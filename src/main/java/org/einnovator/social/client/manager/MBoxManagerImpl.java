@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.einnovator.social.client.SocialClient;
-import org.einnovator.social.client.model.Chat;
+import org.einnovator.social.client.model.MBox;
 import org.einnovator.social.client.modelx.ChatFilter;
 import org.einnovator.social.client.modelx.ChatOptions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpStatusCodeException;
 
-@CacheConfig(cacheManager="chatCacheManager", cacheResolver="chatCacheResolver")
-public class ChatManagerImpl implements ChatManager {
+@CacheConfig(cacheManager="mboxCacheManager", cacheResolver="mboxCacheResolver")
+public class MBoxManagerImpl implements MBoxManager {
 
 	public static final String CACHE_META = "Chat";
 
@@ -33,28 +33,28 @@ public class ChatManagerImpl implements ChatManager {
 	private CacheManager cacheManager;
 
 	@Autowired
-	public ChatManagerImpl(CacheManager cacheManager) {
+	public MBoxManagerImpl(CacheManager cacheManager) {
 		this.cacheManager = cacheManager;
 	}
 
-	public ChatManagerImpl(SocialClient client, CacheManager cacheManager) {
+	public MBoxManagerImpl(SocialClient client, CacheManager cacheManager) {
 		this.client = client;
 		this.cacheManager = cacheManager;
 	}
 	
-	public ChatManagerImpl() {
+	public MBoxManagerImpl() {
 	}
 
 
 	@Override
-	@Cacheable(value=CACHE_META, key="#id", cacheManager="chatCacheManager")
-	public Chat getChat(String id) {
+	@Cacheable(value=CACHE_META, key="#id", cacheManager="mboxCacheManager")
+	public MBox getChat(String id) {
 		try {
-			Chat chat = client.getChat(id);		
-			if (chat==null) {
+			MBox mbox = client.getChat(id);		
+			if (mbox==null) {
 				logger.error("getChat" + id);
 			}
-			return chat;
+			return mbox;
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
 				logger.error("getChat:" + id + "  " + e);				
@@ -67,14 +67,14 @@ public class ChatManagerImpl implements ChatManager {
 	}
 
 	@Override
-	//@Cacheable(value=CACHE_META, key="#id + ' ' + #options.orgs + ' ' + #options.ops + ' ' + #options.teams + ' ' + #options.roles + ' ' + #options.permissions", cacheManager="chatCacheManager")
-	public Chat getChat(String id, ChatOptions options) {
+	//@Cacheable(value=CACHE_META, key="#id + ' ' + #options.orgs + ' ' + #options.ops + ' ' + #options.teams + ' ' + #options.roles + ' ' + #options.permissions", cacheManager="mboxCacheManager")
+	public MBox getChat(String id, ChatOptions options) {
 		try {
-			Chat chat = client.getChat(id, options);		
-			if (chat==null) {
+			MBox mbox = client.getChat(id, options);		
+			if (mbox==null) {
 				logger.error("getChat" + id);
 			}
-			return chat;
+			return mbox;
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
 				logger.error("getChat:" + id + "  " + options + " " +  e);				
@@ -87,9 +87,9 @@ public class ChatManagerImpl implements ChatManager {
 	}
 
 	@Override
-	public URI createChat(Chat chat) {
+	public URI createChat(MBox mbox) {
 		try {
-			return client.createChat(chat);
+			return client.createChat(mbox);
 		} catch (RuntimeException e) {
 			logger.error("createChat:" + e);
 			return null;
@@ -97,11 +97,11 @@ public class ChatManagerImpl implements ChatManager {
 	}
 	
 	@Override
-	@CachePut(value=CACHE_META, key="#chat.id", cacheManager="chatCacheManager")
-	public Chat updateChat(Chat chat) {
+	@CachePut(value=CACHE_META, key="#mbox.id", cacheManager="mboxCacheManager")
+	public MBox updateChat(MBox mbox) {
 		try {
-			client.updateChat(chat);
-			return chat;
+			client.updateChat(mbox);
+			return mbox;
 		} catch (RuntimeException e) {
 			logger.error("updateChat:" + e);
 			return null;
@@ -110,10 +110,10 @@ public class ChatManagerImpl implements ChatManager {
 
 	
 	@Override
-	@CacheEvict(value=CACHE_META, key="#id", cacheManager="chatCacheManager")
-	public boolean deleteChat(String chatId) {
+	@CacheEvict(value=CACHE_META, key="#id", cacheManager="mboxCacheManager")
+	public boolean deleteChat(String mboxId) {
 		try {
-			client.deleteChat(chatId);
+			client.deleteChat(mboxId);
 			return true;
 		} catch (RuntimeException e) {
 			logger.error("deleteChat:" + e);
@@ -123,7 +123,7 @@ public class ChatManagerImpl implements ChatManager {
 	
 	
 	@Override
-	public Page<Chat> listChats(ChatFilter filter, Pageable pageable) {
+	public Page<MBox> listChats(ChatFilter filter, Pageable pageable) {
 		try {
 			return client.listChats(filter, pageable);
 		} catch (RuntimeException e) {
@@ -141,10 +141,10 @@ public class ChatManagerImpl implements ChatManager {
 		try {
 			Cache cache = getChatCache();
 			if (cache!=null) {
-				Chat chat = (Chat) cache.get(id);
-				if (chat!=null) {
+				MBox mbox = (MBox) cache.get(id);
+				if (mbox!=null) {
 					if (details!=null) {
-						chat.updateFrom(details);						
+						mbox.updateFrom(details);						
 					} else {
 						cache.evict(id);
 					}
@@ -166,7 +166,7 @@ public class ChatManagerImpl implements ChatManager {
 
 	@Override
 	public Cache getChatCache() {
-		Cache cache = cacheManager.getCache(ChatManagerImpl.CACHE_META);
+		Cache cache = cacheManager.getCache(MBoxManagerImpl.CACHE_META);
 		return cache;
 	}
 	

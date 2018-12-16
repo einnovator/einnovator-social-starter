@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.einnovator.social.client.model.Chat;
+import org.einnovator.social.client.model.MBox;
 import org.einnovator.social.client.modelx.ChatFilter;
 import org.einnovator.social.client.modelx.ChatOptions;
 import org.einnovator.util.MappingUtils;
@@ -61,12 +61,12 @@ public class SocialClient {
 
 	// Chat
 	
-	public Chat getChat(String id) {
+	public MBox getChat(String id) {
 		return getChat(id, null);
 	}
 	
-	public Chat getChat(String id, ChatOptions options) {
-		URI uri = makeURI(SocialEndpoints.chat(id, config));
+	public MBox getChat(String id, ChatOptions options) {
+		URI uri = makeURI(SocialEndpoints.mbox(id, config));
 		if (options!=null) {
 			Map<String, String> params = new LinkedHashMap<>();
 			if (options!=null) {
@@ -75,13 +75,13 @@ public class SocialClient {
 			uri = appendQueryParameters(uri, params);
 		}
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<Chat> result = exchange(request, Chat.class);
+		ResponseEntity<MBox> result = exchange(request, MBox.class);
 		return result.getBody();
 	}
 
 	
-	public Page<Chat> listChats(ChatFilter filter, Pageable pageable) {
-		URI uri = makeURI(SocialEndpoints.chats(config));
+	public Page<MBox> listChats(ChatFilter filter, Pageable pageable) {
+		URI uri = makeURI(SocialEndpoints.mboxs(config));
 		if (pageable!=null || filter!=null) {
 			Map<String, String> params = new LinkedHashMap<>();
 			if (pageable!=null) {
@@ -95,26 +95,26 @@ public class SocialClient {
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		@SuppressWarnings("rawtypes")
 		ResponseEntity<Page> result = exchange(request, Page.class);
-		return PageUtil.create(result.getBody(),  Chat.class);
+		return PageUtil.create(result.getBody(),  MBox.class);
 	}
 	
-	public URI createChat(Chat chat) {
-		URI uri = makeURI(SocialEndpoints.chats(config));
-		RequestEntity<Chat> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(chat);
+	public URI createChat(MBox mbox) {
+		URI uri = makeURI(SocialEndpoints.mboxs(config));
+		RequestEntity<MBox> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(mbox);
 		
 		ResponseEntity<Void> result = exchange(request, Void.class);
 		return result.getHeaders().getLocation();
 	}
 	
-	public void updateChat(Chat chat) {
-		URI uri = makeURI(SocialEndpoints.chat(chat.getUuid(), config));
-		RequestEntity<Chat> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(chat);
+	public void updateChat(MBox mbox) {
+		URI uri = makeURI(SocialEndpoints.mbox(mbox.getUuid(), config));
+		RequestEntity<MBox> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(mbox);
 		
-		exchange(request, Chat.class);
+		exchange(request, MBox.class);
 	}
 	
 	public void deleteChat(String id) {
-		URI uri = makeURI(SocialEndpoints.chat(id, config));
+		URI uri = makeURI(SocialEndpoints.mbox(id, config));
 		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
 		exchange(request, Void.class);
 	}

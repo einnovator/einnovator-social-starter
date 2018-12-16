@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Note extends EntityBase {
+public class Message extends EntityBase {
 
 	private String title;
 
@@ -22,7 +22,7 @@ public class Note extends EntityBase {
 
 	private List<Attachment> attachments;
 	
-	private List<Note> notes;
+	private List<Message> messages;
 	
 	private List<Impression> impressions = new ArrayList<Impression>();
 	
@@ -42,7 +42,7 @@ public class Note extends EntityBase {
 
 	private Long viewCount;
 	
-	public Note() {
+	public Message() {
 	}
 	
 	public String getTitle() {
@@ -77,12 +77,12 @@ public class Note extends EntityBase {
 		this.attachments = attachments;
 	}
 
-	public List<Note> getNotes() {
-		return notes;
+	public List<Message> getNotes() {
+		return messages;
 	}
 
-	public void setNotes(List<Note> notes) {
-		this.notes = notes;
+	public void setNotes(List<Message> messages) {
+		this.messages = messages;
 	}
 	
 
@@ -165,7 +165,7 @@ public class Note extends EntityBase {
 				.append("type", type)
 				.append("content", content)
 				.append("attachments", attachments)
-				.append("notes", notes)
+				.append("messages", messages)
 				.append("followerCount", followerCount)
 				.append("blocked", blocked)
 				.append("blockedBy", blockedBy)

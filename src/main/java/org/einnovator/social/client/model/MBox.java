@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Chat extends EntityBase {
+public class MBox extends EntityBase {
 
 	private String metaId;
 
@@ -23,12 +23,12 @@ public class Chat extends EntityBase {
 
 	private Tagging tagging;
 
-	private Note head;
+	private Message head;
 
-	private List<Note> notes;
+	private List<Message> messages;
 
 	
-	public Chat() {
+	public MBox() {
 	}
 
 	public String getMetaId() {
@@ -39,20 +39,20 @@ public class Chat extends EntityBase {
 		this.metaId = metaId;
 	}
 
-	public Note getHead() {
+	public Message getHead() {
 		return head;
 	}
 
-	public void setHead(Note head) {
+	public void setHead(Message head) {
 		this.head = head;
 	}
 
-	public List<Note> getNotes() {
-		return notes;
+	public List<Message> getNotes() {
+		return messages;
 	}
 
-	public void setNotes(List<Note> notes) {
-		this.notes = notes;
+	public void setNotes(List<Message> messages) {
+		this.messages = messages;
 	}
 
 
@@ -92,7 +92,7 @@ public class Chat extends EntityBase {
 				.append("head", head)
 				.append("tagging", tagging)
 				.append("meta", meta)
-				.append("notes", notes)
+				.append("messages", messages)
 				;
 	}
 	

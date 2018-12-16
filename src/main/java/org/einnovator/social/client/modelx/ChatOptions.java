@@ -5,23 +5,23 @@ import org.springframework.core.style.ToStringCreator;
 
 public class ChatOptions extends ObjectBase {
 
-	private Boolean notes;
+	private Boolean messages;
 
 	public ChatOptions() {
 	}
 
 	public Boolean getNotes() {
-		return notes;
+		return messages;
 	}
 
-	public void setNotes(Boolean notes) {
-		this.notes = notes;
+	public void setNotes(Boolean messages) {
+		this.messages = messages;
 	}
 
 
 	@Override
 	public ToStringCreator toString(ToStringCreator creator) {
 		return super.toString(creator)
-				.append("notes", notes);
+				.append("messages", messages);
 	}
 }

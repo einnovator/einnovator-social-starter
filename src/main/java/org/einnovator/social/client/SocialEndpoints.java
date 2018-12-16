@@ -3,12 +3,12 @@ package org.einnovator.social.client;
 public class SocialEndpoints {
 	
 
-	public static String chat(String id, SocialClientConfiguration config) {
-		return chats(config) + "/" + id;
+	public static String mbox(String id, SocialClientConfiguration config) {
+		return mboxs(config) + "/" + id;
 	}
 
-	public static String chats(SocialClientConfiguration config) {
-		return config.getServer() + "/api/chat/";
+	public static String mboxs(SocialClientConfiguration config) {
+		return config.getServer() + "/api/mbox/";
 	}
 
 
