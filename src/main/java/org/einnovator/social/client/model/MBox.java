@@ -5,7 +5,7 @@ import java.util.List;
 import org.einnovator.meta.client.model.Meta;
 import org.einnovator.meta.client.model.Tagging;
 import org.einnovator.util.model.EntityBase;
-import org.springframework.core.style.ToStringCreator;
+import org.einnovator.util.model.ToStringCreator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

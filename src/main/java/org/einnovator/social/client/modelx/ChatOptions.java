@@ -1,7 +1,7 @@
 package org.einnovator.social.client.modelx;
 
 import org.einnovator.util.model.ObjectBase;
-import org.springframework.core.style.ToStringCreator;
+import org.einnovator.util.model.ToStringCreator;
 
 public class ChatOptions extends ObjectBase {
 

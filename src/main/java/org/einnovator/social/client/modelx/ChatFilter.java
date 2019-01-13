@@ -1,6 +1,6 @@
 package org.einnovator.social.client.modelx;
 
-import org.springframework.core.style.ToStringCreator;
+import org.einnovator.util.model.ToStringCreator;
 
 public class ChatFilter extends ChatOptions {
 	

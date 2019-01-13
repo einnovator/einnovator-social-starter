@@ -7,7 +7,8 @@ import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.einnovator.social.client.model.MBox;
 import org.einnovator.social.client.modelx.ChatFilter;
 import org.einnovator.social.client.modelx.ChatOptions;
@@ -28,7 +29,7 @@ import org.springframework.web.client.RestClientException;
 public class SocialClient {
 
 	@SuppressWarnings("unused")
-	private Logger logger = Logger.getLogger(this.getClass());
+	private final Log logger = LogFactory.getLog(getClass());
 
 	@Autowired
 	private SocialClientConfiguration config;

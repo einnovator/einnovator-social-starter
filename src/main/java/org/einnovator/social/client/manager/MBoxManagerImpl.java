@@ -3,7 +3,8 @@ package org.einnovator.social.client.manager;
 import java.net.URI;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.einnovator.social.client.SocialClient;
 import org.einnovator.social.client.model.MBox;
 import org.einnovator.social.client.modelx.ChatFilter;
@@ -25,7 +26,7 @@ public class MBoxManagerImpl implements MBoxManager {
 
 	public static final String CACHE_META = "Chat";
 
-	private Logger logger = Logger.getLogger(this.getClass());
+	private final Log logger = LogFactory.getLog(getClass());
 
 	@Autowired
 	private SocialClient client;

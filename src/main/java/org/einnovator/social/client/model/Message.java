@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.einnovator.util.model.EntityBase;
-import org.springframework.core.style.ToStringCreator;
+import org.einnovator.util.model.ToStringCreator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
