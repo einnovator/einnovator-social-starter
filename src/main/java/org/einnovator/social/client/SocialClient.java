@@ -14,7 +14,7 @@ import org.einnovator.social.client.modelx.ChatFilter;
 import org.einnovator.social.client.modelx.ChatOptions;
 import org.einnovator.util.MappingUtils;
 import org.einnovator.util.PageUtil;
-import org.einnovator.util.ListOptions;
+import org.einnovator.util.PageOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -86,7 +86,7 @@ public class SocialClient {
 		if (pageable!=null || filter!=null) {
 			Map<String, String> params = new LinkedHashMap<>();
 			if (pageable!=null) {
-				params.putAll(MappingUtils.toMapFormatted(new ListOptions(pageable)));
+				params.putAll(MappingUtils.toMapFormatted(new PageOptions(pageable)));
 			}
 			if (filter!=null) {
 				params.putAll(MappingUtils.toMapFormatted(filter));				
