@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MBox extends EntityBase {
+public class Channel extends EntityBase {
 
 	private String metaId;
 
@@ -28,7 +28,7 @@ public class MBox extends EntityBase {
 	private List<Message> messages;
 
 	
-	public MBox() {
+	public Channel() {
 	}
 
 	public String getMetaId() {

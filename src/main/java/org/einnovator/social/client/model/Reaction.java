@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Impression extends EntityBase {
+public class Reaction extends EntityBase {
 
 	private String type;
 	
@@ -31,7 +31,7 @@ public class Impression extends EntityBase {
 	 * Create instance of {@code DocumentVote}.
 	 *
 	 */
-	public Impression() {
+	public Reaction() {
 	}
 	
 	/**
@@ -40,7 +40,7 @@ public class Impression extends EntityBase {
 	 * @param account
 	 * @param value
 	 */
-	public Impression(String createdBy, int value) {
+	public Reaction(String createdBy, int value) {
 		this.setCreatedBy(createdBy);
 	}	
 

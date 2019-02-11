@@ -3,12 +3,12 @@ package org.einnovator.social.client;
 public class SocialEndpoints {
 	
 
-	public static String mbox(String id, SocialClientConfiguration config) {
-		return mboxs(config) + "/" + id;
+	public static String channel(String id, SocialClientConfiguration config) {
+		return channels(config) + "/" + id;
 	}
 
-	public static String mboxs(SocialClientConfiguration config) {
-		return config.getServer() + "/api/mbox/";
+	public static String channels(SocialClientConfiguration config) {
+		return config.getServer() + "/api/channel/";
 	}
 
 

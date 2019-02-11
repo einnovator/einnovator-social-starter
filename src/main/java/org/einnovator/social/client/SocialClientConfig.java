@@ -1,8 +1,8 @@
 package org.einnovator.social.client;
 
 
-import org.einnovator.social.client.manager.MBoxManager;
-import org.einnovator.social.client.manager.MBoxManagerImpl;
+import org.einnovator.social.client.manager.ChannelManager;
+import org.einnovator.social.client.manager.ChannelManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -58,8 +58,8 @@ public class SocialClientConfig {
 	}
 
 	@Bean
-	public MBoxManager metaManager() {
-		return new MBoxManagerImpl();
+	public ChannelManager metaManager() {
+		return new ChannelManagerImpl();
 	}
 
 }

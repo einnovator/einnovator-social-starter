@@ -9,9 +9,9 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.einnovator.social.client.model.MBox;
-import org.einnovator.social.client.modelx.ChatFilter;
-import org.einnovator.social.client.modelx.ChatOptions;
+import org.einnovator.social.client.model.Channel;
+import org.einnovator.social.client.modelx.ChannelFilter;
+import org.einnovator.social.client.modelx.ChannelOptions;
 import org.einnovator.util.MappingUtils;
 import org.einnovator.util.PageUtil;
 import org.einnovator.util.PageOptions;
@@ -60,14 +60,14 @@ public class SocialClient {
 	}
 
 
-	// Chat
+	// Channel
 	
-	public MBox getChat(String id) {
-		return getChat(id, null);
+	public Channel getChannel(String id) {
+		return getChannel(id, null);
 	}
 	
-	public MBox getChat(String id, ChatOptions options) {
-		URI uri = makeURI(SocialEndpoints.mbox(id, config));
+	public Channel getChannel(String id, ChannelOptions options) {
+		URI uri = makeURI(SocialEndpoints.channel(id, config));
 		if (options!=null) {
 			Map<String, String> params = new LinkedHashMap<>();
 			if (options!=null) {
@@ -76,13 +76,13 @@ public class SocialClient {
 			uri = appendQueryParameters(uri, params);
 		}
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<MBox> result = exchange(request, MBox.class);
+		ResponseEntity<Channel> result = exchange(request, Channel.class);
 		return result.getBody();
 	}
 
 	
-	public Page<MBox> listChats(ChatFilter filter, Pageable pageable) {
-		URI uri = makeURI(SocialEndpoints.mboxs(config));
+	public Page<Channel> listChannels(ChannelFilter filter, Pageable pageable) {
+		URI uri = makeURI(SocialEndpoints.channels(config));
 		if (pageable!=null || filter!=null) {
 			Map<String, String> params = new LinkedHashMap<>();
 			if (pageable!=null) {
@@ -96,26 +96,26 @@ public class SocialClient {
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		@SuppressWarnings("rawtypes")
 		ResponseEntity<Page> result = exchange(request, Page.class);
-		return PageUtil.create(result.getBody(),  MBox.class);
+		return PageUtil.create(result.getBody(),  Channel.class);
 	}
 	
-	public URI createChat(MBox mbox) {
-		URI uri = makeURI(SocialEndpoints.mboxs(config));
-		RequestEntity<MBox> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(mbox);
+	public URI createChannel(Channel channel) {
+		URI uri = makeURI(SocialEndpoints.channels(config));
+		RequestEntity<Channel> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(channel);
 		
 		ResponseEntity<Void> result = exchange(request, Void.class);
 		return result.getHeaders().getLocation();
 	}
 	
-	public void updateChat(MBox mbox) {
-		URI uri = makeURI(SocialEndpoints.mbox(mbox.getUuid(), config));
-		RequestEntity<MBox> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(mbox);
+	public void updateChannel(Channel channel) {
+		URI uri = makeURI(SocialEndpoints.channel(channel.getUuid(), config));
+		RequestEntity<Channel> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(channel);
 		
-		exchange(request, MBox.class);
+		exchange(request, Channel.class);
 	}
 	
-	public void deleteChat(String id) {
-		URI uri = makeURI(SocialEndpoints.mbox(id, config));
+	public void deleteChannel(String id) {
+		URI uri = makeURI(SocialEndpoints.channel(id, config));
 		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
 		exchange(request, Void.class);
 	}

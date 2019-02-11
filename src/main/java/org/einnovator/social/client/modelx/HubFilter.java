@@ -1,16 +1,19 @@
 package org.einnovator.social.client.modelx;
 
+import org.einnovator.util.model.ObjectBase;
 import org.einnovator.util.model.ToStringCreator;
 
-public class ChatFilter extends ChatOptions {
-	
+public class HubFilter extends ObjectBase {
+
 	private String q;
 	
 	private Boolean strict;
 
-	public ChatFilter() {
+	private String owner;
+
+	public HubFilter() {
 	}
-	
+
 	public String getQ() {
 		return q;
 	}
@@ -26,12 +29,20 @@ public class ChatFilter extends ChatOptions {
 	public void setStrict(Boolean strict) {
 		this.strict = strict;
 	}
-	
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
 	@Override
 	public ToStringCreator toString(ToStringCreator creator) {
 		return creator
-				.append("q", q)
-				.append("strict",strict);
+		.append("owner", owner)
+		.append("q", q)
+		.append("strict",strict);
 	}
-	
 }
