@@ -3,6 +3,7 @@ package org.einnovator.social.client;
 
 import org.einnovator.social.client.manager.ChannelManager;
 import org.einnovator.social.client.manager.ChannelManagerImpl;
+import org.einnovator.social.client.web.ChannelRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -53,13 +54,18 @@ public class SocialClientConfig {
 	}
 	
 	@Bean
-	public SocialClient metaClient() {
+	public SocialClient channelClient() {
 		return new SocialClient(config);
 	}
 
 	@Bean
-	public ChannelManager metaManager() {
+	public ChannelManager channelManager() {
 		return new ChannelManagerImpl();
+	}
+	
+	@Bean
+	public ChannelRestController channelRestController() {
+		return new ChannelRestController();
 	}
 
 }

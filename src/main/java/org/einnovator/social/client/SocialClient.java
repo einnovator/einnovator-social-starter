@@ -18,6 +18,7 @@ import org.einnovator.social.client.modelx.MessageOptions;
 import org.einnovator.util.MappingUtils;
 import org.einnovator.util.PageUtil;
 import org.einnovator.util.PageOptions;
+import org.einnovator.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -98,8 +99,8 @@ public class SocialClient {
 		}
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		@SuppressWarnings("rawtypes")
-		ResponseEntity<Page> result = exchange(request, Page.class);
-		return PageUtil.create(result.getBody(),  Channel.class);
+		ResponseEntity<PageResult> result = exchange(request, PageResult.class);
+		return PageUtil.create2(result.getBody(),  Channel.class);
 	}
 	
 	public URI createChannel(Channel channel) {
@@ -137,8 +138,8 @@ public class SocialClient {
 		}
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		@SuppressWarnings("rawtypes")
-		ResponseEntity<Page> result = exchange(request, Page.class);
-		return PageUtil.create(result.getBody(),  Message.class);
+		ResponseEntity<PageResult> result = exchange(request, PageResult.class);
+		return PageUtil.create2(result.getBody(),  Message.class);
 		
 	}
 

@@ -8,7 +8,7 @@ public class SocialEndpoints {
 	}
 
 	public static String channels(SocialClientConfiguration config) {
-		return config.getServer() + "/api/channel/";
+		return config.getServer() + "/api/channel";
 	}
 
 	public static String messages(String channelId, SocialClientConfiguration config) {

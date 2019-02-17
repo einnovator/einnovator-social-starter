@@ -16,19 +16,19 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Ref extends ObjectBase {
 
-	private String refId;
+	private String id;
 
-	private String refType;
+	private String type;
 
-	private String refName;
+	private String name;
 
-	private String refImg;
+	private String img;
 
-	private String refThumbnail;
+	private String thumbnail;
 
-	private String refRedirectUri;
+	private String redirectUri;
 
-	private String refPingUri;
+	private String pingUri;
 
 	/**
 	 * Create instance of {@code Ref}.
@@ -37,150 +37,143 @@ public class Ref extends ObjectBase {
 	public Ref() {
 	}
 	
-	
 	/**
-	 * Get the value of property {@code refId}.
+	 * Get the value of property {@code id}.
 	 *
-	 * @return the refId
+	 * @return the id
 	 */
-	public String getRefId() {
-		return refId;
+	public String getId() {
+		return id;
 	}
 
 	/**
-	 * Set the value of property {@code refId}.
+	 * Set the value of property {@code id}.
 	 *
-	 * @param refId the refId to set
+	 * @param id the id to set
 	 */
-	public void setRefId(String refId) {
-		this.refId = refId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	/**
-	 * Get the value of property {@code refType}.
+	 * Get the value of property {@code type}.
 	 *
-	 * @return the refType
+	 * @return the type
 	 */
-	public String getRefType() {
-		return refType;
-	}
-
-
-
-	/**
-	 * Set the value of property {@code refType}.
-	 *
-	 * @param refType the refType to set
-	 */
-	public void setRefType(String refType) {
-		this.refType = refType;
+	public String getType() {
+		return type;
 	}
 
 	/**
-	 * Get the value of property {@code refName}.
+	 * Set the value of property {@code type}.
 	 *
-	 * @return the refName
+	 * @param type the type to set
 	 */
-	public String getRefName() {
-		return refName;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	/**
-	 * Set the value of property {@code refName}.
+	 * Get the value of property {@code name}.
 	 *
-	 * @param refName the refName to set
+	 * @return the name
 	 */
-	public void setRefName(String refName) {
-		this.refName = refName;
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * Get the value of property {@code refImg}.
+	 * Set the value of property {@code name}.
 	 *
-	 * @return the refImg
+	 * @param name the name to set
 	 */
-	public String getRefImg() {
-		return refImg;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
-	 * Set the value of property {@code refImg}.
+	 * Get the value of property {@code img}.
 	 *
-	 * @param refImg the refImg to set
+	 * @return the img
 	 */
-	public void setRefImg(String refImg) {
-		this.refImg = refImg;
+	public String getImg() {
+		return img;
 	}
 
 	/**
-	 * Get the value of property {@code refThumbnail}.
+	 * Set the value of property {@code img}.
 	 *
-	 * @return the refThumbnail
+	 * @param img the img to set
 	 */
-	public String getRefThumbnail() {
-		return refThumbnail;
-	}
-
-
-
-	/**
-	 * Set the value of property {@code refThumbnail}.
-	 *
-	 * @param refThumbnail the refThumbnail to set
-	 */
-	public void setRefThumbnail(String refThumbnail) {
-		this.refThumbnail = refThumbnail;
+	public void setImg(String img) {
+		this.img = img;
 	}
 
 	/**
-	 * Get the value of property {@code refRedirectUri}.
+	 * Get the value of property {@code thumbnail}.
 	 *
-	 * @return the refRedirectUri
+	 * @return the thumbnail
 	 */
-	public String getRefRedirectUri() {
-		return refRedirectUri;
+	public String getThumbnail() {
+		return thumbnail;
 	}
 
 	/**
-	 * Set the value of property {@code refRedirectUri}.
+	 * Set the value of property {@code thumbnail}.
 	 *
-	 * @param refRedirectUri the refRedirectUri to set
+	 * @param thumbnail the thumbnail to set
 	 */
-	public void setRefRedirectUri(String refRedirectUri) {
-		this.refRedirectUri = refRedirectUri;
-	}
-
-
-
-	/**
-	 * Get the value of property {@code refPingUri}.
-	 *
-	 * @return the refPingUri
-	 */
-	public String getRefPingUri() {
-		return refPingUri;
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 
 	/**
-	 * Set the value of property {@code refPingUri}.
+	 * Get the value of property {@code redirectUri}.
 	 *
-	 * @param refPingUri the refPingUri to set
+	 * @return the redirectUri
 	 */
-	public void setRefPingUri(String refPingUri) {
-		this.refPingUri = refPingUri;
+	public String getRedirectUri() {
+		return redirectUri;
 	}
 
+	/**
+	 * Set the value of property {@code redirectUri}.
+	 *
+	 * @param redirectUri the redirectUri to set
+	 */
+	public void setRedirectUri(String redirectUri) {
+		this.redirectUri = redirectUri;
+	}
+
+	/**
+	 * Get the value of property {@code pingUri}.
+	 *
+	 * @return the pingUri
+	 */
+	public String getPingUri() {
+		return pingUri;
+	}
+
+	/**
+	 * Set the value of property {@code pingUri}.
+	 *
+	 * @param pingUri the pingUri to set
+	 */
+	public void setPingUri(String pingUri) {
+		this.pingUri = pingUri;
+	}
 
 	@Override
 	public ToStringCreator toString1(ToStringCreator creator) {
 		return super.toString1(creator)
-				.append("refId", refId)
-				.append("refType", refType)
-				.append("refName", refName)
-				.append("refRedirectUri", refRedirectUri)
-				.append("refPingUri", refPingUri)
+				.append("id", id)
+				.append("type", type)
+				.append("name", name)
+				.append("redirectUri", redirectUri)
+				.append("pingUri", pingUri)
 				;
 	}
+
 
 
 }
