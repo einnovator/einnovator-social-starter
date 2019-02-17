@@ -11,6 +11,15 @@ public class SocialEndpoints {
 		return config.getServer() + "/api/channel/";
 	}
 
+	public static String messages(String channelId, SocialClientConfiguration config) {
+		return channel(channelId + "/message", config);
+	}
 
+	public static String message(String channelId, String msgId, SocialClientConfiguration config) {
+		return channel(channelId, config) + "/message/" + msgId;
+	}
 
+	public static String comments(String channelId, String msgId, SocialClientConfiguration config) {
+		return message(channelId, msgId, config) + "/comment";
+	}
 }

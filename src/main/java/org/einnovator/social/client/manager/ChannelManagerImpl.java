@@ -7,12 +7,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.social.client.SocialClient;
 import org.einnovator.social.client.model.Channel;
+import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.social.client.modelx.ChannelOptions;
+import org.einnovator.social.client.modelx.MessageFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,10 +22,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpStatusCodeException;
 
-@CacheConfig(cacheManager="channelCacheManager", cacheResolver="channelCacheResolver")
 public class ChannelManagerImpl implements ChannelManager {
 
-	public static final String CACHE_META = "Channel";
+	public static final String CACHE_CHANNEL = "Channel";
+	public static final String CACHE_MESSAGE = "Message";
 
 	private final Log logger = LogFactory.getLog(getClass());
 
@@ -48,27 +49,27 @@ public class ChannelManagerImpl implements ChannelManager {
 
 
 	@Override
-	@Cacheable(value=CACHE_META, key="#id", cacheManager="channelCacheManager")
+	@Cacheable(value=CACHE_CHANNEL, key="#id")
 	public Channel getChannel(String id) {
 		try {
 			Channel channel = client.getChannel(id);		
 			if (channel==null) {
-				logger.error("getChannel" + id);
+				logger.error(String.format("getChannel: %s", id));
 			}
 			return channel;
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
-				logger.error("getChannel:" + id + "  " + e);				
+				logger.error(String.format("getChannel: %s %s %s", e, id));
 			}
 			return null;
 		} catch (RuntimeException e) {
-			logger.error("getChannel:" + id + "  " + e);
+			logger.error(String.format("getChannel: %s %s %s", e, id));
 			return null;
 		}
 	}
 
 	@Override
-	//@Cacheable(value=CACHE_META, key="#id + ' ' + #options.orgs + ' ' + #options.ops + ' ' + #options.teams + ' ' + #options.roles + ' ' + #options.permissions", cacheManager="channelCacheManager")
+	//@Cacheable(value=CACHE_CHANNEL, key="#id + ' ' + #options.orgs + ' ' + #options.ops + ' ' + #options.teams + ' ' + #options.roles + ' ' + #options.permissions")
 	public Channel getChannel(String id, ChannelOptions options) {
 		try {
 			Channel channel = client.getChannel(id, options);		
@@ -78,11 +79,11 @@ public class ChannelManagerImpl implements ChannelManager {
 			return channel;
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
-				logger.error("getChannel:" + id + "  " + options + " " +  e);				
+				logger.error(String.format("getChannel: %s %s %s", e, id, options));
 			}
 			return null;
 		} catch (RuntimeException e) {
-			logger.error("getChannel:" + id + "  " + options + " " + e);				
+			logger.error(String.format("getChannel: %s %s %s", e, id, options));
 			return null;
 		}
 	}
@@ -92,32 +93,32 @@ public class ChannelManagerImpl implements ChannelManager {
 		try {
 			return client.createChannel(channel);
 		} catch (RuntimeException e) {
-			logger.error("createChannel:" + e);
+			logger.error(String.format("createChannel: %s %s", e, channel));
 			return null;
 		}
 	}
 	
 	@Override
-	@CachePut(value=CACHE_META, key="#channel.id", cacheManager="channelCacheManager")
+	@CachePut(value=CACHE_CHANNEL, key="#channel.id")
 	public Channel updateChannel(Channel channel) {
 		try {
 			client.updateChannel(channel);
 			return channel;
 		} catch (RuntimeException e) {
-			logger.error("updateChannel:" + e);
+			logger.error(String.format("updateChannel: %s %s", e, channel));
 			return null;
 		}
 	}
 
 	
 	@Override
-	@CacheEvict(value=CACHE_META, key="#id", cacheManager="channelCacheManager")
+	@CacheEvict(value=CACHE_CHANNEL, key="#id")
 	public boolean deleteChannel(String channelId) {
 		try {
 			client.deleteChannel(channelId);
 			return true;
 		} catch (RuntimeException e) {
-			logger.error("deleteChannel:" + e);
+			logger.error(String.format("deleteChannel: %s %s %s", e, channelId));
 			return false;
 		}
 	}
@@ -128,8 +129,7 @@ public class ChannelManagerImpl implements ChannelManager {
 		try {
 			return client.listChannels(filter, pageable);
 		} catch (RuntimeException e) {
-			e.printStackTrace();
-			logger.error("listChannels:" + e);
+			logger.error(String.format("listChannels: %s %s %s", e, filter, pageable));
 			return null;
 		}
 	}
@@ -152,8 +152,7 @@ public class ChannelManagerImpl implements ChannelManager {
 				}
 			}
 		} catch (RuntimeException e) {
-			e.printStackTrace();
-			logger.error("onChannelUpdate: " + e);
+			logger.error(String.format("onChannelUpdate: %s", e));
 		}
 	}
 
@@ -167,8 +166,97 @@ public class ChannelManagerImpl implements ChannelManager {
 
 	@Override
 	public Cache getChannelCache() {
-		Cache cache = cacheManager.getCache(ChannelManagerImpl.CACHE_META);
+		Cache cache = cacheManager.getCache(ChannelManagerImpl.CACHE_CHANNEL);
 		return cache;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.einnovator.social.client.manager.ChannelManager#findMessages(org.einnovator.social.client.model.Channel, org.einnovator.social.client.modelx.MessageFilter, org.springframework.data.domain.Pageable)
+	 */
+	@Override
+	public Page<Message> listMessages(String channelId, MessageFilter filter, Pageable pageable) {
+		try {
+			return client.listMessages(channelId, filter, pageable);
+		} catch (RuntimeException e) {
+			logger.error(String.format("listMessages: %s %s %s %s", e, channelId, filter, pageable));
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.einnovator.social.client.manager.ChannelManager#postMessage(org.einnovator.social.client.model.Channel, org.einnovator.social.client.model.Message)
+	 */
+	@Override
+	public URI postMessage(String channelId, Message msg) {
+		try {
+			return client.postMessage(channelId, msg);
+		} catch (RuntimeException e) {
+			logger.error(String.format("postMessage: %s %s %s", e, channelId, msg));
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.einnovator.social.client.manager.ChannelManager#findMessage(org.einnovator.social.client.model.Channel, java.lang.String)
+	 */
+	@Override
+	public Message getMessage(String channelId, String id) {
+		try {
+			Message msg = client.getMessage(channelId, id, null);		
+			if (msg==null) {
+				logger.error("getMessage" + channelId + " " + id);
+			}
+			return msg;
+		} catch (HttpStatusCodeException e) {
+			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
+				logger.error(String.format("getMessage: %s %s", channelId, id));
+			}
+			return null;
+		} catch (RuntimeException e) {
+			logger.error(String.format("getMessage: %s %s %s", e, channelId, id));
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.einnovator.social.client.manager.ChannelManager#updateMessage(org.einnovator.social.client.model.Channel, org.einnovator.social.client.model.Message)
+	 */
+	@Override
+	public Message updateMessage(String channelId, Message msg) {
+		try {
+			client.updateMessage(channelId, msg);
+			return msg;
+		} catch (RuntimeException e) {
+			logger.error(String.format("updateMessage: %s %s %s", e, channelId, msg));
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.einnovator.social.client.manager.ChannelManager#deleteMessage(org.einnovator.social.client.model.Channel, java.lang.String)
+	 */
+	@Override
+	public boolean deleteMessage(String channelId, String id) {
+		try {
+			client.deleteMessage(channelId, id);
+			return true;
+		} catch (RuntimeException e) {
+			logger.error(String.format("deleteMessage: %s %s %s", e, channelId, id));
+			return false;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.einnovator.social.client.manager.ChannelManager#postComment(org.einnovator.social.client.model.Channel, java.lang.String, org.einnovator.social.client.model.Message)
+	 */
+	@Override
+	public URI postComment(String channelId, String msgId, Message comment) {
+		try {
+			return client.postComment(channelId, msgId, comment);
+		} catch (RuntimeException e) {
+			logger.error(String.format("postComment: %s %s %s", e, channelId, comment));
+			return null;
+		}
 	}
 	
 }

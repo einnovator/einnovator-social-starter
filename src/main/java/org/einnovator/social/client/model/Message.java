@@ -24,7 +24,7 @@ public class Message extends EntityBase {
 	
 	private List<Message> messages;
 	
-	private List<Reaction> impressions = new ArrayList<Reaction>();
+	private List<Reaction> reactions = new ArrayList<Reaction>();
 	
 	private Long followerCount;
 	
@@ -86,12 +86,12 @@ public class Message extends EntityBase {
 	}
 	
 
-	public List<Reaction> getImpressions() {
-		return impressions;
+	public List<Reaction> getReactions() {
+		return reactions;
 	}
 
-	public void setImpressions(List<Reaction> impressions) {
-		this.impressions = impressions;
+	public void setReactions(List<Reaction> reactions) {
+		this.reactions = reactions;
 	}
 
 	public Long getViewCount() {

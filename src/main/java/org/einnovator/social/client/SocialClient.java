@@ -10,8 +10,11 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.social.client.model.Channel;
+import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.social.client.modelx.ChannelOptions;
+import org.einnovator.social.client.modelx.MessageFilter;
+import org.einnovator.social.client.modelx.MessageOptions;
 import org.einnovator.util.MappingUtils;
 import org.einnovator.util.PageUtil;
 import org.einnovator.util.PageOptions;
@@ -120,7 +123,70 @@ public class SocialClient {
 		exchange(request, Void.class);
 	}
 
+	public Page<Message> listMessages(String channelId, MessageFilter filter, Pageable pageable) {
+		URI uri = makeURI(SocialEndpoints.messages(channelId, config));
+		if (pageable!=null || filter!=null) {
+			Map<String, String> params = new LinkedHashMap<>();
+			if (pageable!=null) {
+				params.putAll(MappingUtils.toMapFormatted(new PageOptions(pageable)));
+			}
+			if (filter!=null) {
+				params.putAll(MappingUtils.toMapFormatted(filter));				
+			}
+			uri = appendQueryParameters(uri, params);
+		}
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		@SuppressWarnings("rawtypes")
+		ResponseEntity<Page> result = exchange(request, Page.class);
+		return PageUtil.create(result.getBody(),  Message.class);
+		
+	}
+
+	public URI postMessage(String channelId, Message msg) {
+		URI uri = makeURI(SocialEndpoints.messages(channelId, config));
+		RequestEntity<Message> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(msg);
+		
+		ResponseEntity<Void> result = exchange(request, Void.class);
+		return result.getHeaders().getLocation();
+		
+	}
+
+	public Message getMessage(String channelId, String id, MessageOptions options) {
+		URI uri = makeURI(SocialEndpoints.message(channelId, id, config));
+		if (options!=null) {
+			Map<String, String> params = new LinkedHashMap<>();
+			if (options!=null) {
+				params.putAll(MappingUtils.toMapFormatted(options));
+			}
+			uri = appendQueryParameters(uri, params);
+		}
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		ResponseEntity<Message> result = exchange(request, Message.class);
+		return result.getBody();
+		
+	}
 	
+	public void updateMessage(String channelId, Message msg) {
+		URI uri = makeURI(SocialEndpoints.message(channelId, msg.getUuid(), config));
+		RequestEntity<Message> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(msg);
+		
+		exchange(request, Message.class);
+	}
+
+	public void deleteMessage(String channelId, String id) {
+		URI uri = makeURI(SocialEndpoints.message(channelId, id, config));
+		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
+		exchange(request, Void.class);
+	}
+
+	public URI postComment(String channelId, String msgId, Message comment) {
+		URI uri = makeURI(SocialEndpoints.comments(channelId, msgId, config));
+		RequestEntity<Message> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(comment);
+		
+		ResponseEntity<Void> result = exchange(request, Void.class);
+		return result.getHeaders().getLocation();
+	}
+
 
 	protected <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType) throws RestClientException {
 		return restTemplate.exchange(request, responseType);
