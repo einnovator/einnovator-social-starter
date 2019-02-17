@@ -45,6 +45,13 @@
 
 		<dependency>
 			<groupId>org.einnovator</groupId>
+			<artifactId>einnovator-sso-starter</artifactId>
+			<version>${einnovator.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.einnovator</groupId>
 			<artifactId>einnovator-util</artifactId>
 			<version>${einnovator.version}</version>
 		</dependency>
