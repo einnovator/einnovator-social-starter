@@ -1,6 +1,7 @@
 package org.einnovator.social.client.model;
 
 import org.einnovator.util.model.EntityBase;
+import org.einnovator.util.model.Ref;
 import org.einnovator.util.model.ToStringCreator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

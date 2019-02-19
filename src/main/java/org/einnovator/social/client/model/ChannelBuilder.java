@@ -1,5 +1,7 @@
 package org.einnovator.social.client.model;
 
+import org.einnovator.util.model.Ref;
+
 public class ChannelBuilder {
 
 	private ChannelType type;
