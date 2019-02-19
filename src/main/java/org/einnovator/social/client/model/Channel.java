@@ -1,5 +1,7 @@
 package org.einnovator.social.client.model;
 
+import java.util.List;
+
 import org.einnovator.util.model.EntityBase;
 import org.einnovator.util.model.Ref;
 import org.einnovator.util.model.ToStringCreator;
@@ -29,6 +31,8 @@ public class Channel extends EntityBase {
 
 	//private User ownerUser;
 	
+	private List<Authority> authorities;
+
 	public Channel() {
 	}
 
@@ -182,6 +186,25 @@ public class Channel extends EntityBase {
 		this.head = head;
 	}
 
+
+	/**
+	 * Get the value of property {@code authorities}.
+	 *
+	 * @return the authorities
+	 */
+	public List<Authority> getAuthorities() {
+		return authorities;
+	}
+
+	/**
+	 * Set the value of property {@code authorities}.
+	 *
+	 * @param authorities the authorities to set
+	 */
+	public void setAuthorities(List<Authority> authorities) {
+		this.authorities = authorities;
+	}
+
 	
 	/**
 	 * Get the value of property {@code ownerUser}.
@@ -200,6 +223,8 @@ public class Channel extends EntityBase {
 	//public void setOwnerUser(User ownerUser) {
 	//	this.ownerUser = ownerUser;
 	//}
+	
+	
 
 	@Override
 	public ToStringCreator toString1(ToStringCreator creator) {
@@ -210,8 +235,8 @@ public class Channel extends EntityBase {
 				.append("img", img)
 				.append("thumbnail", thumbnail)
 				.append("head", head)
+				.append("authorities", authorities)
 				;
 	}
-
 	
 }
