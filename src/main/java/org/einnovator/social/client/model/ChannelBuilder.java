@@ -2,6 +2,7 @@ package org.einnovator.social.client.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.einnovator.util.model.Ref;
@@ -75,7 +76,16 @@ public class ChannelBuilder {
 	}
 
 	
-	
+	public ChannelBuilder authorities(Collection<Authority> authorities) {
+		if (this.authorities==null) {
+			this.authorities = new ArrayList<>();
+		}
+		if (authorities!=null) {
+			this.authorities.addAll(authorities);			
+		}
+		return this;
+	}
+
 	public Channel build() {
 		Channel channel = new Channel();
 		channel.setType(type);

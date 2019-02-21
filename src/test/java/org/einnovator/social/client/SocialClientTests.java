@@ -7,8 +7,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.UUID;
 
+import org.einnovator.social.client.model.Authority;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.ChannelBuilder;
 import org.einnovator.social.client.model.Message;
@@ -146,17 +148,22 @@ public class SocialClientTests extends SsoTestHelper {
 	}
 
 	@Test
-	@Ignore
 	public void updateExistingChannelTest() {
 		String name = TEST_CHANNEL;
-		Channel channel = client.getChannel(name);
+		Channel channel = getOrCreateChannel(name);
 		assertNotNull(channel);
 		assertEquals(name, channel.getName());
 		channel.setPurpose("Purpose-" + UUID.randomUUID());
+		channel.setAuthorities(Arrays.asList(Authority.user(TEST_USER3, true, true, false), Authority.user(TEST_USER2, true, false, false)));
 		client.updateChannel(channel);
-		Channel channel2 = client.getChannel(name);
+		Channel channel2 = client.getChannel(channel.getUuid());
 		assertNotNull(channel2);
 		assertEquals(channel.getPurpose(), channel2.getPurpose());
+		assertNotNull(channel.getAuthorities());
+		assertFalse(channel.getAuthorities().isEmpty());
+		assertEquals(2, channel.getAuthorities().size());
+		assertTrue(channel.getAuthorities().contains(channel.getAuthorities().get(0)));
+		assertTrue(channel.getAuthorities().contains(channel.getAuthorities().get(1)));
 	}
 
 	@Test

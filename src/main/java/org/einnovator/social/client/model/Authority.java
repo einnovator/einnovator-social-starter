@@ -30,7 +30,10 @@ public class Authority extends EntityBase {
 	public Authority(Boolean publik) {
 		this.publik = publik;
 	}
-	
+
+	public Authority() {
+	}
+
 	/**
 	 * Get the value of property {@code username}.
 	 *
@@ -169,5 +172,115 @@ public class Authority extends EntityBase {
 			.append("manage", manage)
 			;
 	}
+
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
+		result = prime * result + ((manage == null) ? 0 : manage.hashCode());
+		result = prime * result + ((publik == null) ? 0 : publik.hashCode());
+		result = prime * result + ((read == null) ? 0 : read.hashCode());
+		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		result = prime * result + ((write == null) ? 0 : write.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Authority other = (Authority) obj;
+		if (groupId == null) {
+			if (other.groupId != null)
+				return false;
+		} else if (!groupId.equals(other.groupId))
+			return false;
+		if (manage == null) {
+			if (other.manage != null)
+				return false;
+		} else if (!manage.equals(other.manage))
+			return false;
+		if (publik == null) {
+			if (other.publik != null)
+				return false;
+		} else if (!publik.equals(other.publik))
+			return false;
+		if (read == null) {
+			if (other.read != null)
+				return false;
+		} else if (!read.equals(other.read))
+			return false;
+		if (role == null) {
+			if (other.role != null)
+				return false;
+		} else if (!role.equals(other.role))
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		if (write == null) {
+			if (other.write != null)
+				return false;
+		} else if (!write.equals(other.write))
+			return false;
+		return true;
+	}
+
+	public static Authority user(String username, Boolean read, Boolean write, Boolean manage) {
+		Authority authority = new Authority();
+		authority.username = username;
+		authority.read = read;
+		authority.write = write;
+		authority.manage = manage;
+		return authority;
+	}
+
+	public static Authority publik(Boolean read, Boolean write, Boolean manage) {
+		Authority authority = new Authority();
+		authority.publik = true;
+		authority.read = read;
+		authority.write = write;
+		authority.manage = manage;
+		return authority;
+	}
+
+	public static Authority group(String groupId, Boolean read, Boolean write, Boolean manage) {
+		Authority authority = new Authority();
+		authority.groupId = groupId;
+		authority.read = read;
+		authority.write = write;
+		authority.manage = manage;
+		return authority;
+	}
+
+	public static Authority group(String groupId, String role, Boolean read, Boolean write, Boolean manage) {
+		Authority authority = new Authority();
+		authority.groupId = groupId;
+		authority.role = role;
+		authority.read = read;
+		authority.write = write;
+		authority.manage = manage;
+		return authority;
+	}
+	
+	
+	
 
 }
