@@ -64,9 +64,13 @@ public class Message extends EntityBase {
 
 	private Map<String, List<String>> headers;
 	
-	//private User reportedByUser;
+	private Map<String, Object> createdByUser;
 
-	//private User blockedByUser;
+	private Map<String, Object> lastModifiedByUser;
+
+	private Map<String, Object> reportedByUser;
+
+	private Map<String, Object> blockedByUser;
 	
 	public Message() {
 	}
@@ -506,6 +510,79 @@ public class Message extends EntityBase {
 	 */
 	public void setHeaders(Map<String, List<String>> headers) {
 		this.headers = headers;
+	}
+	
+
+	/**
+	 * Get the value of property {@code createdByUser}.
+	 *
+	 * @return the createdByUser
+	 */
+	public Map<String, Object> getCreatedByUser() {
+		return createdByUser;
+	}
+
+	/**
+	 * Set the value of property {@code createdByUser}.
+	 *
+	 * @param createdByUser the createdByUser to set
+	 */
+	public void setCreatedByUser(Map<String, Object> createdByUser) {
+		this.createdByUser = createdByUser;
+	}
+
+	/**
+	 * Get the value of property {@code lastModifiedByUser}.
+	 *
+	 * @return the lastModifiedByUser
+	 */
+	public Map<String, Object> getLastModifiedByUser() {
+		return lastModifiedByUser;
+	}
+
+	/**
+	 * Set the value of property {@code lastModifiedByUser}.
+	 *
+	 * @param lastModifiedByUser the lastModifiedByUser to set
+	 */
+	public void setLastModifiedByUser(Map<String, Object> lastModifiedByUser) {
+		this.lastModifiedByUser = lastModifiedByUser;
+	}
+
+	/**
+	 * Get the value of property {@code reportedByUser}.
+	 *
+	 * @return the reportedByUser
+	 */
+	public Map<String, Object> getReportedByUser() {
+		return reportedByUser;
+	}
+
+	/**
+	 * Set the value of property {@code reportedByUser}.
+	 *
+	 * @param reportedByUser the reportedByUser to set
+	 */
+	public void setReportedByUser(Map<String, Object> reportedByUser) {
+		this.reportedByUser = reportedByUser;
+	}
+
+	/**
+	 * Get the value of property {@code blockedByUser}.
+	 *
+	 * @return the blockedByUser
+	 */
+	public Map<String, Object> getBlockedByUser() {
+		return blockedByUser;
+	}
+
+	/**
+	 * Set the value of property {@code blockedByUser}.
+	 *
+	 * @param blockedByUser the blockedByUser to set
+	 */
+	public void setBlockedByUser(Map<String, Object> blockedByUser) {
+		this.blockedByUser = blockedByUser;
 	}
 
 	@Override

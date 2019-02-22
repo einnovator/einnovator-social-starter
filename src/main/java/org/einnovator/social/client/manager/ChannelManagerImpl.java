@@ -99,7 +99,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 	
 	@Override
-	@CachePut(value=CACHE_CHANNEL, key="#channel.id")
+	@CachePut(value=CACHE_CHANNEL, key="#channel.uuid")
 	public Channel updateChannel(Channel channel) {
 		try {
 			client.updateChannel(channel);
@@ -113,12 +113,12 @@ public class ChannelManagerImpl implements ChannelManager {
 	
 	@Override
 	@CacheEvict(value=CACHE_CHANNEL, key="#id")
-	public boolean deleteChannel(String channelId) {
+	public boolean deleteChannel(String id) {
 		try {
-			client.deleteChannel(channelId);
+			client.deleteChannel(id);
 			return true;
 		} catch (RuntimeException e) {
-			logger.error(String.format("deleteChannel: %s %s %s", e, channelId));
+			logger.error(String.format("deleteChannel: %s %s %s", e, id));
 			return false;
 		}
 	}
