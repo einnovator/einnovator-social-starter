@@ -11,6 +11,7 @@ import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.social.client.modelx.ChannelOptions;
 import org.einnovator.social.client.modelx.MessageFilter;
+import org.einnovator.util.UriUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -20,6 +21,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpStatusCodeException;
 
 public class ChannelManagerImpl implements ChannelManager {
@@ -110,6 +112,26 @@ public class ChannelManagerImpl implements ChannelManager {
 		}
 	}
 
+	@Override
+	public Channel createOrUpdateChannel(Channel channel) {
+		try {
+			if (!StringUtils.hasText(channel.getUuid())) {
+				URI uri = createChannel(channel);
+				if (uri==null) {
+					return null;
+				}
+				channel.setUuid(UriUtils.extractId(uri));
+				return channel;
+			} else {
+				return updateChannel(channel);
+			}	
+		} catch (RuntimeException e) {
+			logger.error(String.format("createOrUpdateChannel: %s %s", e, channel));
+			return null;
+		}
+
+	}
+	
 	
 	@Override
 	@CacheEvict(value=CACHE_CHANNEL, key="#id")

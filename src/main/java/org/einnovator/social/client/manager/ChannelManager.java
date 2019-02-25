@@ -21,9 +21,26 @@ public interface ChannelManager {
 
 	Page<Channel> listChannels(ChannelFilter filter, Pageable pageable);
 
+	/**
+	 * Create Channel.
+	 * 
+	 * @param channel the {@code Channel}
+	 * @return the {@code URI} for te created {@code Channel}.
+	 */
+
 	URI createChannel(Channel channel);
 	
 	Channel updateChannel(Channel channel);
+	
+
+	/**
+	 * Create or Update Channel.
+	 * 
+	 * If {@code Channel.uuid} has text is assumed to be an edit. Otherwise a create. A single call is made to seerver.
+	 * @param channel the {@code Channel}
+	 * @return the {@code Channel} with {@code uuid} property set; or null if error.
+	 */
+	Channel createOrUpdateChannel(Channel channel);
 	
 	boolean deleteChannel(String id);
 	
@@ -44,5 +61,6 @@ public interface ChannelManager {
 	void clearCache();
 	
 	Cache getChannelCache();
+
 
 }

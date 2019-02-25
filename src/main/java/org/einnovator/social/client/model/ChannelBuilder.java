@@ -9,6 +9,8 @@ import org.einnovator.util.model.Ref;
 
 public class ChannelBuilder {
 
+	private String uuid;
+	
 	private ChannelType type;
 
 	private String owner;
@@ -26,7 +28,12 @@ public class ChannelBuilder {
 	private Message head;
 
 	private List<Authority> authorities;
-	
+
+	public ChannelBuilder uuid(String uuid) {
+		this.uuid = uuid;
+		return this;
+	}
+
 	public ChannelBuilder type(ChannelType type) {
 		this.type = type;
 		return this;
@@ -88,6 +95,7 @@ public class ChannelBuilder {
 
 	public Channel build() {
 		Channel channel = new Channel();
+		channel.setUuid(uuid);
 		channel.setType(type);
 		channel.setOwner(owner);
 		channel.setName(name);
