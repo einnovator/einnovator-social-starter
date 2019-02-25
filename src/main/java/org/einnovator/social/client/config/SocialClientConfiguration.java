@@ -1,4 +1,4 @@
-package org.einnovator.social.client;
+package org.einnovator.social.client.config;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

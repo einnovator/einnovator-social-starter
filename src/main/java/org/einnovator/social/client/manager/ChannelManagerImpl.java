@@ -11,6 +11,7 @@ import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.social.client.modelx.ChannelOptions;
 import org.einnovator.social.client.modelx.MessageFilter;
+import org.einnovator.util.CacheUtils;
 import org.einnovator.util.UriUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
@@ -51,21 +52,29 @@ public class ChannelManagerImpl implements ChannelManager {
 
 
 	@Override
-	@Cacheable(value=CACHE_CHANNEL, key="#id")
 	public Channel getChannel(String id) {
+		if (id==null) {
+			return null;
+		}
+			
 		try {
-			Channel channel = client.getChannel(id);		
+			Channel channel = CacheUtils.getCacheValue(Channel.class, getChannelCache(), id);
+			if (channel!=null) {
+				return channel;
+			}	
+			channel = client.getChannel(id);		
 			if (channel==null) {
 				logger.error(String.format("getChannel: %s", id));
+				return null;
 			}
-			return channel;
+			return CacheUtils.putCacheValue(channel, getChannelCache(), id);
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
-				logger.error(String.format("getChannel: %s %s %s", e, id));
+				logger.error(String.format("getChannel: %s %s", e, id));
 			}
 			return null;
 		} catch (RuntimeException e) {
-			logger.error(String.format("getChannel: %s %s %s", e, id));
+			logger.error(String.format("getChannel: %s %s", e, id));
 			return null;
 		}
 	}

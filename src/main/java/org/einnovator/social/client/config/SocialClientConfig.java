@@ -1,11 +1,13 @@
-package org.einnovator.social.client;
+package org.einnovator.social.client.config;
 
 
+import org.einnovator.social.client.SocialClient;
 import org.einnovator.social.client.manager.ChannelManager;
 import org.einnovator.social.client.manager.ChannelManagerImpl;
 import org.einnovator.social.client.web.ChannelRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -59,8 +61,8 @@ public class SocialClientConfig {
 	}
 
 	@Bean
-	public ChannelManager channelManager() {
-		return new ChannelManagerImpl();
+	public ChannelManager channelManager(CacheManager cacheManager) {
+		return new ChannelManagerImpl(cacheManager);
 	}
 	
 	@Bean

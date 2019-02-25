@@ -69,6 +69,9 @@ public class ChannelRestController extends ControllerBase {
 		try {
 			setupToken(principal);
 			Channel channel = manager.getChannel(id);
+			if (channel==null) {
+				return badrequest("getChannel", response);				
+			}
 			return ok(channel, "getChannel", response);
 		} catch (RuntimeException e) {
 			return status("getChannel", e, response, id);
@@ -110,9 +113,9 @@ public class ChannelRestController extends ControllerBase {
 		try {
 			setupToken(principal);
 			Page<Message> page = manager.listMessages(cid, filter, options.toPageRequest());
-			return ok(page, "deleteChannel", response);
+			return ok(page, "listMessagesFor", response);
 		} catch (RuntimeException e) {
-			return status("deleteChannel", e, response, cid);
+			return status("listMessagesFor", e, response, cid);
 		}	
 	}
 
@@ -125,7 +128,7 @@ public class ChannelRestController extends ControllerBase {
 			URI location =  manager.postMessage(cid, msg);
 			return created(location, "postMessage", response, location);
 		} catch (RuntimeException e) {
-			return status("createChannel", e, response);
+			return status("postMessage", e, response, msg);
 		}
 	}
 
@@ -154,7 +157,7 @@ public class ChannelRestController extends ControllerBase {
 			}
 			return nocontent("deleteMessage", response);
 		} catch (RuntimeException e) {
-			return status("deleteChannel", e, response, id);
+			return status("deleteMessage", e, response, id);
 		}		
 	}
 

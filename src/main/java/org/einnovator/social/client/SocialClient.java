@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.einnovator.social.client.config.SocialClientConfiguration;
+import org.einnovator.social.client.config.SocialEndpoints;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.modelx.ChannelFilter;

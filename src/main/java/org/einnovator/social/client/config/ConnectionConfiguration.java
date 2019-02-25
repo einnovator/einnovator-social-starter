@@ -1,4 +1,4 @@
-package org.einnovator.social.client;
+package org.einnovator.social.client.config;
 
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;

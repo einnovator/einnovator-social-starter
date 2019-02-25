@@ -10,6 +10,8 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.UUID;
 
+import org.einnovator.social.client.config.SocialClientConfig;
+import org.einnovator.social.client.config.SocialClientConfiguration;
 import org.einnovator.social.client.model.Authority;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.ChannelBuilder;
