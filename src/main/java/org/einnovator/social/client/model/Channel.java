@@ -5,6 +5,7 @@ import java.util.List;
 import org.einnovator.util.model.EntityBase;
 import org.einnovator.util.model.Ref;
 import org.einnovator.util.model.ToStringCreator;
+import org.einnovator.util.security.Authority;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -29,8 +30,6 @@ public class Channel extends EntityBase {
 
 	private Message head;
 
-	//private User ownerUser;
-	
 	private List<Authority> authorities;
 
 	public Channel() {

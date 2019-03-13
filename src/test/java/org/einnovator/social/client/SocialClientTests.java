@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import org.einnovator.social.client.config.SocialClientConfig;
 import org.einnovator.social.client.config.SocialClientConfiguration;
-import org.einnovator.social.client.model.Authority;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.ChannelBuilder;
 import org.einnovator.social.client.model.Message;
@@ -20,6 +19,7 @@ import org.einnovator.social.client.model.MessageBuilder;
 import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.sso.client.support.SsoTestHelper;
 import org.einnovator.util.UriUtils;
+import org.einnovator.util.security.Authority;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;

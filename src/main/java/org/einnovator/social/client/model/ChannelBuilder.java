@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.einnovator.util.model.Ref;
+import org.einnovator.util.security.Authority;
 
 public class ChannelBuilder {
 
