@@ -123,22 +123,16 @@ public class ChannelManagerImpl implements ChannelManager {
 
 	@Override
 	public Channel createOrUpdateChannel(Channel channel) {
-		try {
-			if (!StringUtils.hasText(channel.getUuid())) {
-				URI uri = createChannel(channel);
-				if (uri==null) {
-					return null;
-				}
-				channel.setUuid(UriUtils.extractId(uri));
-				return channel;
-			} else {
-				return updateChannel(channel);
-			}	
-		} catch (RuntimeException e) {
-			logger.error(String.format("createOrUpdateChannel: %s %s", e, channel));
-			return null;
+		if (channel.getUuid()==null) {
+			URI uri = createChannel(channel);
+			if (uri==null) {
+				return null;
+			}
+			channel.setUuid(UriUtils.extractId(uri));
+			return channel;
+		} else {
+			return updateChannel(channel);
 		}
-
 	}
 	
 	
