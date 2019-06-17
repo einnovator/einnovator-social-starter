@@ -10,9 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * A {@code Impression}.
+ * A {@code Reaction}.
  *
- * @author Jorge Simao {@code {jorge.simao@einnovator.org}}
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -28,22 +27,12 @@ public class Reaction extends EntityBase {
 	//
 	
 	/**
-	 * Create instance of {@code DocumentVote}.
+	 * Create instance of {@code Reaction}.
 	 *
 	 */
 	public Reaction() {
 	}
 	
-	/**
-	 * Create instance of {@code Vote}.
-	 *
-	 * @param account
-	 * @param value
-	 */
-	public Reaction(String createdBy, int value) {
-		this.setCreatedBy(createdBy);
-	}	
-
 	//
 	// Getters and setters
 	//

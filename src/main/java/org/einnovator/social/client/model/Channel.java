@@ -204,26 +204,6 @@ public class Channel extends EntityBase {
 		this.authorities = authorities;
 	}
 
-	
-	/**
-	 * Get the value of property {@code ownerUser}.
-	 *
-	 * @return the ownerUser
-	 */
-	//public User getOwnerUser() {
-	//	return ownerUser;
-	//}
-
-	/**
-	 * Set the value of property {@code ownerUser}.
-	 *
-	 * @param ownerUser the ownerUser to set
-	 */
-	//public void setOwnerUser(User ownerUser) {
-	//	this.ownerUser = ownerUser;
-	//}
-	
-	
 
 	@Override
 	public ToStringCreator toString1(ToStringCreator creator) {
