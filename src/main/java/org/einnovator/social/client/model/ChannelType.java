@@ -2,14 +2,16 @@ package org.einnovator.social.client.model;
 
 
 public enum ChannelType {
-	MULTI("Multi"),
-	COMMENTS("Comments"),
-	QUESTION("Question"),
-	DIRECT("Direct"),
-	PERSONAL("Personal"),
 	MAIL("Mail"),
-	EXTERNAL("External"),
+	MBOX("MBox"),
+	FORUM("Forum"),
+	CHAT("Chat"),
+	DIRECT("Direct"),
+	COMMENTS("Comments"),
+	PERSONAL("Personal"),
 	BLOG("Blog"),
+	FEED("Feed"),
+	EXTERNAL("External")
 	;
 	
 	private final String displayValue;
