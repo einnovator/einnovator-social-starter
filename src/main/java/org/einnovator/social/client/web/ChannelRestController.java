@@ -57,6 +57,9 @@ public class ChannelRestController extends ControllerBase {
 		try {
 			setupToken(principal);
 			URI location =  manager.createChannel(channel);
+			if (location==null) {
+				return badrequest("createChannel", response, channel);
+			}
 			return created(location, "createChannel", response, channel);
 		} catch (RuntimeException e) {
 			return status("createChannel", e, response, channel);
@@ -70,7 +73,7 @@ public class ChannelRestController extends ControllerBase {
 			setupToken(principal);
 			Channel channel = manager.getChannel(id);
 			if (channel==null) {
-				return badrequest("getChannel", response);				
+				return notfound("getChannel", response);				
 			}
 			return ok(channel, "getChannel", response);
 		} catch (RuntimeException e) {
@@ -126,6 +129,9 @@ public class ChannelRestController extends ControllerBase {
 		try {
 			setupToken(principal);
 			URI location =  manager.postMessage(cid, msg);
+			if (location==null) {
+				return badrequest("postMessage", response, msg);
+			}
 			return created(location, "postMessage", response, location);
 		} catch (RuntimeException e) {
 			return status("postMessage", e, response, msg);
