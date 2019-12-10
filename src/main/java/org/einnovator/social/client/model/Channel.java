@@ -1,5 +1,8 @@
 package org.einnovator.social.client.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.einnovator.util.model.EntityBase;
@@ -14,25 +17,25 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Channel extends EntityBase {
 
-	private ChannelType type;
+	protected ChannelType type;
 
-	private String owner;
+	protected String owner;
 	
-	private String name;
+	protected String name;
 
-	private String purpose;
+	protected String purpose;
 
-	private String img;
+	protected String img;
 
-	private String thumbnail;
+	protected String thumbnail;
 
-	private Ref ref;
+	protected Ref ref;
 
-	private Message head;
+	protected Message head;
 
-	private List<Authority> authorities;
+	protected List<Authority> authorities;
 
-	private Boolean publik;
+	protected Boolean publik;
 	
 	public Channel() {
 	}
@@ -223,6 +226,77 @@ public class Channel extends EntityBase {
 	 */
 	public void setPublic(Boolean publik) {
 		this.publik = publik;
+	}
+	
+	// With
+	
+	public Channel withUuid(String uuid) {
+		this.uuid = uuid;
+		return this;
+	}
+
+	public Channel withType(ChannelType type) {
+		this.type = type;
+		return this;
+	}
+
+	public Channel withOwner(String owner) {
+		this.owner = owner;
+		return this;
+	}
+
+	public Channel withName(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public Channel withPurpose(String purpose) {
+		this.purpose = purpose;
+		return this;
+	}
+
+	public Channel withImg(String img) {
+		this.img = img;
+		return this;
+	}
+
+	public Channel withThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+		return this;
+	}
+
+	public Channel withRef(Ref ref) {
+		this.ref = ref;
+		return this;
+	}
+
+	public Channel withHead(Message head) {
+		this.head = head;
+		return this;
+	}
+	
+	public Channel withPublic(Boolean publik) {
+		this.publik = publik;
+		return this;
+	}
+
+	public Channel withAuthorities(Authority... authorities) {
+		if (this.authorities==null) {
+			this.authorities = new ArrayList<>();
+		}
+		this.authorities.addAll(Arrays.asList(authorities));
+		return this;
+	}
+
+	
+	public Channel withAuthorities(Collection<Authority> authorities) {
+		if (this.authorities==null) {
+			this.authorities = new ArrayList<>();
+		}
+		if (authorities!=null) {
+			this.authorities.addAll(authorities);			
+		}
+		return this;
 	}
 
 	@Override

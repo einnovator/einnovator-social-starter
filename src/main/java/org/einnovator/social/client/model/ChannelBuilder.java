@@ -3,32 +3,11 @@ package org.einnovator.social.client.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import org.einnovator.util.model.Ref;
 import org.einnovator.util.security.Authority;
 
-public class ChannelBuilder {
-
-	private String uuid;
-	
-	private ChannelType type;
-
-	private String owner;
-	
-	private String name;
-
-	private String purpose;
-
-	private String img;
-
-	private String thumbnail;
-
-	private Ref ref;
-
-	private Message head;
-
-	private List<Authority> authorities;
+public class ChannelBuilder extends Channel {
 
 	public ChannelBuilder uuid(String uuid) {
 		this.uuid = uuid;
@@ -74,6 +53,11 @@ public class ChannelBuilder {
 		this.head = head;
 		return this;
 	}
+	
+	public ChannelBuilder publik(Boolean publik) {
+		this.publik = publik;
+		return this;
+	}
 
 	public ChannelBuilder authorities(Authority... authorities) {
 		if (this.authorities==null) {
@@ -105,6 +89,7 @@ public class ChannelBuilder {
 		channel.setThumbnail(thumbnail);
 		channel.setRef(ref);
 		channel.setHead(head);
+		channel.setPublic(publik);
 		channel.setAuthorities(authorities);
 		return channel;
 	}
