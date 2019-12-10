@@ -2,6 +2,7 @@ package org.einnovator.social.client.web;
 
 import java.net.URI;
 import java.security.Principal;
+import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,8 +14,10 @@ import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.social.client.modelx.MessageFilter;
 import org.einnovator.util.PageOptions;
 import org.einnovator.util.PageUtil;
+import org.einnovator.util.UriUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriTemplate;
 
 
 
@@ -49,7 +53,6 @@ public class ChannelRestController extends ControllerBase {
 		}
 	}
 	
-
 	
 	@PostMapping
 	public ResponseEntity<Void> createChannel(@RequestBody Channel channel, HttpServletRequest request, @RequestParam(required=false) Boolean publish,
@@ -166,6 +169,29 @@ public class ChannelRestController extends ControllerBase {
 			return status("deleteMessage", e, response, id);
 		}		
 	}
+	
+	//
+	// Comments
+	//
+	
+
+	@PostMapping("/{cid:.*}/message/{mid:.*}/comment")
+	public ResponseEntity<Void> postComment(@PathVariable("cid") String cid, @PathVariable("mid") String mid, 
+			@RequestBody Message comment, BindingResult errors,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			URI location = manager.postComment(cid, mid, comment); 	
+			if (location==null) {
+				return badrequest("postComment", response, comment);				
+			}
+			URI location2 = new UriTemplate(request.getRequestURI() + "/{id}").expand(UriUtils.extractId(location));
+			return created(location2, "postComment", response);
+		} catch (RuntimeException e) {
+			return badrequest("postComment", response, e, comment);
+		}
+	}
+
 
 	protected void setupToken(Principal principal) {
 		

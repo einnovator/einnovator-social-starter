@@ -32,6 +32,8 @@ public class Channel extends EntityBase {
 
 	private List<Authority> authorities;
 
+	private Boolean publik;
+	
 	public Channel() {
 	}
 
@@ -204,6 +206,24 @@ public class Channel extends EntityBase {
 		this.authorities = authorities;
 	}
 
+	/**
+	 * Get the value of property {@code publik}.
+	 *
+	 * @return the publik
+	 */
+	public Boolean getPublic() {
+		return publik;
+	}
+
+
+	/**
+	 * Set the value of property {@code publik}.
+	 *
+	 * @param publik the value of property publik
+	 */
+	public void setPublic(Boolean publik) {
+		this.publik = publik;
+	}
 
 	@Override
 	public ToStringCreator toString1(ToStringCreator creator) {
@@ -214,6 +234,7 @@ public class Channel extends EntityBase {
 				.append("img", img)
 				.append("thumbnail", thumbnail)
 				.append("head", head)
+				.append("public", publik)
 				.append("authorities", authorities)
 				;
 	}

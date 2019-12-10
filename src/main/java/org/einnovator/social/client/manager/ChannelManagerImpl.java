@@ -195,7 +195,7 @@ public class ChannelManagerImpl implements ChannelManager {
 		return cache;
 	}
 
-	/* (non-Javadoc)
+	/*
 	 * @see org.einnovator.social.client.manager.ChannelManager#findMessages(org.einnovator.social.client.model.Channel, org.einnovator.social.client.modelx.MessageFilter, org.springframework.data.domain.Pageable)
 	 */
 	@Override
@@ -208,7 +208,7 @@ public class ChannelManagerImpl implements ChannelManager {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
 	 * @see org.einnovator.social.client.manager.ChannelManager#postMessage(org.einnovator.social.client.model.Channel, org.einnovator.social.client.model.Message)
 	 */
 	@Override
@@ -221,7 +221,7 @@ public class ChannelManagerImpl implements ChannelManager {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
 	 * @see org.einnovator.social.client.manager.ChannelManager#findMessage(org.einnovator.social.client.model.Channel, java.lang.String)
 	 */
 	@Override
@@ -243,7 +243,7 @@ public class ChannelManagerImpl implements ChannelManager {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
 	 * @see org.einnovator.social.client.manager.ChannelManager#updateMessage(org.einnovator.social.client.model.Channel, org.einnovator.social.client.model.Message)
 	 */
 	@Override
@@ -257,7 +257,7 @@ public class ChannelManagerImpl implements ChannelManager {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
 	 * @see org.einnovator.social.client.manager.ChannelManager#deleteMessage(org.einnovator.social.client.model.Channel, java.lang.String)
 	 */
 	@Override
@@ -271,7 +271,7 @@ public class ChannelManagerImpl implements ChannelManager {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
 	 * @see org.einnovator.social.client.manager.ChannelManager#postComment(org.einnovator.social.client.model.Channel, java.lang.String, org.einnovator.social.client.model.Message)
 	 */
 	@Override
