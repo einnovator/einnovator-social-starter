@@ -175,7 +175,7 @@ public class ChannelRestController extends ControllerBase {
 	//
 	
 
-	@PostMapping("/{cid:.*}/message/{mid:.*}/comment")
+	@PostMapping({"/{cid:.*}/message/{mid:.*}/comment", "/{cid:.*}/message/{mid:.*}/message"})
 	public ResponseEntity<Void> postComment(@PathVariable("cid") String cid, @PathVariable("mid") String mid, 
 			@RequestBody Message comment, BindingResult errors,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
