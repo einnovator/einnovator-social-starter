@@ -143,7 +143,7 @@ public class ChannelManagerImpl implements ChannelManager {
 			client.deleteChannel(id);
 			return true;
 		} catch (RuntimeException e) {
-			logger.error(String.format("deleteChannel: %s %s %s", e, id));
+			logger.error(String.format("deleteChannel: %s %s", e, id));
 			return false;
 		}
 	}
