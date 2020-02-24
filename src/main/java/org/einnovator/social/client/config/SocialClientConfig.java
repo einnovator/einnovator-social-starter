@@ -48,7 +48,7 @@ public class SocialClientConfig {
 	}
 	
 	@Bean
-	public OAuth2RestTemplate metaRestTemplate() {
+	public OAuth2RestTemplate socialRestTemplate() {
 		OAuth2RestTemplate template;
 		template = new OAuth2RestTemplate(oauth2ResourceDetails, oauth2ClientContext);			
 		template.setRequestFactory(clientHttpRequestFactory());
