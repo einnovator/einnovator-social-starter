@@ -81,6 +81,7 @@ abstract public class ProtectedEntity extends OwnedEntity {
 	 * Set the value of property {@code sharing}.
 	 *
 	 * @param sharing the value of property sharing
+	 * @return this {@code ProtectedEntity}
 	 */
 	public ProtectedEntity withSharing(ShareType sharing) {
 		this.sharing = sharing;
@@ -91,6 +92,7 @@ abstract public class ProtectedEntity extends OwnedEntity {
 	 * Set the value of property {@code authorities}.
 	 *
 	 * @param authorities the value of property authorities
+	 * @return this {@code ProtectedEntity}
 	 */
 	public ProtectedEntity withAuthorities(List<Authority> authorities) {
 		this.authorities = authorities;
@@ -101,6 +103,7 @@ abstract public class ProtectedEntity extends OwnedEntity {
 	 * Set the value of property {@code authorities}.
 	 *
 	 * @param authorities a variadic array of authorities
+	 * @return this {@code ProtectedEntity}
 	 */
 	public ProtectedEntity withAuthorities(Authority... authorities) {
 		if (this.authorities==null) {

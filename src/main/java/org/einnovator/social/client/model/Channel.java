@@ -232,6 +232,7 @@ public class Channel extends ProtectedEntity {
 	 * Set the value of property {@code purpose}.
 	 *
 	 * @param purpose the value of property purpose
+	 * @return this {@code Channel}
 	 */
 	public Channel withPurpose(String purpose) {
 		this.purpose = purpose;
@@ -254,6 +255,7 @@ public class Channel extends ProtectedEntity {
 	 * Set the value of property {@code thumbnail}.
 	 *
 	 * @param thumbnail the value of property thumbnail
+	 * @return this {@code Channel}
 	 */
 	public Channel withThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
@@ -285,6 +287,12 @@ public class Channel extends ProtectedEntity {
 	}
 
 
+	/**
+	 * Set the value of property {@code attachments}.
+	 *
+	 * @param attachments the value of property attachments
+	 * @return this {@code Channel}
+	 */
 	public Channel withAttachments(Attachment... attachments) {
 		if (this.attachments==null) {
 			this.attachments = new ArrayList<>();

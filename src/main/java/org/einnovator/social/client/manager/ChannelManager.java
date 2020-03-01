@@ -146,19 +146,20 @@ public interface ChannelManager {
 	 * @param context optional {@code SsoClientContext}
 	 * @return the {@code Message}, or null if not found or request failed
 	 */
-	Message getMessage(String channelId, String id, MessageOptions options, SocialClientContext context);
+	Message getMessage(String channelId, String msgId, MessageOptions options, SocialClientContext context);
 	
 	/**
 	 * Update existing {@code Message} posted to a {@code Channel}.
 	 * 
 	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner.
 	 * 
-	 * @param channel the {@code Channel}
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param message the message to be update (UUID property should be set)
 	 * @param options optional {@code RequestOptions}
 	 * @param context optional {@code SsoClientContext}
 	 * @return the same {@code Message}, or null if request failed
 	 */
-	Message updateMessage(String channelId, Message msg, RequestOptions options, SocialClientContext context);
+	Message updateMessage(String channelId, Message message, RequestOptions options, SocialClientContext context);
 
 	/**
 	 * Delete {@code Message} posted to a {@code Channel}.
@@ -172,7 +173,7 @@ public interface ChannelManager {
 	 * @param context optional {@code SsoClientContext}
 	 * @return true if {@code Message} was deleted, or false if request failed
 	 */
-	boolean deleteMessage(String channelId, String id, RequestOptions options, SocialClientContext context);
+	boolean deleteMessage(String channelId, String msgId, RequestOptions options, SocialClientContext context);
 
 	/**
 	 * Post a {@code Message} as child to other {@code Message} previous posted to a {@code Channel}.
@@ -181,11 +182,12 @@ public interface ChannelManager {
 	 * 
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msgId the identifier of the parent {@code Message} (UUID)
+	 * @param message the {@code Message} to post
 	 * @param options optional {@code RequestOptions}
 	 * @param context optional {@code SsoClientContext}
 	 * @return the location {@code URI} for the created {@code Message}, or null if request failed
 	 */
-	URI postChildMessage(String channelId, String msgId, Message comment, RequestOptions options, SocialClientContext context);
+	URI postChildMessage(String channelId, String msgId, Message message, RequestOptions options, SocialClientContext context);
 
 	/**
 	 * Post a {@code Message} of type {@code COMMENT} as child to other {@code Message} previous posted to a {@code Channel}.
@@ -194,6 +196,7 @@ public interface ChannelManager {
 	 * 
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msgId the identifier of the parent {@code Message} (UUID)
+	 * @param comment the child {@code Message} to post
 	 * @param options optional {@code RequestOptions}
 	 * @param context optional {@code SsoClientContext}
 	 * @return the location {@code URI} for the created {@code Message}, or null if request failed
@@ -209,6 +212,7 @@ public interface ChannelManager {
 	 * 
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msgId the identifier of the parent {@code Message} (UUID)
+	 * @param answer the child {@code Message} to post
 	 * @param options optional {@code RequestOptions}
 	 * @param context optional {@code SsoClientContext}
 	 * @return the location {@code URI} for the created {@code Message}, or null if request failed

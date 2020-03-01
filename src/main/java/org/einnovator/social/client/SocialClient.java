@@ -58,8 +58,6 @@ import org.springframework.web.client.RestClientException;
  * <p>Requests use a session-scoped  {@code OAuth2ClientContext} if running in a web-environment.
  * <p>If the invoking thread does not have an associated web session, the default behavior is to fallback to use a {@code OAuth2ClientContext} 
  * with client credentials. This can be disabled by setting property {@link #web} to false.
- * <p>Method {@link #register()} can be used to register custom application roles with server.
- * <p>This is automatically performed by if configuration property {@code sso.registration.roles.auto} is set to true.
  * 
  * @see org.einnovator.social.client.manager.ChannelManager
  * 
@@ -83,6 +81,8 @@ public class SocialClient {
 	private OAuth2RestTemplate restTemplate0;
 
 	private ClientHttpRequestFactory clientHttpRequestFactory;
+
+	private boolean web = true;
 
 	
 	/**
@@ -113,6 +113,18 @@ public class SocialClient {
 		this.config = config;
 	}
 	
+	/**
+	 * Create instance of {@code SocialClient}.
+	 *
+	 * @param restTemplate the {@code OAuth2RestTemplate} used for HTTP transport
+	 * @param config the {@code SocialClientConfiguration}
+	 * @param web true if auto-detect web-environment 
+	 */
+	public SocialClient(OAuth2RestTemplate restTemplate, SocialClientConfiguration config, boolean web) {
+		this(restTemplate, config);
+		this.web = web;
+	}
+
 	//
 	// Getters/Setters
 	//
@@ -153,7 +165,60 @@ public class SocialClient {
 		this.restTemplate = restTemplate;
 	}
 
+	/**
+	 * Get the value of property {@code oauth2ClientContext0}.
+	 *
+	 * @return the oauth2ClientContext0
+	 */
+	public OAuth2ClientContext getOauth2ClientContext0() {
+		return oauth2ClientContext0;
+	}
 
+	/**
+	 * Set the value of property {@code oauth2ClientContext0}.
+	 *
+	 * @param oauth2ClientContext0 the value of property oauth2ClientContext0
+	 */
+	public void setOauth2ClientContext0(OAuth2ClientContext oauth2ClientContext0) {
+		this.oauth2ClientContext0 = oauth2ClientContext0;
+	}
+
+	/**
+	 * Get the value of property {@code restTemplate0}.
+	 *
+	 * @return the restTemplate0
+	 */
+	public OAuth2RestTemplate getRestTemplate0() {
+		return restTemplate0;
+	}
+
+	/**
+	 * Set the value of property {@code restTemplate0}.
+	 *
+	 * @param restTemplate0 the value of property restTemplate0
+	 */
+	public void setRestTemplate0(OAuth2RestTemplate restTemplate0) {
+		this.restTemplate0 = restTemplate0;
+	}
+
+	/**
+	 * Get the value of property {@code web}.
+	 *
+	 * @return the web
+	 */
+	public boolean isWeb() {
+		return web;
+	}
+
+	/**
+	 * Set the value of property {@code web}.
+	 *
+	 * @param web the value of property web
+	 */
+	public void setWeb(boolean web) {
+		this.web = web;
+	}
+	
 	//
 	// Channel
 	//
@@ -329,15 +394,16 @@ public class SocialClient {
 	 * 
 	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner.
 	 * 
-	 * @param channel the {@code Channel}
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param message the message to be update (UUID property should be set)
 	 * @param options optional {@code RequestOptions}
 	 * @param context optional {@code SsoClientContext}
 	 * @throws RestClientException if request fails
 	 */
-	public void updateMessage(String channelId, Message msg, RequestOptions options, SocialClientContext context) {
-		URI uri = makeURI(SocialEndpoints.message(channelId, msg.getUuid(), config));
+	public void updateMessage(String channelId, Message message, RequestOptions options, SocialClientContext context) {
+		URI uri = makeURI(SocialEndpoints.message(channelId, message.getUuid(), config));
 		uri = processURI(uri, options);
-		RequestEntity<Message> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(msg);
+		RequestEntity<Message> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(message);
 		exchange(request, Message.class, context);
 	}
 
@@ -367,6 +433,7 @@ public class SocialClient {
 	 * 
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msgId the identifier of the parent {@code Message} (UUID)
+	 * @param message the {@code Message} to post
 	 * @param options optional {@code RequestOptions}
 	 * @param context optional {@code SsoClientContext}
 	 * @return the location {@code URI} for the created {@code Message}
@@ -390,7 +457,7 @@ public class SocialClient {
 		if (context!=null && context.getRestTemplate()!=null) {
 			restTemplate = context.getRestTemplate();
 		} else {
-			if (WebUtil.getHttpServletRequest()==null && this.restTemplate0!=null) {
+			if (WebUtil.getHttpServletRequest()==null && this.restTemplate0!=null && web) {
 				restTemplate = this.restTemplate0;
 			}			
 		}

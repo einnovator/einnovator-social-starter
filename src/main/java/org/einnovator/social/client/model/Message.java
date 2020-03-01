@@ -309,6 +309,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code type}.
 	 *
 	 * @param type the value of property type
+	 * @return this {@code Message}
 	 */
 	public Message withType(MessageType type) {
 		this.type = type;
@@ -319,6 +320,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code status}.
 	 *
 	 * @param status the value of property status
+	 * @return this {@code Message}
 	 */
 	public Message withStatus(MessageStatus status) {
 		this.status = status;
@@ -329,6 +331,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code title}.
 	 *
 	 * @param title the value of property title
+	 * @return this {@code Message}
 	 */
 	public Message withTitle(String title) {
 		this.title = title;
@@ -339,6 +342,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code content}.
 	 *
 	 * @param content the value of property content
+	 * @return this {@code Message}
 	 */
 	public Message withContent(String content) {
 		this.content = content;
@@ -349,6 +353,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code size}.
 	 *
 	 * @param size the value of property size
+	 * @return this {@code Message}
 	 */
 	public Message withSize(Integer size) {
 		this.size = size;
@@ -359,6 +364,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code attachments}.
 	 *
 	 * @param attachments the value of property attachments
+	 * @return this {@code Message}
 	 */
 	public Message withAttachments(List<Attachment> attachments) {
 		this.attachments = attachments;
@@ -369,6 +375,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code tree}.
 	 *
 	 * @param tree the value of property tree
+	 * @return this {@code Message}
 	 */
 	public Message withTree(List<Message> tree) {
 		this.tree = tree;
@@ -379,6 +386,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code watchCount}.
 	 *
 	 * @param watchCount the value of property watchCount
+	 * @return this {@code Message}
 	 */
 	public Message withWatchCount(Long watchCount) {
 		this.watchCount = watchCount;
@@ -389,6 +397,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code reported}.
 	 *
 	 * @param reported the value of property reported
+	 * @return this {@code Message}
 	 */
 	public Message withReported(Boolean reported) {
 		this.reported = reported;
@@ -399,6 +408,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code reportedBy}.
 	 *
 	 * @param reportedBy the value of property reportedBy
+	 * @return this {@code Message}
 	 */
 	public Message withReportedBy(String reportedBy) {
 		this.reportedBy = reportedBy;
@@ -409,6 +419,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code reportedDate}.
 	 *
 	 * @param reportedDate the value of property reportedDate
+	 * @return this {@code Message}
 	 */
 	public Message withReportedDate(String reportedDate) {
 		this.reportedDate = reportedDate;
@@ -419,6 +430,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code reportedByUser}.
 	 *
 	 * @param reportedByUser the value of property reportedByUser
+	 * @return this {@code Message}
 	 */
 	public Message withReportedByUser(Object reportedByUser) {
 		this.reportedByUser = reportedByUser;
@@ -429,6 +441,7 @@ public class Message extends EntityBase {
 	 * Set the value of property {@code reactions}.
 	 *
 	 * @param reactions the value of property reactions
+	 * @return this {@code Message}
 	 */
 	public Message withReactions(List<Reaction> reactions) {
 		this.reactions = reactions;

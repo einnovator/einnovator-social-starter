@@ -168,6 +168,7 @@ public class Attachment extends EntityBase {
 	 * Set the value of property {@code size}.
 	 *
 	 * @param size the value of property size
+	 * @return this {@code Attachment}
 	 */
 	public Attachment withSize(Long size) {
 		this.size = size;

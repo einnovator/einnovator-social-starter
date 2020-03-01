@@ -119,10 +119,15 @@ public class OwnedEntity extends EntityBase {
 		this.group = group;
 	}
 
+	//
+	// With
+	//
+
 	/**
 	 * Set the value of property {@code owner}.
 	 *
 	 * @param owner the value of property owner
+	 * @return this {@code OwnedEntity}
 	 */
 	public OwnedEntity withOwner(String owner) {
 		this.owner = owner;
@@ -130,14 +135,11 @@ public class OwnedEntity extends EntityBase {
 	}
 	
 
-	//
-	// With
-	//
-	
 	/**
 	 * Set the value of property {@code ownerUser}.
 	 *
 	 * @param ownerUser the value of property ownerUser
+	 * @return this {@code OwnedEntity}
 	 */
 	public OwnedEntity withOwnerUser(Object ownerUser) {
 		this.ownerUser = ownerUser;
@@ -148,6 +150,7 @@ public class OwnedEntity extends EntityBase {
 	 * Set the value of property {@code groupId}.
 	 *
 	 * @param groupId the value of property groupId
+	 * @return this {@code OwnedEntity}
 	 */
 	public OwnedEntity withGroupId(String groupId) {
 		this.groupId = groupId;
@@ -158,6 +161,7 @@ public class OwnedEntity extends EntityBase {
 	 * Set the value of property {@code group}.
 	 *
 	 * @param group the value of property group
+	 * @return this {@code OwnedEntity}
 	 */
 	public OwnedEntity withGroup(Object group) {
 		this.group = group;
