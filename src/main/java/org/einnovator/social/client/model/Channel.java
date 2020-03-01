@@ -1,26 +1,28 @@
 package org.einnovator.social.client.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
-import org.einnovator.util.model.EntityBase;
 import org.einnovator.util.model.Ref;
 import org.einnovator.util.model.ToStringCreator;
-import org.einnovator.util.security.Authority;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * A Channel.
+ * 
+ * @author support@einnovator.org
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Channel extends EntityBase {
+public class Channel extends ProtectedEntity {
 
 	protected ChannelType type;
 
-	protected String owner;
-	
+	protected ChannelStatus status;
+
 	protected String name;
 
 	protected String purpose;
@@ -31,14 +33,18 @@ public class Channel extends EntityBase {
 
 	protected Ref ref;
 
-	protected Message head;
-
-	protected List<Authority> authorities;
-
-	protected Boolean publik;
+	private List<Attachment> attachments;
 	
+	/**
+	 * Create instance of {@code Channel}.
+	 *
+	 */
 	public Channel() {
 	}
+
+	//
+	// Getters/Setters
+	//
 
 	/**
 	 * Get the value of property {@code type}.
@@ -52,30 +58,30 @@ public class Channel extends EntityBase {
 	/**
 	 * Set the value of property {@code type}.
 	 *
-	 * @param type the type to set
+	 * @param type the value of property type
 	 */
 	public void setType(ChannelType type) {
 		this.type = type;
 	}
 
 	/**
-	 * Get the value of property {@code owner}.
+	 * Get the value of property {@code status}.
 	 *
-	 * @return the owner
+	 * @return the status
 	 */
-	public String getOwner() {
-		return owner;
+	public ChannelStatus getStatus() {
+		return status;
 	}
 
 	/**
-	 * Set the value of property {@code owner}.
+	 * Set the value of property {@code status}.
 	 *
-	 * @param owner the owner to set
+	 * @param status the value of property status
 	 */
-	public void setOwner(String owner) {
-		this.owner = owner;
+	public void setStatus(ChannelStatus status) {
+		this.status = status;
 	}
-
+	
 	/**
 	 * Get the value of property {@code name}.
 	 *
@@ -88,12 +94,11 @@ public class Channel extends EntityBase {
 	/**
 	 * Set the value of property {@code name}.
 	 *
-	 * @param name the name to set
+	 * @param name the value of property name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-
 
 	/**
 	 * Get the value of property {@code purpose}.
@@ -104,16 +109,14 @@ public class Channel extends EntityBase {
 		return purpose;
 	}
 
-
 	/**
 	 * Set the value of property {@code purpose}.
 	 *
-	 * @param purpose the purpose to set
+	 * @param purpose the value of property purpose
 	 */
 	public void setPurpose(String purpose) {
 		this.purpose = purpose;
 	}
-
 
 	/**
 	 * Get the value of property {@code img}.
@@ -127,7 +130,7 @@ public class Channel extends EntityBase {
 	/**
 	 * Set the value of property {@code img}.
 	 *
-	 * @param img the img to set
+	 * @param img the value of property img
 	 */
 	public void setImg(String img) {
 		this.img = img;
@@ -142,12 +145,10 @@ public class Channel extends EntityBase {
 		return thumbnail;
 	}
 
-
-
 	/**
 	 * Set the value of property {@code thumbnail}.
 	 *
-	 * @param thumbnail the thumbnail to set
+	 * @param thumbnail the value of property thumbnail
 	 */
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
@@ -165,136 +166,132 @@ public class Channel extends EntityBase {
 	/**
 	 * Set the value of property {@code ref}.
 	 *
-	 * @param ref the ref to set
+	 * @param ref the value of property ref
 	 */
 	public void setRef(Ref ref) {
 		this.ref = ref;
 	}
 
 	/**
-	 * Get the value of property {@code head}.
+	 * Get the value of property {@code attachments}.
 	 *
-	 * @return the head
+	 * @return the attachments
 	 */
-	public Message getHead() {
-		return head;
-	}
-
-
-	/**
-	 * Set the value of property {@code head}.
-	 *
-	 * @param head the head to set
-	 */
-	public void setHead(Message head) {
-		this.head = head;
-	}
-
-
-	/**
-	 * Get the value of property {@code authorities}.
-	 *
-	 * @return the authorities
-	 */
-	public List<Authority> getAuthorities() {
-		return authorities;
+	public List<Attachment> getAttachments() {
+		return attachments;
 	}
 
 	/**
-	 * Set the value of property {@code authorities}.
+	 * Set the value of property {@code attachments}.
 	 *
-	 * @param authorities the authorities to set
+	 * @param attachments the value of property attachments
 	 */
-	public void setAuthorities(List<Authority> authorities) {
-		this.authorities = authorities;
-	}
-
-	/**
-	 * Get the value of property {@code publik}.
-	 *
-	 * @return the publik
-	 */
-	public Boolean getPublic() {
-		return publik;
+	public void setAttachments(List<Attachment> attachments) {
+		this.attachments = attachments;
 	}
 
 
-	/**
-	 * Set the value of property {@code publik}.
-	 *
-	 * @param publik the value of property publik
-	 */
-	public void setPublic(Boolean publik) {
-		this.publik = publik;
-	}
-	
+	//
 	// With
-	
-	public Channel withUuid(String uuid) {
-		this.uuid = uuid;
-		return this;
-	}
+	//
 
+	/**
+	 * Set the value of property {@code type}.
+	 *
+	 * @param type the value of property type
+	 * @return this {@code Channel}
+	 */
 	public Channel withType(ChannelType type) {
 		this.type = type;
 		return this;
 	}
-
-	public Channel withOwner(String owner) {
-		this.owner = owner;
+	
+	/**
+	 * Set the value of property {@code status}.
+	 *
+	 * @param status the value of property status
+	 * @return this {@code Channel}
+	 */
+	public Channel withStatus(ChannelStatus status) {
+		this.status = status;
 		return this;
 	}
-
+	
+	/**
+	 * Set the value of property {@code name}.
+	 *
+	 * @param name the value of property name
+	 * @return this {@code Channel}
+	 */
 	public Channel withName(String name) {
 		this.name = name;
 		return this;
 	}
 
+	/**
+	 * Set the value of property {@code purpose}.
+	 *
+	 * @param purpose the value of property purpose
+	 */
 	public Channel withPurpose(String purpose) {
 		this.purpose = purpose;
 		return this;
 	}
 
+	/**
+	 * Set the value of property {@code img}.
+	 *
+	 * @param img the value of property img
+	 * @return this {@code Channel}
+	 */
 	public Channel withImg(String img) {
 		this.img = img;
 		return this;
 	}
 
+
+	/**
+	 * Set the value of property {@code thumbnail}.
+	 *
+	 * @param thumbnail the value of property thumbnail
+	 */
 	public Channel withThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
 		return this;
 	}
 
+
+	/**
+	 * Set the value of property {@code ref}.
+	 *
+	 * @param ref the value of property ref
+	 * @return this {@code Channel}
+	 */
 	public Channel withRef(Ref ref) {
 		this.ref = ref;
 		return this;
 	}
 
-	public Channel withHead(Message head) {
-		this.head = head;
-		return this;
-	}
-	
-	public Channel withPublic(Boolean publik) {
-		this.publik = publik;
+
+	/**
+	 * Set the value of property {@code attachments}.
+	 *
+	 * @param attachments the value of property attachments
+	 * @return this {@code Channel}
+	 */
+	public Channel withAttachments(List<Attachment> attachments) {
+		this.attachments = attachments;
 		return this;
 	}
 
-	public Channel withAuthorities(Authority... authorities) {
-		if (this.authorities==null) {
-			this.authorities = new ArrayList<>();
-		}
-		this.authorities.addAll(Arrays.asList(authorities));
-		return this;
-	}
 
-	
-	public Channel withAuthorities(Collection<Authority> authorities) {
-		if (this.authorities==null) {
-			this.authorities = new ArrayList<>();
+	public Channel withAttachments(Attachment... attachments) {
+		if (this.attachments==null) {
+			this.attachments = new ArrayList<>();
 		}
-		if (authorities!=null) {
-			this.authorities.addAll(authorities);			
+		for (Attachment attachment: attachments) {
+			this.attachments.add(attachment);
+			
 		}
 		return this;
 	}
@@ -304,12 +301,11 @@ public class Channel extends EntityBase {
 		return super.toString1(creator)
 				.append("name", name)
 				.append("type", type)
-				.append("owner", owner)
+				.append("status", status)
 				.append("img", img)
 				.append("thumbnail", thumbnail)
-				.append("head", head)
-				.append("public", publik)
-				.append("authorities", authorities)
+				.append("attachments", attachments)
+				.append("#purpose", purpose!=null ? purpose.length() : null)
 				;
 	}
 	

@@ -13,9 +13,7 @@ import java.util.UUID;
 import org.einnovator.social.client.config.SocialClientConfig;
 import org.einnovator.social.client.config.SocialClientConfiguration;
 import org.einnovator.social.client.model.Channel;
-import org.einnovator.social.client.model.ChannelBuilder;
 import org.einnovator.social.client.model.Message;
-import org.einnovator.social.client.model.MessageBuilder;
 import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.sso.client.support.SsoTestHelper;
 import org.einnovator.util.UriUtils;
@@ -111,7 +109,7 @@ public class SocialClientTests extends SsoTestHelper {
 	@Ignore
 	public void createChannelAndDeleteTest() {
 		String name = "tdd-" + UUID.randomUUID().toString();
-		Channel channel = new ChannelBuilder().name(name).build();
+		Channel channel = new Channel().withName(name);
 		URI uri = client.createChannel(channel, null);
 		assertNotNull(uri);
 		String id = UriUtils.extractId(uri);
@@ -142,7 +140,7 @@ public class SocialClientTests extends SsoTestHelper {
 		if (!page.getContent().isEmpty()) {
 			return page.getContent().get(0);
 		}
-		Channel channel = new ChannelBuilder().name(name).build();
+		Channel channel = new Channel().withName(name);
 		URI uri = client.createChannel(channel, null);
 		assertNotNull(uri);
 		String id = UriUtils.extractId(uri);
@@ -172,7 +170,7 @@ public class SocialClientTests extends SsoTestHelper {
 	@Test
 	public void postMessageTest() {
 		Channel channel = getOrCreateChannel(TEST_CHANNEL);
-		Message msg = new MessageBuilder().content("test-" + UUID.randomUUID()).build();
+		Message msg = new Message().withContent("test-" + UUID.randomUUID());
 		URI uri = client.postMessage(channel.getUuid(), msg, null);
 		String id = UriUtils.extractId(uri);
 		Message msg2 = client.getMessage(channel.getUuid(), id, null, null);
