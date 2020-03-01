@@ -57,7 +57,7 @@ public class ChannelRestController extends ControllerBase {
 		Principal principal, HttpServletResponse response) {
 		try {
 			setupToken(principal);
-			URI location =  manager.createChannel(channel, null);
+			URI location =  manager.createChannel(channel, null, null);
 			if (location==null) {
 				return badrequest("createChannel", response, channel);
 			}
@@ -87,7 +87,7 @@ public class ChannelRestController extends ControllerBase {
 			Principal principal, HttpServletResponse response) {			
 		try {
 			setupToken(principal);
-			if (manager.updateChannel(channel, null)==null) {
+			if (manager.updateChannel(channel, null, null)==null) {
 				return badrequest("getChannel", response);
 			}
 			return nocontent("getChannel", response);
@@ -101,7 +101,7 @@ public class ChannelRestController extends ControllerBase {
 			Principal principal, HttpServletResponse response) {			
 		try {
 			setupToken(principal);
-			if (!manager.deleteChannel(id, null)) {
+			if (!manager.deleteChannel(id, null, null)) {
 				return badrequest("deleteChannel", response);
 			}
 			return nocontent("deleteChannel", response);
@@ -129,7 +129,7 @@ public class ChannelRestController extends ControllerBase {
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			setupToken(principal);
-			URI location =  manager.postMessage(cid, msg, null);
+			URI location =  manager.postMessage(cid, msg, null, null);
 			if (location==null) {
 				return badrequest("postMessage", response, msg);
 			}
@@ -145,7 +145,7 @@ public class ChannelRestController extends ControllerBase {
 			Principal principal, HttpServletResponse response) {
 		try {
 			setupToken(principal);
-			if (manager.updateMessage(cid, msg, null)==null) {
+			if (manager.updateMessage(cid, msg, null, null)==null) {
 				return badrequest("updateMessage", response);
 			}
 			return nocontent("updateMessage", response);
@@ -159,7 +159,7 @@ public class ChannelRestController extends ControllerBase {
 			Principal principal, HttpServletResponse response) {
 		try {
 			setupToken(principal);
-			if (!manager.deleteMessage(cid, id, null)) {
+			if (!manager.deleteMessage(cid, id, null, null)) {
 				return badrequest("deleteMessage", response);
 			}
 			return nocontent("deleteMessage", response);
@@ -175,18 +175,18 @@ public class ChannelRestController extends ControllerBase {
 
 	@PostMapping({"/{cid:.*}/message/{mid:.*}/comment", "/{cid:.*}/message/{mid:.*}/message"})
 	public ResponseEntity<Void> postComment(@PathVariable("cid") String cid, @PathVariable("mid") String mid, 
-			@RequestBody Message comment, BindingResult errors,
+			@RequestBody Message message, BindingResult errors,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
-			URI location = manager.postComment(cid, mid, comment, null); 	
+			URI location = manager.postComment(cid, mid, message, null, null); 	
 			if (location==null) {
-				return badrequest("postComment", response, comment);				
+				return badrequest("postComment", response, message);				
 			}
 			URI location2 = new UriTemplate(request.getRequestURI() + "/{id}").expand(UriUtils.extractId(location));
 			return created(location2, "postComment", response);
 		} catch (RuntimeException e) {
-			return badrequest("postComment", response, e, comment);
+			return badrequest("postComment", response, e, message);
 		}
 	}
 

@@ -15,7 +15,7 @@ import org.einnovator.social.client.config.SocialClientConfiguration;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.modelx.ChannelFilter;
-import org.einnovator.sso.client.support.SsoTestHelper;
+import org.einnovator.sso.client.SsoTestHelper;
 import org.einnovator.util.UriUtils;
 import org.einnovator.util.security.Authority;
 import org.junit.Ignore;
@@ -110,15 +110,15 @@ public class SocialClientTests extends SsoTestHelper {
 	public void createChannelAndDeleteTest() {
 		String name = "tdd-" + UUID.randomUUID().toString();
 		Channel channel = new Channel().withName(name);
-		URI uri = client.createChannel(channel, null);
+		URI uri = client.createChannel(channel, null, null);
 		assertNotNull(uri);
 		String id = UriUtils.extractId(uri);
-		Channel channel2 = client.getChannel(id, null);
+		Channel channel2 = client.getChannel(id, null, null);
 		assertNotNull(channel2);
 		System.out.println(channel2);
-		client.deleteChannel(id, null);
+		client.deleteChannel(id, null, null);
 		try {
-			client.getChannel(id, null);			
+			client.getChannel(id, null, null);			
 			fail();
 		} catch (RuntimeException e) {
 		}
@@ -127,7 +127,7 @@ public class SocialClientTests extends SsoTestHelper {
 
 	public Channel getOrCreateChannel(String name) {
 		try {
-			Channel channel = client.getChannel(name, null);		
+			Channel channel = client.getChannel(name, null, null);		
 			return channel;
 		} catch (RuntimeException e) {
 		}
@@ -141,10 +141,10 @@ public class SocialClientTests extends SsoTestHelper {
 			return page.getContent().get(0);
 		}
 		Channel channel = new Channel().withName(name);
-		URI uri = client.createChannel(channel, null);
+		URI uri = client.createChannel(channel, null, null);
 		assertNotNull(uri);
 		String id = UriUtils.extractId(uri);
-		Channel channel2 = client.getChannel(id, null);
+		Channel channel2 = client.getChannel(id, null, null);
 		return channel2;
 	}
 
@@ -156,8 +156,8 @@ public class SocialClientTests extends SsoTestHelper {
 		assertEquals(name, channel.getName());
 		channel.setPurpose("Purpose-" + UUID.randomUUID());
 		channel.setAuthorities(Arrays.asList(Authority.user(TEST_USER3, true, true, false), Authority.user(TEST_USER2, true, false, false)));
-		client.updateChannel(channel, null);
-		Channel channel2 = client.getChannel(channel.getUuid(), null);
+		client.updateChannel(channel, null, null);
+		Channel channel2 = client.getChannel(channel.getUuid(), null, null);
 		assertNotNull(channel2);
 		assertEquals(channel.getPurpose(), channel2.getPurpose());
 		assertNotNull(channel.getAuthorities());
@@ -171,7 +171,7 @@ public class SocialClientTests extends SsoTestHelper {
 	public void postMessageTest() {
 		Channel channel = getOrCreateChannel(TEST_CHANNEL);
 		Message msg = new Message().withContent("test-" + UUID.randomUUID());
-		URI uri = client.postMessage(channel.getUuid(), msg, null);
+		URI uri = client.postMessage(channel.getUuid(), msg, null, null);
 		String id = UriUtils.extractId(uri);
 		Message msg2 = client.getMessage(channel.getUuid(), id, null, null);
 		assertNotNull(msg2);
