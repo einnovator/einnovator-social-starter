@@ -231,7 +231,7 @@ public class SocialClient {
 	 * 
 	 * @param id the identifier
 	 * @param options (optional) the {@code ChannelOptions} that tailor which fields are returned (projection)
-	 * @param context optional {@code SsoClientContext}
+	 * @param context optional {@code SocialClientContext}
 	 * @return the {@code Channel}
 	 * @throws RestClientException if request fails
 	 */
@@ -251,9 +251,10 @@ public class SocialClient {
 	 * 
 	 * @param filter a {@code ChannelFilter}
 	 * @param pageable a {@code Pageable} (optional)
-	 * @param context optional {@code SsoClientContext}
+	 * @param context optional {@code SocialClientContext}
 	 * @throws RestClientException if request fails
-	 * @return a {@code Page} with {@code Channel}s, or null if request failed
+	 * @return a {@code Page} with {@code Channel}s
+	 * @throws RestClientException if request fails
 	 */
 	public Page<Channel> listChannels(ChannelFilter filter, Pageable pageable, SocialClientContext context) {
 		URI uri = makeURI(SocialEndpoints.channels(config));
@@ -272,7 +273,7 @@ public class SocialClient {
 	 * 
 	 * @param channel the {@code Channel}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
+	 * @param context optional {@code SocialClientContext}
 	 * @return the location {@code URI} for the created {@code Channel}
 	 * @throws RestClientException if request fails
 	 */
@@ -291,7 +292,7 @@ public class SocialClient {
 	 * 
 	 * @param channel the {@code Channel}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
+	 * @param context optional {@code SocialClientContext}
 	 * @throws RestClientException if request fails
 	 */
 	public void updateChannel(Channel channel, RequestOptions options, SocialClientContext context) {
@@ -310,7 +311,7 @@ public class SocialClient {
 	 * 
 	 * @param id the {@code Channel} identifier (UUID)
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
+	 * @param context optional {@code SocialClientContext}
 	 * @throws RestClientException if request fails
 	 */
 	public void deleteChannel(String id, RequestOptions options, SocialClientContext context) {
@@ -333,7 +334,7 @@ public class SocialClient {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param filter a {@code MessageFilter}
 	 * @param pageable a {@code Pageable} (optional)
-	 * @param context optional {@code SsoClientContext}
+	 * @param context optional {@code SocialClientContext}
 	 * @return a {@code Page} with {@code Message}s
 	 * @throws RestClientException if request fails
 	 */
@@ -355,7 +356,7 @@ public class SocialClient {
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msg the {@code Message}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
+	 * @param context optional {@code SocialClientContext}
 	 * @return the location {@code URI} for the created {@code Message}
 	 * @throws RestClientException if request fails
 	 */
@@ -376,7 +377,7 @@ public class SocialClient {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param msgId the identifier of a {@code Message} (UUID)
 	 * @param options optional {@code UserOptions}
-	 * @param context optional {@code SsoClientContext}
+	 * @param context optional {@code SocialClientContext}
 	 * @return the {@code Message}
 	 * @throws RestClientException if request fails
 	 */
@@ -397,7 +398,7 @@ public class SocialClient {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param message the message to be update (UUID property should be set)
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
+	 * @param context optional {@code SocialClientContext}
 	 * @throws RestClientException if request fails
 	 */
 	public void updateMessage(String channelId, Message message, RequestOptions options, SocialClientContext context) {
@@ -416,7 +417,7 @@ public class SocialClient {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param msgId the {@code Message} identifier (UUID)
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
+	 * @param context optional {@code SocialClientContext}
 	 * @throws RestClientException if request fails
 	 */
 	public void deleteMessage(String channelId, String msgId, RequestOptions options, SocialClientContext context) {
@@ -435,7 +436,7 @@ public class SocialClient {
 	 * @param msgId the identifier of the parent {@code Message} (UUID)
 	 * @param message the {@code Message} to post
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
+	 * @param context optional {@code SocialClientContext}
 	 * @return the location {@code URI} for the created {@code Message}
 	 * @throws RestClientException if request fails
 	 */
@@ -524,7 +525,7 @@ public class SocialClient {
 	 * Check if request is for admin endpoint.
 	 * 
 	 * @param options optional {@code RequestOptions}
-	 * @param context options {@code SsoClientContext}
+	 * @param context options {@code SocialClientContext}
 	 * @return true if reques is for an admin endpoint, false otherwise
 	 */
 	public static boolean isAdminRequest(RequestOptions options, ClientContext context) {
