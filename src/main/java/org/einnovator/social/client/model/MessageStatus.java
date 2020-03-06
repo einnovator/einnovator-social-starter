@@ -4,6 +4,7 @@ public enum MessageStatus {
 	VISIBLE("Visible"),
 	DRAFT("Draft"),
 	REPORTED("Reported"),
+	CLOSED("Closed"),
 	;
 	
 	private final String displayValue;

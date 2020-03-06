@@ -78,8 +78,7 @@ public class SocialClientTests extends SsoTestHelper {
 	@Test
 	public void listChannelsWithFilterTest() {
 		String q = "G";
-		ChannelFilter filter = new ChannelFilter();
-		filter.setQ(q);
+		ChannelFilter filter = new ChannelFilter().withQ("G");
 		Page<Channel> channels = client.listChannels(filter, null, null);
 		assertNotNull(channels);
 		assertNotNull(channels.getContent());
@@ -133,7 +132,6 @@ public class SocialClientTests extends SsoTestHelper {
 		}
 		ChannelFilter filter = new ChannelFilter();
 		filter.setQ(name);
-		filter.setStrict(true);
 		Page<Channel> page = client.listChannels(filter, null, null);
 		assertNotNull(page);
 		assertNotNull(page.getContent());

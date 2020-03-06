@@ -1,25 +1,43 @@
 package org.einnovator.social.client.modelx;
 
+import org.einnovator.social.client.model.ReactionType;
 import org.einnovator.util.model.ObjectBase;
 import org.einnovator.util.model.ToStringCreator;
 
+/**
+ * A filter for {@code Reaction}s.
+ *
+ * @see Reaction
+ * @author support@einnovator.org
+ *
+ */
 public class ReactionFilter extends ObjectBase {
 
-	private String type;
+	private ReactionType type;
 
-	private String username;
+	private String owner;
 
-	private String group;
-
+	//
+	// Constructors
+	//
+	
+	/**
+	 * Create instance of {@code ReactionFilter}.
+	 *
+	 */
 	public ReactionFilter() {
 	}
 
+	//
+	// Getters/Setters
+	//
+	
 	/**
 	 * Get the value of property {@code type}.
 	 *
 	 * @return the type
 	 */
-	public String getTypes() {
+	public ReactionType getType() {
 		return type;
 	}
 
@@ -28,51 +46,58 @@ public class ReactionFilter extends ObjectBase {
 	 *
 	 * @param type the type to set
 	 */
-	public void setTypes(String type) {
+	public void setType(ReactionType type) {
 		this.type = type;
 	}
 
 	/**
-	 * Get the value of property {@code username}.
+	 * Get the value of property {@code owner}.
 	 *
-	 * @return the username
+	 * @return the owner
 	 */
-	public String getUsername() {
-		return username;
+	public String getOwner() {
+		return owner;
 	}
 
 	/**
-	 * Set the value of property {@code username}.
+	 * Set the value of property {@code owner}.
 	 *
-	 * @param username the username to set
+	 * @param owner the owner to set
 	 */
-	public void setUsername(String username) {
-		this.username = username;
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	//
+	// With
+	//
+
+	/**
+	 * Set the value of property {@code type}.
+	 *
+	 * @param type the type to set
+	 * @return this {@code ReactionFilter}
+	 */
+	public ReactionFilter withType(ReactionType type) {
+		this.type = type;
+		return this;
 	}
 
 	/**
-	 * Get the value of property {@code group}.
+	 * Set the value of property {@code owner}.
 	 *
-	 * @return the group
+	 * @param owner the owner to set
+	 * @return this {@code ReactionFilter}
 	 */
-	public String getGroup() {
-		return group;
-	}
-
-	/**
-	 * Set the value of property {@code group}.
-	 *
-	 * @param group the group to set
-	 */
-	public void setGroup(String group) {
-		this.group = group;
+	public ReactionFilter withOwner(String owner) {
+		this.owner = owner;
+		return this;
 	}
 
 	@Override
 	public ToStringCreator toString(ToStringCreator creator) {
 		return creator
 		.append("type", type)
-		.append("username", username)
-		.append("group", group);
+		.append("owner", owner);
 	}
 }

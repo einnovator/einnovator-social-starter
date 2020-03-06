@@ -3,25 +3,30 @@ package org.einnovator.social.client.modelx;
 import org.einnovator.util.model.ObjectBase;
 import org.einnovator.util.model.ToStringCreator;
 
+/**
+ * Options to retrieve {@code Message}s.
+ *
+ * @see Message
+ * @author support@einnovator.org
+ */
 public class MessageOptions extends ObjectBase {
 
-	private Boolean messages;
 
+	//
+	// Constructors
+	//
+	
+	/**
+	 * Create instance of {@code MessageOptions}.
+	 *
+	 */
 	public MessageOptions() {
-	}
-
-	public Boolean getNotes() {
-		return messages;
-	}
-
-	public void setNotes(Boolean messages) {
-		this.messages = messages;
 	}
 
 
 	@Override
 	public ToStringCreator toString(ToStringCreator creator) {
 		return super.toString(creator)
-				.append("messages", messages);
+				;
 	}
 }

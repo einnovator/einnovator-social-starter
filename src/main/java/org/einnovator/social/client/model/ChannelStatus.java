@@ -1,8 +1,14 @@
 package org.einnovator.social.client.model;
 
+/**
+ * An Enum for a {@code Channel} status.
+ *
+ * @see Channel
+ * @author support@einnovator.org
+ */
 public enum ChannelStatus {
 	ACTIVE("Active"),
-	LOCKED("Locked"),
+	CLOSED("Closed"),
 	ARCHIVED("Archived"),
 	;
 	

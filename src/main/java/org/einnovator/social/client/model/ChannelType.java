@@ -1,6 +1,12 @@
 package org.einnovator.social.client.model;
 
 
+/**
+ * An Enum for a {@code Channel} type.
+ *
+ * @see Channel
+ * @author support@einnovator.org
+ */
 public enum ChannelType {
 	MAIL("Mail"),
 	MBOX("MBox"),

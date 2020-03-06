@@ -1,6 +1,12 @@
 package org.einnovator.social.client.model;
 
 
+/**
+ * An Enum for a {@code Message} type.
+ *
+ * @see Message
+ * @author support@einnovator.org
+ */
 public enum MessageType {
 	MESSAGE("Message"),
 	QUESTION("Question"),

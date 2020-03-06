@@ -2,20 +2,21 @@ package org.einnovator.social.client.model;
 
 
 /**
- * An Enum for a {@code Channel} sharing model.
+ * An Enum for a {@code Reaction} type.
  *
- * @see Channel
+ * @see Reaction
  * @author support@einnovator.org
  */
-public enum ShareType {
-	PRIVATE("Private"),
-	PUBLIC("Public"),
-	RESTRICTED("Restricted"),
-	ROLE("Role");
+public enum ReactionType {
+	VOTEUP("Vote Up"),
+	VOTEDOWN("Vote Down"),
+	LIKE("Like"),
+	LOVE("Love")
+	;
 	
 	private final String displayValue;
 
-	ShareType(String displayValue) {
+	ReactionType(String displayValue) {
 		this.displayValue = displayValue;
 	}
 
@@ -27,8 +28,8 @@ public enum ShareType {
 		return displayValue;
 	}
 
-	public static ShareType parse(String s) {
-		for (ShareType e: ShareType.class.getEnumConstants()) {
+	public static ReactionType parse(String s) {
+		for (ReactionType e: ReactionType.class.getEnumConstants()) {
 			if (e.toString().equalsIgnoreCase(s)) {
 				return e;
 			}
@@ -36,10 +37,9 @@ public enum ShareType {
 		return null;
 	}
 	
-	public static ShareType parse(String s, ShareType defaultValue) {
-		ShareType value = parse(s);
+	public static ReactionType parse(String s, ReactionType defaultValue) {
+		ReactionType value = parse(s);
 		return value!=null ? value: defaultValue;
 	}
-	
 
 }
