@@ -1,6 +1,7 @@
 package org.einnovator.social.client.modelx;
 
-import org.einnovator.util.model.ObjectBase;
+import org.einnovator.social.client.model.Channel;
+import org.einnovator.util.model.EntityOptions;
 import org.einnovator.util.model.ToStringCreator;
 
 /**
@@ -9,7 +10,7 @@ import org.einnovator.util.model.ToStringCreator;
  * @see Channel
  * @author support@einnovator.org
  */
-public class ChannelOptions extends ObjectBase {
+public class ChannelOptions extends EntityOptions<Channel> {
 
 	private Boolean messages;
 

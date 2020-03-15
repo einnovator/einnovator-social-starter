@@ -3,7 +3,7 @@ package org.einnovator.social.client.manager;
 
 import java.net.URI;
 
-import org.einnovator.social.client.config.SocialClientContext;
+
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.model.MessageType;
@@ -25,10 +25,9 @@ public interface ChannelManager {
 	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
 	 * 
 	 * @param id the identifier
-	 * @param context optional {@code SsoClientContext}
 	 * @return the {@code Channel} if found, or null if not found or request failed
 	 */
-	Channel getChannel(String id, SocialClientContext context);
+	Channel getChannel(String id);
 	
 	/**
 	 * Get {@code Channel} with specified identifier.
@@ -37,10 +36,9 @@ public interface ChannelManager {
 	 * 
 	 * @param id the identifier
 	 * @param options (optional) the {@code ChannelOptions} that tailor which fields are returned (projection)
-	 * @param context optional {@code SsoClientContext}
 	 * @return the {@code Channel} if found, or null if not found or request failed
 	 */
-	Channel getChannel(String id, ChannelOptions options, SocialClientContext context);
+	Channel getChannel(String id, ChannelOptions options);
 
 	/**
 	 * List {@code Channel}s.
@@ -49,11 +47,10 @@ public interface ChannelManager {
 	 * 
 	 * @param filter a {@code ChannelFilter}
 	 * @param pageable a {@code Pageable} (optional)
-	 * @param context optional {@code SsoClientContext}
 	 * @throws RestClientException if request fails
 	 * @return a {@code Page} with {@code Channel}s
 	 */
-	Page<Channel> listChannels(ChannelFilter filter, Pageable pageable, SocialClientContext context);
+	Page<Channel> listChannels(ChannelFilter filter, Pageable pageable);
 
 	/**
 	 * Create a new {@code Channel}.
@@ -62,10 +59,9 @@ public interface ChannelManager {
 	 * 
 	 * @param channel the {@code Channel}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
 	 * @return the location {@code URI} for the created {@code Channel}, or null if request fails
 	 */
-	URI createChannel(Channel channel, RequestOptions options, SocialClientContext context);
+	URI createChannel(Channel channel, RequestOptions options);
 	
 	/**
 	 * Update existing {@code Channel}
@@ -74,10 +70,9 @@ public interface ChannelManager {
 	 * 
 	 * @param channel the {@code Channel}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
 	 * @return the same {@code Channel}, or null if request failed
 	 */
-	Channel updateChannel(Channel channel, RequestOptions options, SocialClientContext context);
+	Channel updateChannel(Channel channel, RequestOptions options);
 	
 
 	/**
@@ -87,10 +82,9 @@ public interface ChannelManager {
 	 * 
 	 * @param channel the {@code Channel}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
 	 * @return the {@code Channel} with {@code uuid} property set; or null if error.
 	 */
-	Channel createOrUpdateChannel(Channel channel, RequestOptions options, SocialClientContext context);
+	Channel createOrUpdateChannel(Channel channel, RequestOptions options);
 	
 	
 	/**
@@ -100,10 +94,9 @@ public interface ChannelManager {
 	 * 
 	 * @param id the {@code Channel} identifier (UUID)
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
 	 * @return true if {@code Channel} was deleted, or false if request failed
 	 */
-	boolean deleteChannel(String id, RequestOptions options, SocialClientContext context);
+	boolean deleteChannel(String id, RequestOptions options);
 	
 	//
 	// Messages
@@ -117,10 +110,9 @@ public interface ChannelManager {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param filter a {@code MessageFilter}
 	 * @param pageable a {@code Pageable} (optional)
-	 * @param context optional {@code SsoClientContext}
 	 * @return a {@code Page} with {@code Message}s, or null if request failed
 	 */
-	Page<Message> listMessages(String channelId, MessageFilter filter, Pageable pageable, SocialClientContext context);
+	Page<Message> listMessages(String channelId, MessageFilter filter, Pageable pageable);
 
 	/**
 	 * Post a {@code Message} to a {@code Channel}.
@@ -130,10 +122,9 @@ public interface ChannelManager {
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msg the {@code Message}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
 	 * @return the location {@code URI} for the created {@code Message}, or null if request failed
 	 */
-	URI postMessage(String channelId, Message msg, RequestOptions options, SocialClientContext context);
+	URI postMessage(String channelId, Message msg, RequestOptions options);
 
 	/**
 	 * Get {@code Message} with specified identifier post to a {@code Channel}.
@@ -143,10 +134,9 @@ public interface ChannelManager {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param msgId the identifier of a {@code Message} (UUID)
 	 * @param options optional {@code UserOptions}
-	 * @param context optional {@code SsoClientContext}
 	 * @return the {@code Message}, or null if not found or request failed
 	 */
-	Message getMessage(String channelId, String msgId, MessageOptions options, SocialClientContext context);
+	Message getMessage(String channelId, String msgId, MessageOptions options);
 	
 	/**
 	 * Update existing {@code Message} posted to a {@code Channel}.
@@ -156,10 +146,9 @@ public interface ChannelManager {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param message the message to be update (UUID property should be set)
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
 	 * @return the same {@code Message}, or null if request failed
 	 */
-	Message updateMessage(String channelId, Message message, RequestOptions options, SocialClientContext context);
+	Message updateMessage(String channelId, Message message, RequestOptions options);
 
 	/**
 	 * Delete {@code Message} posted to a {@code Channel}.
@@ -170,10 +159,9 @@ public interface ChannelManager {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param msgId the {@code Message} identifier (UUID)
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
 	 * @return true if {@code Message} was deleted, or false if request failed
 	 */
-	boolean deleteMessage(String channelId, String msgId, RequestOptions options, SocialClientContext context);
+	boolean deleteMessage(String channelId, String msgId, RequestOptions options);
 
 	/**
 	 * Post a {@code Message} as child to other {@code Message} previous posted to a {@code Channel}.
@@ -184,10 +172,9 @@ public interface ChannelManager {
 	 * @param msgId the identifier of the parent {@code Message} (UUID)
 	 * @param message the {@code Message} to post
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
 	 * @return the location {@code URI} for the created {@code Message}, or null if request failed
 	 */
-	URI postChildMessage(String channelId, String msgId, Message message, RequestOptions options, SocialClientContext context);
+	URI postChildMessage(String channelId, String msgId, Message message, RequestOptions options);
 
 	/**
 	 * Post a {@code Message} of type {@code COMMENT} as child to other {@code Message} previous posted to a {@code Channel}.
@@ -198,11 +185,10 @@ public interface ChannelManager {
 	 * @param msgId the identifier of the parent {@code Message} (UUID)
 	 * @param comment the child {@code Message} to post
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
 	 * @return the location {@code URI} for the created {@code Message}, or null if request failed
 	 * @see MessageType
 	 */
-	URI postComment(String channelId, String msgId, Message comment, RequestOptions options, SocialClientContext context);
+	URI postComment(String channelId, String msgId, Message comment, RequestOptions options);
 
 
 	/**
@@ -214,11 +200,10 @@ public interface ChannelManager {
 	 * @param msgId the identifier of the parent {@code Message} (UUID)
 	 * @param answer the child {@code Message} to post
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SsoClientContext}
 	 * @return the location {@code URI} for the created {@code Message}, or null if request failed
 	 * @see MessageType
 	 */
-	URI postAnswer(String channelId, String msgId, Message answer, RequestOptions options, SocialClientContext context);
+	URI postAnswer(String channelId, String msgId, Message answer, RequestOptions options);
 
 
 	//
@@ -230,9 +215,9 @@ public interface ChannelManager {
 	 * 
 	 * @param id the {@code Channel} uuid or username
 	 * @param details new state of {@code Channel}
-	 * @param context optional {@code SsoClientContext}
+
 	 */
-	void onChannelUpdate(String id, Object details, SocialClientContext context);
+	void onChannelUpdate(String id, Object details);
 
 	/**
 	 * Clear the cache for {@code Channel}s.

@@ -5,7 +5,7 @@ import java.net.URI;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.social.client.SocialClient;
-import org.einnovator.social.client.config.SocialClientContext;
+
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.model.MessageType;
@@ -53,12 +53,12 @@ public class ChannelManagerImpl implements ChannelManager {
 
 
 	@Override
-	public Channel getChannel(String id, SocialClientContext context) {
-		return getChannel(id, null, context);
+	public Channel getChannel(String id) {
+		return getChannel(id, null);
 	}
 	
 	@Override
-	public Channel getChannel(String id, ChannelOptions options, SocialClientContext context) {
+	public Channel getChannel(String id, ChannelOptions options) {
 		try {
 			Channel channel = null;
 			
@@ -68,7 +68,7 @@ public class ChannelManagerImpl implements ChannelManager {
 					return channel;
 				}	
 			}
-			channel = client.getChannel(id, options, context);		
+			channel = client.getChannel(id, options);		
 			if (channel==null) {
 				logger.error(String.format("getChannel: %s", id));
 				return null;
@@ -93,9 +93,9 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public URI createChannel(Channel channel, RequestOptions options, SocialClientContext context) {
+	public URI createChannel(Channel channel, RequestOptions options) {
 		try {
-			return client.createChannel(channel, options, context);
+			return client.createChannel(channel, options);
 		} catch (RuntimeException e) {
 			logger.error(String.format("createChannel: %s %s", e, channel));
 			return null;
@@ -104,9 +104,9 @@ public class ChannelManagerImpl implements ChannelManager {
 	
 	@Override
 	@CachePut(value=CACHE_CHANNEL, key="#channel.uuid")
-	public Channel updateChannel(Channel channel, RequestOptions options, SocialClientContext context) {
+	public Channel updateChannel(Channel channel, RequestOptions options) {
 		try {
-			client.updateChannel(channel, options, context);
+			client.updateChannel(channel, options);
 			return channel;
 		} catch (RuntimeException e) {
 			logger.error(String.format("updateChannel: %s %s", e, channel));
@@ -115,25 +115,25 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public Channel createOrUpdateChannel(Channel channel, RequestOptions options, SocialClientContext context) {
+	public Channel createOrUpdateChannel(Channel channel, RequestOptions options) {
 		if (channel.getUuid()==null) {
-			URI uri = createChannel(channel, options, context);
+			URI uri = createChannel(channel, options);
 			if (uri==null) {
 				return null;
 			}
 			channel.setUuid(UriUtils.extractId(uri));
 			return channel;
 		} else {
-			return updateChannel(channel, options, context);
+			return updateChannel(channel, options);
 		}
 	}
 	
 	
 	@Override
 	@CacheEvict(value=CACHE_CHANNEL, key="#id")
-	public boolean deleteChannel(String id, RequestOptions options, SocialClientContext context) {
+	public boolean deleteChannel(String id, RequestOptions options) {
 		try {
-			client.deleteChannel(id, options, context);
+			client.deleteChannel(id, options);
 			return true;
 		} catch (RuntimeException e) {
 			logger.error(String.format("deleteChannel: %s %s", e, id));
@@ -143,9 +143,9 @@ public class ChannelManagerImpl implements ChannelManager {
 	
 	
 	@Override
-	public Page<Channel> listChannels(ChannelFilter filter, Pageable pageable, SocialClientContext context) {
+	public Page<Channel> listChannels(ChannelFilter filter, Pageable pageable) {
 		try {
-			return client.listChannels(filter, pageable, context);
+			return client.listChannels(filter, pageable);
 		} catch (RuntimeException e) {
 			logger.error(String.format("listChannels: %s %s %s", e, filter, pageable));
 			return null;
@@ -154,7 +154,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	
 	
 	@Override
-	public void onChannelUpdate(String id, Object details, SocialClientContext context) {
+	public void onChannelUpdate(String id, Object details) {
 		if (id==null) {
 			return;
 		}
@@ -190,9 +190,9 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public Page<Message> listMessages(String channelId, MessageFilter filter, Pageable pageable, SocialClientContext context) {
+	public Page<Message> listMessages(String channelId, MessageFilter filter, Pageable pageable) {
 		try {
-			return client.listMessages(channelId, filter, pageable, context);
+			return client.listMessages(channelId, filter, pageable);
 		} catch (RuntimeException e) {
 			logger.error(String.format("listMessages: %s %s %s %s", e, channelId, filter, pageable));
 			return null;
@@ -200,9 +200,9 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public URI postMessage(String channelId, Message msg, RequestOptions options, SocialClientContext context) {
+	public URI postMessage(String channelId, Message msg, RequestOptions options) {
 		try {
-			return client.postMessage(channelId, msg, options, context);
+			return client.postMessage(channelId, msg, options);
 		} catch (RuntimeException e) {
 			logger.error(String.format("postMessage: %s %s %s", e, channelId, msg));
 			return null;
@@ -210,50 +210,50 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public Message getMessage(String channelId, String id, MessageOptions options, SocialClientContext context) {
+	public Message getMessage(String channelId, String id, MessageOptions options) {
 		try {
-			Message msg = client.getMessage(channelId, id, options, context);		
+			Message msg = client.getMessage(channelId, id, options);		
 			if (msg==null) {
 				logger.error("getMessage" + channelId + " " + id);
 			}
 			return msg;
 		} catch (HttpStatusCodeException e) {
 			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
-				logger.error(String.format("getMessage: %s %s", channelId, id, context));
+				logger.error(String.format("getMessage: %s %s", channelId, id));
 			}
 			return null;
 		} catch (RuntimeException e) {
-			logger.error(String.format("getMessage: %s %s %s", e, channelId, id, context));
+			logger.error(String.format("getMessage: %s %s %s", e, channelId, id));
 			return null;
 		}
 	}
 
 	@Override
-	public Message updateMessage(String channelId, Message msg, RequestOptions options, SocialClientContext context) {
+	public Message updateMessage(String channelId, Message msg, RequestOptions options) {
 		try {
-			client.updateMessage(channelId, msg, options, context);
+			client.updateMessage(channelId, msg, options);
 			return msg;
 		} catch (RuntimeException e) {
-			logger.error(String.format("updateMessage: %s %s %s", e, channelId, msg, options, context));
+			logger.error(String.format("updateMessage: %s %s %s", e, channelId, msg, options));
 			return null;
 		}
 	}
 
 	@Override
-	public boolean deleteMessage(String channelId, String id, RequestOptions options, SocialClientContext context) {
+	public boolean deleteMessage(String channelId, String id, RequestOptions options) {
 		try {
-			client.deleteMessage(channelId, id, options, context);
+			client.deleteMessage(channelId, id, options);
 			return true;
 		} catch (RuntimeException e) {
-			logger.error(String.format("deleteMessage: %s %s %s", e, channelId, id, options, context));
+			logger.error(String.format("deleteMessage: %s %s %s", e, channelId, id, options));
 			return false;
 		}
 	}
 	
 	@Override
-	public URI postChildMessage(String channelId, String msgId, Message message, RequestOptions options, SocialClientContext context) {
+	public URI postChildMessage(String channelId, String msgId, Message message, RequestOptions options) {
 		try {
-			return client.postChildMessage(channelId, msgId, message, options, context);
+			return client.postChildMessage(channelId, msgId, message, options);
 		} catch (RuntimeException e) {
 			logger.error(String.format("postComment: %s %s %s", e, channelId, message));
 			return null;
@@ -262,14 +262,14 @@ public class ChannelManagerImpl implements ChannelManager {
 	
 
 	@Override
-	public URI postComment(String channelId, String msgId, Message comment, RequestOptions options, SocialClientContext context) {
+	public URI postComment(String channelId, String msgId, Message comment, RequestOptions options) {
 		comment.setType(MessageType.COMMENT);
-		return postChildMessage(channelId, msgId, comment, options, context);		
+		return postChildMessage(channelId, msgId, comment, options);		
 	}
 
 	@Override
-	public URI postAnswer(String channelId, String msgId, Message answer, RequestOptions options, SocialClientContext context) {
+	public URI postAnswer(String channelId, String msgId, Message answer, RequestOptions options) {
 		answer.setType(MessageType.ANSWER);
-		return postChildMessage(channelId, msgId, answer, options, context);		
+		return postChildMessage(channelId, msgId, answer, options);		
 	}
 }

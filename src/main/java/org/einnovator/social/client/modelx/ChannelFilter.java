@@ -1,5 +1,6 @@
 package org.einnovator.social.client.modelx;
 
+import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.ChannelStatus;
 import org.einnovator.social.client.model.ChannelType;
 import org.einnovator.util.model.ToStringCreator;

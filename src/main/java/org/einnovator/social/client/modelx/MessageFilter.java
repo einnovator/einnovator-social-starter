@@ -1,5 +1,6 @@
 package org.einnovator.social.client.modelx;
 
+import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.model.MessageType;
 import org.einnovator.util.model.ToStringCreator;
 

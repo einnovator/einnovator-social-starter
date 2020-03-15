@@ -14,6 +14,7 @@ import org.einnovator.social.client.modelx.MessageFilter;
 import org.einnovator.util.PageOptions;
 import org.einnovator.util.PageUtil;
 import org.einnovator.util.UriUtils;
+import org.einnovator.util.web.RequestOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriTemplate;
 
@@ -40,11 +40,11 @@ public class ChannelRestController extends ControllerBase {
 
 
 	@GetMapping
-	public ResponseEntity<Page<Channel>> listChannel(ChannelFilter filter, PageOptions options, @RequestParam(required=false) Boolean publish,
+	public ResponseEntity<Page<Channel>> listChannel(ChannelFilter filter, PageOptions options,
 		Principal principal, HttpServletResponse response) {
 		try {
 			setupToken(principal);
-			Page<Channel> channels = manager.listChannels(filter, options.toPageRequest(), null);
+			Page<Channel> channels = manager.listChannels(filter, options.toPageRequest());
 			return ok(channels, "listChannel", response, PageUtil.toString(channels), filter, options);
 		} catch (RuntimeException e) {
 			return status("listChannel", e, response, filter, options);
@@ -53,11 +53,12 @@ public class ChannelRestController extends ControllerBase {
 	
 	
 	@PostMapping
-	public ResponseEntity<Void> createChannel(@RequestBody Channel channel, HttpServletRequest request, @RequestParam(required=false) Boolean publish,
-		Principal principal, HttpServletResponse response) {
+	public ResponseEntity<Void> createChannel(@RequestBody Channel channel, 
+			RequestOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			setupToken(principal);
-			URI location =  manager.createChannel(channel, null, null);
+			URI location =  manager.createChannel(channel, options);
 			if (location==null) {
 				return badrequest("createChannel", response, channel);
 			}
@@ -68,11 +69,11 @@ public class ChannelRestController extends ControllerBase {
 	}
 	
 	@GetMapping("/{id:.*}")
-	public ResponseEntity<Channel> getChannel(@PathVariable String id, @RequestParam(required=false) Boolean publish,
+	public ResponseEntity<Channel> getChannel(@PathVariable String id,
 		Principal principal, HttpServletResponse response) {
 		try {
 			setupToken(principal);
-			Channel channel = manager.getChannel(id, null, null);
+			Channel channel = manager.getChannel(id);
 			if (channel==null) {
 				return notfound("getChannel", response);				
 			}
@@ -83,11 +84,11 @@ public class ChannelRestController extends ControllerBase {
 	}
 	
 	@PutMapping("/{id:.*}")
-	public ResponseEntity<Void> updateChannel(@RequestBody Channel channel, @PathVariable String id, @RequestParam(required=false) Boolean publish, 
+	public ResponseEntity<Void> updateChannel(@RequestBody Channel channel, @PathVariable String id,
 			Principal principal, HttpServletResponse response) {			
 		try {
 			setupToken(principal);
-			if (manager.updateChannel(channel, null, null)==null) {
+			if (manager.updateChannel(channel, null)==null) {
 				return badrequest("getChannel", response);
 			}
 			return nocontent("getChannel", response);
@@ -97,11 +98,11 @@ public class ChannelRestController extends ControllerBase {
 	}
 	
 	@DeleteMapping("/{channelId:.*}")
-	public ResponseEntity<Void> deleteChannel(@PathVariable String id, @RequestParam(required=false) Boolean publish,
+	public ResponseEntity<Void> deleteChannel(@PathVariable String id,
 			Principal principal, HttpServletResponse response) {			
 		try {
 			setupToken(principal);
-			if (!manager.deleteChannel(id, null, null)) {
+			if (!manager.deleteChannel(id, null)) {
 				return badrequest("deleteChannel", response);
 			}
 			return nocontent("deleteChannel", response);
@@ -116,7 +117,7 @@ public class ChannelRestController extends ControllerBase {
 			Principal principal, HttpServletResponse response) {		
 		try {
 			setupToken(principal);
-			Page<Message> page = manager.listMessages(cid, filter, options.toPageRequest(), null);
+			Page<Message> page = manager.listMessages(cid, filter, options.toPageRequest());
 			return ok(page, "listMessagesFor", response);
 		} catch (RuntimeException e) {
 			return status("listMessagesFor", e, response, cid);
@@ -125,11 +126,12 @@ public class ChannelRestController extends ControllerBase {
 
 	@PostMapping("/{cid:.*}/message")
 	public ResponseEntity<Void> postMessage(@PathVariable("cid") String cid,
+			RequestOptions options,
 			@RequestBody Message msg, BindingResult errors,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			setupToken(principal);
-			URI location =  manager.postMessage(cid, msg, null, null);
+			URI location =  manager.postMessage(cid, msg, options);
 			if (location==null) {
 				return badrequest("postMessage", response, msg);
 			}
@@ -145,7 +147,7 @@ public class ChannelRestController extends ControllerBase {
 			Principal principal, HttpServletResponse response) {
 		try {
 			setupToken(principal);
-			if (manager.updateMessage(cid, msg, null, null)==null) {
+			if (manager.updateMessage(cid, msg, null)==null) {
 				return badrequest("updateMessage", response);
 			}
 			return nocontent("updateMessage", response);
@@ -159,7 +161,7 @@ public class ChannelRestController extends ControllerBase {
 			Principal principal, HttpServletResponse response) {
 		try {
 			setupToken(principal);
-			if (!manager.deleteMessage(cid, id, null, null)) {
+			if (!manager.deleteMessage(cid, id, null)) {
 				return badrequest("deleteMessage", response);
 			}
 			return nocontent("deleteMessage", response);
@@ -176,10 +178,11 @@ public class ChannelRestController extends ControllerBase {
 	@PostMapping({"/{cid:.*}/message/{mid:.*}/comment", "/{cid:.*}/message/{mid:.*}/message"})
 	public ResponseEntity<Void> postComment(@PathVariable("cid") String cid, @PathVariable("mid") String mid, 
 			@RequestBody Message message, BindingResult errors,
+			RequestOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
-			URI location = manager.postComment(cid, mid, message, null, null); 	
+			URI location = manager.postComment(cid, mid, message, options); 	
 			if (location==null) {
 				return badrequest("postComment", response, message);				
 			}

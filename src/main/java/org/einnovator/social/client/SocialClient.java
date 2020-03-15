@@ -10,7 +10,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.social.client.config.SocialClientConfiguration;
-import org.einnovator.social.client.config.SocialClientContext;
+
 import org.einnovator.social.client.config.SocialEndpoints;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
@@ -23,8 +23,8 @@ import org.einnovator.util.MappingUtils;
 import org.einnovator.util.PageOptions;
 import org.einnovator.util.PageResult;
 import org.einnovator.util.PageUtil;
-import org.einnovator.util.web.ClientContext;
 import org.einnovator.util.web.RequestOptions;
+import org.einnovator.util.web.Result;
 import org.einnovator.util.web.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -231,15 +231,15 @@ public class SocialClient {
 	 * 
 	 * @param id the identifier
 	 * @param options (optional) the {@code ChannelOptions} that tailor which fields are returned (projection)
-	 * @param context optional {@code SocialClientContext}
+	
 	 * @return the {@code Channel}
 	 * @throws RestClientException if request fails
 	 */
-	public Channel getChannel(String id, ChannelOptions options, SocialClientContext context) {
+	public Channel getChannel(String id, ChannelOptions options) {
 		URI uri = makeURI(SocialEndpoints.channel(id, config));
 		uri = processURI(uri, options);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<Channel> result = exchange(request, Channel.class, context);
+		ResponseEntity<Channel> result = exchange(request, Channel.class, options);
 		return result.getBody();
 	}
 
@@ -251,17 +251,17 @@ public class SocialClient {
 	 * 
 	 * @param filter a {@code ChannelFilter}
 	 * @param pageable a {@code Pageable} (optional)
-	 * @param context optional {@code SocialClientContext}
+	
 	 * @throws RestClientException if request fails
 	 * @return a {@code Page} with {@code Channel}s
 	 * @throws RestClientException if request fails
 	 */
-	public Page<Channel> listChannels(ChannelFilter filter, Pageable pageable, SocialClientContext context) {
+	public Page<Channel> listChannels(ChannelFilter filter, Pageable pageable) {
 		URI uri = makeURI(SocialEndpoints.channels(config));
 		uri = processURI(uri, filter, pageable);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		@SuppressWarnings("rawtypes")
-		ResponseEntity<PageResult> result = exchange(request, PageResult.class, context);
+		ResponseEntity<PageResult> result = exchange(request, PageResult.class, filter);
 		return PageUtil.create2(result.getBody(),  Channel.class);
 	}
 	
@@ -273,15 +273,15 @@ public class SocialClient {
 	 * 
 	 * @param channel the {@code Channel}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SocialClientContext}
+	
 	 * @return the location {@code URI} for the created {@code Channel}
 	 * @throws RestClientException if request fails
 	 */
-	public URI createChannel(Channel channel, RequestOptions options, SocialClientContext context) {
+	public URI createChannel(Channel channel, RequestOptions options) {
 		URI uri = makeURI(SocialEndpoints.channels(config));
 		uri = processURI(uri, options);
 		RequestEntity<Channel> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(channel);
-		ResponseEntity<Void> result = exchange(request, Void.class, context);
+		ResponseEntity<Void> result = exchange(request, Void.class, options);
 		return result.getHeaders().getLocation();
 	}
 	
@@ -292,14 +292,14 @@ public class SocialClient {
 	 * 
 	 * @param channel the {@code Channel}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SocialClientContext}
+	
 	 * @throws RestClientException if request fails
 	 */
-	public void updateChannel(Channel channel, RequestOptions options, SocialClientContext context) {
+	public void updateChannel(Channel channel, RequestOptions options) {
 		URI uri = makeURI(SocialEndpoints.channel(channel.getUuid(), config));
 		uri = processURI(uri, options);
 		RequestEntity<Channel> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(channel);
-		exchange(request, Channel.class, context);
+		exchange(request, Channel.class, options);
 	}
 	
 	
@@ -311,14 +311,14 @@ public class SocialClient {
 	 * 
 	 * @param id the {@code Channel} identifier (UUID)
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SocialClientContext}
+	
 	 * @throws RestClientException if request fails
 	 */
-	public void deleteChannel(String id, RequestOptions options, SocialClientContext context) {
+	public void deleteChannel(String id, RequestOptions options) {
 		URI uri = makeURI(SocialEndpoints.channel(id, config));
 		uri = processURI(uri, options);
 		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
-		exchange(request, Void.class, context);
+		exchange(request, Void.class, options);
 	}
 
 	//
@@ -334,16 +334,16 @@ public class SocialClient {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param filter a {@code MessageFilter}
 	 * @param pageable a {@code Pageable} (optional)
-	 * @param context optional {@code SocialClientContext}
+	
 	 * @return a {@code Page} with {@code Message}s
 	 * @throws RestClientException if request fails
 	 */
-	public Page<Message> listMessages(String channelId, MessageFilter filter, Pageable pageable, SocialClientContext context) {
+	public Page<Message> listMessages(String channelId, MessageFilter filter, Pageable pageable) {
 		URI uri = makeURI(SocialEndpoints.messages(channelId, config));
 		uri = processURI(uri, filter, pageable);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		@SuppressWarnings("rawtypes")
-		ResponseEntity<PageResult> result = exchange(request, PageResult.class, context);
+		ResponseEntity<PageResult> result = exchange(request, PageResult.class, filter);
 		return PageUtil.create2(result.getBody(),  Message.class);
 		
 	}
@@ -356,15 +356,15 @@ public class SocialClient {
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msg the {@code Message}
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SocialClientContext}
+	
 	 * @return the location {@code URI} for the created {@code Message}
 	 * @throws RestClientException if request fails
 	 */
-	public URI postMessage(String channelId, Message msg, RequestOptions options, SocialClientContext context) {
+	public URI postMessage(String channelId, Message msg, RequestOptions options) {
 		URI uri = makeURI(SocialEndpoints.messages(channelId, config));
 		uri = processURI(uri, options);
 		RequestEntity<Message> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(msg);
-		ResponseEntity<Void> result = exchange(request, Void.class, context);
+		ResponseEntity<Void> result = exchange(request, Void.class, options);
 		return result.getHeaders().getLocation();
 		
 	}
@@ -377,15 +377,15 @@ public class SocialClient {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param msgId the identifier of a {@code Message} (UUID)
 	 * @param options optional {@code UserOptions}
-	 * @param context optional {@code SocialClientContext}
+	
 	 * @return the {@code Message}
 	 * @throws RestClientException if request fails
 	 */
-	public Message getMessage(String channelId, String msgId, MessageOptions options, SocialClientContext context) {
+	public Message getMessage(String channelId, String msgId, MessageOptions options) {
 		URI uri = makeURI(SocialEndpoints.message(channelId, msgId, config));
 		uri = processURI(uri, options);
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<Message> result = exchange(request, Message.class, context);
+		ResponseEntity<Message> result = exchange(request, Message.class, options);
 		return result.getBody();
 		
 	}
@@ -398,14 +398,14 @@ public class SocialClient {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param message the message to be update (UUID property should be set)
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SocialClientContext}
+	
 	 * @throws RestClientException if request fails
 	 */
-	public void updateMessage(String channelId, Message message, RequestOptions options, SocialClientContext context) {
+	public void updateMessage(String channelId, Message message, RequestOptions options) {
 		URI uri = makeURI(SocialEndpoints.message(channelId, message.getUuid(), config));
 		uri = processURI(uri, options);
 		RequestEntity<Message> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(message);
-		exchange(request, Message.class, context);
+		exchange(request, Message.class, options);
 	}
 
 	/**
@@ -417,14 +417,13 @@ public class SocialClient {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param msgId the {@code Message} identifier (UUID)
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SocialClientContext}
 	 * @throws RestClientException if request fails
 	 */
-	public void deleteMessage(String channelId, String msgId, RequestOptions options, SocialClientContext context) {
+	public void deleteMessage(String channelId, String msgId, RequestOptions options) {
 		URI uri = makeURI(SocialEndpoints.message(channelId, msgId, config));
 		uri = processURI(uri, options);
 		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
-		exchange(request, Void.class, context);
+		exchange(request, Void.class, options);
 	}
 
 	/**
@@ -436,15 +435,14 @@ public class SocialClient {
 	 * @param msgId the identifier of the parent {@code Message} (UUID)
 	 * @param message the {@code Message} to post
 	 * @param options optional {@code RequestOptions}
-	 * @param context optional {@code SocialClientContext}
 	 * @return the location {@code URI} for the created {@code Message}
 	 * @throws RestClientException if request fails
 	 */
-	public URI postChildMessage(String channelId, String msgId, Message message, RequestOptions options, SocialClientContext context) {
+	public URI postChildMessage(String channelId, String msgId, Message message, RequestOptions options) {
 		URI uri = makeURI(SocialEndpoints.comments(channelId, msgId, config));
 		uri = processURI(uri, options);
 		RequestEntity<Message> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(message);
-		ResponseEntity<Void> result = exchange(request, Void.class, context);
+		ResponseEntity<Void> result = exchange(request, Void.class, options);
 		return result.getHeaders().getLocation();
 	}
 
@@ -453,22 +451,39 @@ public class SocialClient {
 	// HTTP transport
 	//
 	
-	protected <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType, SocialClientContext context) throws RestClientException {
-		OAuth2RestTemplate restTemplate = this.restTemplate;
-		if (context!=null && context.getRestTemplate()!=null) {
-			restTemplate = context.getRestTemplate();
-		} else {
-			if (WebUtil.getHttpServletRequest()==null && this.restTemplate0!=null && web) {
-				restTemplate = this.restTemplate0;
-			}			
+	protected <T> ResponseEntity<T> exchange(RequestEntity<?> request, Class<T> responseType, RequestOptions options) throws RestClientException {
+		OAuth2RestTemplate restTemplate = getRequiredRestTemplate(options);
+		try {
+			return exchange(restTemplate, request, responseType);			
+		} catch (RuntimeException e) {
+			if (options!=null && !options.isSingleton()) {
+				options.setResult(new Result<Object>(e));
+			}
+			throw e;
 		}
-		return exchange(restTemplate, request, responseType);
 	}
 
 	protected <T> ResponseEntity<T> exchange(OAuth2RestTemplate restTemplate, RequestEntity<?> request, Class<T> responseType) throws RestClientException {
 		return restTemplate.exchange(request, responseType);
 	}
 	
+	/**
+	 * Get the {@code OAuth2RestTemplate} to use to perform a request.
+	 * 
+	 * Return the configured {@code OAuth2RestTemplate} in property {@link #restTemplate}.
+	 * If property {@link web} is true, check if current thread is bound to a web request with a session-scope. If not, fallback
+	 * to client credential {@code OAuth2RestTemplate} in property {@link #restTemplate0} or create one if needed.
+	 * 
+	 * @param options optional {@code RequestOptions}
+	 * @return the {@code OAuth2RestTemplate}
+	 */
+	protected OAuth2RestTemplate getRequiredRestTemplate(RequestOptions options) {
+		OAuth2RestTemplate restTemplate = this.restTemplate;
+		if (WebUtil.getHttpServletRequest()==null && web && this.restTemplate0!=null ) {
+			restTemplate = this.restTemplate0;
+		}			
+		return restTemplate;
+	}
 	//
 	// RestTemplate util factory methods
 	//
@@ -521,22 +536,5 @@ public class SocialClient {
 	}
 	
 	
-	/**
-	 * Check if request is for admin endpoint.
-	 * 
-	 * @param options optional {@code RequestOptions}
-	 * @param context options {@code SocialClientContext}
-	 * @return true if reques is for an admin endpoint, false otherwise
-	 */
-	public static boolean isAdminRequest(RequestOptions options, ClientContext context) {
-		if (options!=null && options.getAdmin()!=null) {
-			return Boolean.TRUE.equals(options.getAdmin());
-		}
-		if (context!=null && context.isAdmin()) {
-			return true;
-		}
-		return false;
-	}
-
 	
 }

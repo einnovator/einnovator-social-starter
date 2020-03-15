@@ -1,6 +1,7 @@
 package org.einnovator.social.client.modelx;
 
-import org.einnovator.util.model.ObjectBase;
+import org.einnovator.social.client.model.Message;
+import org.einnovator.util.model.EntityOptions;
 import org.einnovator.util.model.ToStringCreator;
 
 /**
@@ -9,7 +10,7 @@ import org.einnovator.util.model.ToStringCreator;
  * @see Message
  * @author support@einnovator.org
  */
-public class MessageOptions extends ObjectBase {
+public class MessageOptions extends EntityOptions<Message> {
 
 
 	//

@@ -65,7 +65,7 @@ public class SocialClientTests extends SsoTestHelper {
 	
 	@Test
 	public void listChannelsTest() {
-		Page<Channel> channels = client.listChannels(null, null, null);
+		Page<Channel> channels = client.listChannels(null, null);
 		assertNotNull(channels);
 		assertNotNull(channels.getContent());
 		assertFalse(channels.getNumberOfElements()==0);
@@ -79,7 +79,7 @@ public class SocialClientTests extends SsoTestHelper {
 	public void listChannelsWithFilterTest() {
 		String q = "G";
 		ChannelFilter filter = new ChannelFilter().withQ("G");
-		Page<Channel> channels = client.listChannels(filter, null, null);
+		Page<Channel> channels = client.listChannels(filter, null);
 		assertNotNull(channels);
 		assertNotNull(channels.getContent());
 		assertFalse(channels.getNumberOfElements()==0);
@@ -90,7 +90,7 @@ public class SocialClientTests extends SsoTestHelper {
 		
 		q = "NOTFOUND-" + UUID.randomUUID();
 		filter.setQ(q);
-		channels = client.listChannels(filter, null, null);
+		channels = client.listChannels(filter, null);
 		assertNotNull(channels);
 		assertNotNull(channels.getContent());
 		assertTrue(channels.getNumberOfElements()==0);
@@ -109,15 +109,15 @@ public class SocialClientTests extends SsoTestHelper {
 	public void createChannelAndDeleteTest() {
 		String name = "tdd-" + UUID.randomUUID().toString();
 		Channel channel = new Channel().withName(name);
-		URI uri = client.createChannel(channel, null, null);
+		URI uri = client.createChannel(channel, null);
 		assertNotNull(uri);
 		String id = UriUtils.extractId(uri);
-		Channel channel2 = client.getChannel(id, null, null);
+		Channel channel2 = client.getChannel(id, null);
 		assertNotNull(channel2);
 		System.out.println(channel2);
-		client.deleteChannel(id, null, null);
+		client.deleteChannel(id, null);
 		try {
-			client.getChannel(id, null, null);			
+			client.getChannel(id, null);			
 			fail();
 		} catch (RuntimeException e) {
 		}
@@ -126,23 +126,23 @@ public class SocialClientTests extends SsoTestHelper {
 
 	public Channel getOrCreateChannel(String name) {
 		try {
-			Channel channel = client.getChannel(name, null, null);		
+			Channel channel = client.getChannel(name, null);		
 			return channel;
 		} catch (RuntimeException e) {
 		}
 		ChannelFilter filter = new ChannelFilter();
 		filter.setQ(name);
-		Page<Channel> page = client.listChannels(filter, null, null);
+		Page<Channel> page = client.listChannels(filter, null);
 		assertNotNull(page);
 		assertNotNull(page.getContent());
 		if (!page.getContent().isEmpty()) {
 			return page.getContent().get(0);
 		}
 		Channel channel = new Channel().withName(name);
-		URI uri = client.createChannel(channel, null, null);
+		URI uri = client.createChannel(channel, null);
 		assertNotNull(uri);
 		String id = UriUtils.extractId(uri);
-		Channel channel2 = client.getChannel(id, null, null);
+		Channel channel2 = client.getChannel(id, null);
 		return channel2;
 	}
 
@@ -154,8 +154,8 @@ public class SocialClientTests extends SsoTestHelper {
 		assertEquals(name, channel.getName());
 		channel.setPurpose("Purpose-" + UUID.randomUUID());
 		channel.setAuthorities(Arrays.asList(Authority.user(TEST_USER3, true, true, false), Authority.user(TEST_USER2, true, false, false)));
-		client.updateChannel(channel, null, null);
-		Channel channel2 = client.getChannel(channel.getUuid(), null, null);
+		client.updateChannel(channel, null);
+		Channel channel2 = client.getChannel(channel.getUuid(), null);
 		assertNotNull(channel2);
 		assertEquals(channel.getPurpose(), channel2.getPurpose());
 		assertNotNull(channel.getAuthorities());
@@ -169,9 +169,9 @@ public class SocialClientTests extends SsoTestHelper {
 	public void postMessageTest() {
 		Channel channel = getOrCreateChannel(TEST_CHANNEL);
 		Message msg = new Message().withContent("test-" + UUID.randomUUID());
-		URI uri = client.postMessage(channel.getUuid(), msg, null, null);
+		URI uri = client.postMessage(channel.getUuid(), msg, null);
 		String id = UriUtils.extractId(uri);
-		Message msg2 = client.getMessage(channel.getUuid(), id, null, null);
+		Message msg2 = client.getMessage(channel.getUuid(), id, null);
 		assertNotNull(msg2);
 		assertEquals(msg.getContent(), msg2.getContent());
 	}

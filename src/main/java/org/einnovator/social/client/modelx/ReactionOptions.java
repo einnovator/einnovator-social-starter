@@ -1,5 +1,6 @@
 package org.einnovator.social.client.modelx;
 
+import org.einnovator.social.client.model.Reaction;
 import org.einnovator.util.model.ObjectBase;
 import org.einnovator.util.model.ToStringCreator;
 
