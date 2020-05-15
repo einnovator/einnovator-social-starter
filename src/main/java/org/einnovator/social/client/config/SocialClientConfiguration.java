@@ -1,6 +1,7 @@
 package org.einnovator.social.client.config;
 
 
+import org.einnovator.util.config.ConnectionConfiguration;
 import org.einnovator.util.model.ObjectBase;
 import org.einnovator.util.model.ToStringCreator;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -222,26 +222,6 @@ public class SocialClient {
 	//
 	// Channel
 	//
-	
-
-	/**
-	 * Get {@code Channel} with specified identifier.
-	 * 
-	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
-	 * 
-	 * @param id the identifier
-	 * @param options (optional) the {@code ChannelOptions} that tailor which fields are returned (projection)
-	
-	 * @return the {@code Channel}
-	 * @throws RestClientException if request fails
-	 */
-	public Channel getChannel(String id, ChannelOptions options) {
-		URI uri = makeURI(SocialEndpoints.channel(id, config));
-		uri = processURI(uri, options);
-		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
-		ResponseEntity<Channel> result = exchange(request, Channel.class, options);
-		return result.getBody();
-	}
 
 	
 	/**
@@ -251,7 +231,6 @@ public class SocialClient {
 	 * 
 	 * @param filter a {@code ChannelFilter}
 	 * @param pageable a {@code Pageable} (optional)
-	
 	 * @throws RestClientException if request fails
 	 * @return a {@code Page} with {@code Channel}s
 	 * @throws RestClientException if request fails
@@ -265,6 +244,26 @@ public class SocialClient {
 		return PageUtil.create2(result.getBody(),  Channel.class);
 	}
 	
+	
+
+	/**
+	 * Get {@code Channel} with specified identifier.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param id the identifier
+	 * @param options (optional) the {@code ChannelOptions} that tailor which fields are returned (projection)
+	 * @return the {@code Channel}
+	 * @throws RestClientException if request fails
+	 */
+	public Channel getChannel(String id, ChannelOptions options) {
+		URI uri = makeURI(SocialEndpoints.channel(id, config));
+		uri = processURI(uri, options);
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		ResponseEntity<Channel> result = exchange(request, Channel.class, options);
+		return result.getBody();
+	}
+
 
 	/**
 	 * Create a new {@code Channel}.
@@ -273,7 +272,6 @@ public class SocialClient {
 	 * 
 	 * @param channel the {@code Channel}
 	 * @param options optional {@code RequestOptions}
-	
 	 * @return the location {@code URI} for the created {@code Channel}
 	 * @throws RestClientException if request fails
 	 */
@@ -292,7 +290,6 @@ public class SocialClient {
 	 * 
 	 * @param channel the {@code Channel}
 	 * @param options optional {@code RequestOptions}
-	
 	 * @throws RestClientException if request fails
 	 */
 	public void updateChannel(Channel channel, RequestOptions options) {
@@ -306,12 +303,10 @@ public class SocialClient {
 	/**
 	 * Delete existing {@code Channel}
 	 * 
-	 * 
 	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner.
 	 * 
 	 * @param id the {@code Channel} identifier (UUID)
 	 * @param options optional {@code RequestOptions}
-	
 	 * @throws RestClientException if request fails
 	 */
 	public void deleteChannel(String id, RequestOptions options) {
