@@ -6,6 +6,7 @@ import java.util.Map;
 import org.einnovator.util.model.ObjectBase;
 import org.einnovator.util.model.ToStringCreator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -123,6 +124,16 @@ public class Reactions extends ObjectBase {
 	 */
 	public void setTotal(Integer total) {
 		this.total = total;
+	}
+
+	public List<Reaction> findUserReactions(ReactionType type) {
+		return Reaction.findOfType(userReactions, type);
+	}
+
+	@JsonIgnore
+	public Reaction getUserReaction(ReactionType type) {
+		List<Reaction> reactions = Reaction.findOfType(userReactions, type);
+		return reactions!=null && reactions.size()>0 ? reactions.get(0) : null;
 	}
 
 	@Override

@@ -4,6 +4,9 @@
 package org.einnovator.social.client.model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.einnovator.util.model.EntityBase;
 import org.einnovator.util.model.ToStringCreator;
 
@@ -114,5 +117,18 @@ public class Reaction extends EntityBase {
 				.append("value", value)
 				;
 	}
-	
+
+	 public static List<Reaction> findOfType(List<Reaction> reactions, ReactionType type) {
+		 if (reactions==null) {
+			 return null;
+		 }
+		 List<Reaction> reactions2 = new ArrayList<>();
+		 for (Reaction reaction: reactions) {
+			 if (reaction.getType()==type) {
+				 reactions2.add(reaction);
+			 }
+		 }
+		 return reactions2;
+	}
+
 }
