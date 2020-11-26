@@ -18,9 +18,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Reactions extends ObjectBase {
 	
-	private Map<ReactionType, Integer> owner;
+	private Map<ReactionType, Integer> userStats;
 
-	private Map<ReactionType, Integer> all;
+	private List<Reaction> userReactions;
+
+	private Map<ReactionType, Integer> stats;
 
 	private Map<ReactionType, List<Reaction>> reactions;
 	
@@ -34,39 +36,57 @@ public class Reactions extends ObjectBase {
 	}
 
 	/**
-	 * Get the value of property {@code owner}.
+	 * Get the value of property {@code userStats}.
 	 *
-	 * @return the value of {@code owner}
+	 * @return the value of {@code userStats}
 	 */
-	public Map<ReactionType, Integer> getOwner() {
-		return owner;
+	public Map<ReactionType, Integer> getUserStats() {
+		return userStats;
 	}
 
 	/**
-	 * Set the value of property {@code owner}.
+	 * Set the value of property {@code userStats}.
 	 *
-	 * @param owner the value of {@code owner}
+	 * @param userStats the value of {@code userStats}
 	 */
-	public void setOwner(Map<ReactionType, Integer> owner) {
-		this.owner = owner;
+	public void setUserStats(Map<ReactionType, Integer> userStats) {
+		this.userStats = userStats;
 	}
 
 	/**
-	 * Get the value of property {@code all}.
+	 * Get the value of property {@code userReactions}.
 	 *
-	 * @return the value of {@code all}
+	 * @return the value of {@code userReactions}
 	 */
-	public Map<ReactionType, Integer> getAll() {
-		return all;
+	public List<Reaction> getUserReactions() {
+		return userReactions;
 	}
 
 	/**
-	 * Set the value of property {@code all}.
+	 * Set the value of property {@code userReactions}.
 	 *
-	 * @param all the value of {@code all}
+	 * @param userReactions the value of {@code userReactions}
 	 */
-	public void setAll(Map<ReactionType, Integer> all) {
-		this.all = all;
+	public void setUserReactions(List<Reaction> userReactions) {
+		this.userReactions = userReactions;
+	}
+
+	/**
+	 * Get the value of property {@code stats}.
+	 *
+	 * @return the value of {@code stats}
+	 */
+	public Map<ReactionType, Integer> getStats() {
+		return stats;
+	}
+
+	/**
+	 * Set the value of property {@code stats}.
+	 *
+	 * @param stats the value of {@code stats}
+	 */
+	public void setStats(Map<ReactionType, Integer> stats) {
+		this.stats = stats;
 	}
 
 	/**
@@ -86,8 +106,7 @@ public class Reactions extends ObjectBase {
 	public void setReactions(Map<ReactionType, List<Reaction>> reactions) {
 		this.reactions = reactions;
 	}
-	
-	
+
 	/**
 	 * Get the value of property {@code total}.
 	 *
@@ -110,8 +129,9 @@ public class Reactions extends ObjectBase {
 	public ToStringCreator toString(ToStringCreator creator) {
 		return creator
 			.append("total", total)
-			.append("owner", owner)
-			.append("all", all)
+			.append("userStats", userStats)
+			.append("stats", stats)
+			.append("userReactions", userReactions)
 			.append("reactions", reactions)
 		;
 	}
