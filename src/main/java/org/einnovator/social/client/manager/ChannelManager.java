@@ -1,11 +1,8 @@
 package org.einnovator.social.client.manager;
 
 
-import static org.einnovator.util.UriUtils.makeURI;
-
 import java.net.URI;
 
-import org.einnovator.social.client.config.SocialEndpoints;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.model.MessageType;
@@ -16,15 +13,10 @@ import org.einnovator.social.client.modelx.MessageFilter;
 import org.einnovator.social.client.modelx.MessageOptions;
 import org.einnovator.social.client.modelx.ReactionFilter;
 import org.einnovator.social.client.modelx.ReactionOptions;
-import org.einnovator.util.PageResult;
-import org.einnovator.util.PageUtil;
 import org.einnovator.util.web.RequestOptions;
 import org.springframework.cache.Cache;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 
 public interface ChannelManager {

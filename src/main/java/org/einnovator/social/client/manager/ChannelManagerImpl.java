@@ -1,13 +1,10 @@
 package org.einnovator.social.client.manager;
 
-import static org.einnovator.util.UriUtils.makeURI;
-
 import java.net.URI;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.social.client.SocialClient;
-import org.einnovator.social.client.config.SocialEndpoints;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.model.MessageType;
@@ -18,8 +15,6 @@ import org.einnovator.social.client.modelx.MessageFilter;
 import org.einnovator.social.client.modelx.MessageOptions;
 import org.einnovator.social.client.modelx.ReactionFilter;
 import org.einnovator.social.client.modelx.ReactionOptions;
-import org.einnovator.util.PageResult;
-import org.einnovator.util.PageUtil;
 import org.einnovator.util.UriUtils;
 import org.einnovator.util.cache.CacheUtils;
 import org.einnovator.util.web.RequestOptions;
@@ -31,11 +26,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestClientException;
 
 public class ChannelManagerImpl implements ChannelManager {
 
