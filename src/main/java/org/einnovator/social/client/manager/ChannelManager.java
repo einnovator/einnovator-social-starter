@@ -1,20 +1,30 @@
 package org.einnovator.social.client.manager;
 
 
+import static org.einnovator.util.UriUtils.makeURI;
+
 import java.net.URI;
 
-
+import org.einnovator.social.client.config.SocialEndpoints;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.model.MessageType;
+import org.einnovator.social.client.model.Reaction;
 import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.social.client.modelx.ChannelOptions;
 import org.einnovator.social.client.modelx.MessageFilter;
 import org.einnovator.social.client.modelx.MessageOptions;
+import org.einnovator.social.client.modelx.ReactionFilter;
+import org.einnovator.social.client.modelx.ReactionOptions;
+import org.einnovator.util.PageResult;
+import org.einnovator.util.PageUtil;
 import org.einnovator.util.web.RequestOptions;
 import org.springframework.cache.Cache;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 
 public interface ChannelManager {
@@ -205,6 +215,142 @@ public interface ChannelManager {
 	 */
 	URI postAnswer(String channelId, String msgId, Message answer, RequestOptions options);
 
+
+	//
+	// Message Reactions
+	//
+	
+	/**
+	 * List {@code Reaction} of a {@code Message}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param msgId the identifier of a {@code Message} (UUID)
+	 * @param filter a {@code ReactionFilter}
+	 * @param pageable a {@code Pageable} (optional)
+	 * @return a {@code Page} with {@code Reaction}s, or null if request failed
+	 */
+	Page<Reaction> listReactions(String channelId, String msgId, ReactionFilter filter, Pageable pageable);
+
+	/**
+	 * Post a {@code Reaction} to a {@code Message}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the identifier of a {@code Channel} (UUID)
+	 * @param msgId the identifier of a {@code Message} (UUID)
+	 * @param reaction the {@code Reaction}
+	 * @param options optional {@code RequestOptions}
+	 * @return the location {@code URI} for the created {@code Reaction}, or null if request failed
+	 */
+	URI postReaction(String channelId, String msgId, Reaction reaction, RequestOptions options);
+
+	/**
+	 * Get {@code Reaction} with specified identifier posted on a {@code Message}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param msgId the identifier of a {@code Message} (UUID)
+	 * @param reactionId the {@code Reaction} identifier (UUID)
+	 * @param options optional {@code UserOptions}
+	 * @return the {@code Reaction}, or null if not found or request failed
+	 */
+	Reaction getReaction(String channelId, String msgId, String reactionId, ReactionOptions options);
+	
+	/**
+	 * Update existing {@code Reaction} posted to a {@code Message}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param msgId the identifier of a {@code Message} (UUID)
+	 * @param reaction the reaction to be update (UUID property should be set)
+	 * @param options optional {@code RequestOptions}
+	 * @throws RestClientException if request fails
+	 */
+	Reaction updateReaction(String channelId, String msgId, Reaction reaction, RequestOptions options);
+
+	/**
+	 * Delete {@code Reaction} posted to a {@code Message}.
+	 * 
+	 * 
+	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner of {@code Reaction}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param msgId the {@code Message} identifier (UUID)
+	 * @param reactionId the {@code Reaction} identifier (UUID)
+	 * @param options optional {@code RequestOptions}
+	 * @return true if {@code Reaction} was deleted, or false if request failed
+	 */
+	boolean deleteReaction(String channelId, String msgId, String reactionId, RequestOptions options);
+
+	//
+	// Channel Reactions
+	//
+	
+	/**
+	 * List {@code Reaction} of a {@code Channel}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param filter a {@code ReactionFilter}
+	 * @param pageable a {@code Pageable} (optional)
+	 * @return a {@code Page} with {@code Reaction}s, or null if request failed
+	 */
+	Page<Reaction> listChannelReactions(String channelId, ReactionFilter filter, Pageable pageable);
+
+	/**
+	 * Post a {@code Reaction} to a {@code Channel}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the identifier of a {@code Channel} (UUID)
+	 * @param reaction the {@code Reaction}
+	 * @param options optional {@code RequestOptions}	
+	 * @return the location {@code URI} for the created {@code Reaction}, or null if request failed
+	 */
+	URI postChannelReaction(String channelId, Reaction reaction, RequestOptions options);
+
+	/**
+	 * Get {@code Reaction} with specified identifier post on a {@code Channel}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param reactionId the {@code Reaction} identifier (UUID)
+	 * @param options optional {@code UserOptions}
+	 * @return the {@code Reaction}
+	 * @throws RestClientException if request fails
+	 */
+	Reaction getChannelReaction(String channelId, String reactionId, ReactionOptions options);
+	
+	/**
+	 * Update existing {@code Reaction} posted on a {@code Channel}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param reaction the reaction to be update (UUID property should be set)
+	 * @param options optional {@code RequestOptions}
+	 * @return the {@code Reaction}, or null if not found or request failed
+	 */
+	Reaction updateChannelReaction(String channelId, Reaction reaction, RequestOptions options);
+
+	/**
+	 * Delete {@code Reaction} posted to a {@code Channel}.
+	 * 
+	 * 
+	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner of {@code Reaction}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param reactionId the {@code Reaction} identifier (UUID)
+	 * @param options optional {@code RequestOptions}
+	 * @return true if {@code Reaction} was deleted, or false if request failed
+	 */
+	boolean deleteChannelReaction(String channelId, String reactionId, RequestOptions options);
 
 	//
 	// Caching

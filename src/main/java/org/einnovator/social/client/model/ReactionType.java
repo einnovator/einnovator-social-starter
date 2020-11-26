@@ -11,7 +11,8 @@ public enum ReactionType {
 	VOTEUP("Vote Up"),
 	VOTEDOWN("Vote Down"),
 	LIKE("Like"),
-	LOVE("Love")
+	LOVE("Love"),
+	FOLLOW("Follow")
 	;
 	
 	private final String displayValue;

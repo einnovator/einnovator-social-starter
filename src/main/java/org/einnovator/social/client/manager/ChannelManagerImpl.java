@@ -1,18 +1,25 @@
 package org.einnovator.social.client.manager;
 
+import static org.einnovator.util.UriUtils.makeURI;
+
 import java.net.URI;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.social.client.SocialClient;
-
+import org.einnovator.social.client.config.SocialEndpoints;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.model.MessageType;
+import org.einnovator.social.client.model.Reaction;
 import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.social.client.modelx.ChannelOptions;
 import org.einnovator.social.client.modelx.MessageFilter;
 import org.einnovator.social.client.modelx.MessageOptions;
+import org.einnovator.social.client.modelx.ReactionFilter;
+import org.einnovator.social.client.modelx.ReactionOptions;
+import org.einnovator.util.PageResult;
+import org.einnovator.util.PageUtil;
 import org.einnovator.util.UriUtils;
 import org.einnovator.util.cache.CacheUtils;
 import org.einnovator.util.web.RequestOptions;
@@ -24,7 +31,11 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestClientException;
 
 public class ChannelManagerImpl implements ChannelManager {
 
@@ -90,6 +101,10 @@ public class ChannelManagerImpl implements ChannelManager {
 	
 	protected boolean isCacheable(ChannelOptions options) {
 		return options==null;
+	}
+
+	protected boolean isCacheable(ReactionOptions options) {
+		return false;
 	}
 
 	@Override
@@ -260,6 +275,159 @@ public class ChannelManagerImpl implements ChannelManager {
 		}
 	}
 	
+	
+	//
+	// Message Reactions
+	//
+	
+	@Override
+	public Page<Reaction> listReactions(String channelId, String msgId, ReactionFilter filter, Pageable pageable) {
+		try {
+			return client.listReactions(channelId, msgId, filter, pageable);
+		} catch (RuntimeException e) {
+			logger.error(String.format("listMessages: %s %s %s %s %s", e, channelId, msgId, filter, pageable));
+			return null;
+		}
+	}
+
+	@Override
+	public URI postReaction(String channelId, String msgId, Reaction reaction, RequestOptions options) {
+		try {
+			return client.postReaction(channelId, msgId, reaction, options);
+		} catch (RuntimeException e) {
+			logger.error(String.format("postMessage: %s %s %s %s", e, channelId, msgId, reaction));
+			return null;
+		}
+	}
+
+	@Override
+	public Reaction getReaction(String channelId, String msgId, String reactionId, ReactionOptions options) {
+		try {
+			Reaction reaction = null;
+			
+			if (isCacheable(options)) {
+				reaction = CacheUtils.getCacheValue(Reaction.class, getChannelCache(), channelId, msgId, reactionId);
+				if (reaction!=null) {
+					return reaction;
+				}	
+			}
+			reaction = client.getReaction(channelId, msgId, reactionId, options);		
+			if (reaction==null) {
+				logger.error(String.format("getReaction: %s %s %s", channelId, msgId, reactionId));
+				return null;
+			}
+			if (isCacheable(options)) {
+				CacheUtils.putCacheValue(reaction, getChannelCache(), channelId, msgId, reactionId);				
+			}
+			return reaction;
+		} catch (HttpStatusCodeException e) {
+			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
+				logger.error(String.format("getReaction: %s %s %s %s %s", e, channelId, msgId, reactionId, options));
+			}
+			return null;
+		} catch (RuntimeException e) {
+			logger.error(String.format("getReaction: %s %s %s %s %s", e, channelId, msgId, reactionId, options));
+			return null;
+		}
+	}
+	
+	public Reaction updateReaction(String channelId, String msgId, Reaction reaction, RequestOptions options) {
+		try {
+			client.updateReaction(channelId, msgId, reaction, options);
+			return reaction;
+		} catch (RuntimeException e) {
+			logger.error(String.format("updateMessage: %s %s %s %s", e, channelId, msgId, reaction, options));
+			return null;
+		}
+	}
+
+	@Override
+	public boolean deleteReaction(String channelId, String msgId, String reactionId, RequestOptions options) {
+		try {
+			client.deleteReaction(channelId, msgId, reactionId, options);
+			return true;
+		} catch (RuntimeException e) {
+			logger.error(String.format("deleteMessage: %s %s %s %s", e, channelId, msgId, reactionId, options));
+			return false;
+		}
+	}
+
+	//
+	// Channel Reactions
+	//
+	
+	@Override
+	public Page<Reaction> listChannelReactions(String channelId, ReactionFilter filter, Pageable pageable) {
+		try {
+			return client.listChannelReactions(channelId, filter, pageable);
+		} catch (RuntimeException e) {
+			logger.error(String.format("listMessages: %s %s %s %s", e, channelId, filter, pageable));
+			return null;
+		}
+	}
+
+	@Override
+	public URI postChannelReaction(String channelId, Reaction reaction, RequestOptions options) {
+		try {
+			return client.postChannelReaction(channelId, reaction, options);
+		} catch (RuntimeException e) {
+			logger.error(String.format("postChannelReaction: %s %s %s", e, channelId, reaction));
+			return null;
+		}
+	}
+	
+	@Override
+	public Reaction getChannelReaction(String channelId, String reactionId, ReactionOptions options) {
+		try {
+			Reaction reaction = null;
+			
+			if (isCacheable(options)) {
+				reaction = CacheUtils.getCacheValue(Reaction.class, getChannelCache(), channelId, reactionId);
+				if (reaction!=null) {
+					return reaction;
+				}	
+			}
+			reaction = client.getChannelReaction(channelId, reactionId, options);		
+			if (reaction==null) {
+				logger.error(String.format("getChannelReaction: %s %s", channelId, reactionId));
+				return null;
+			}
+			if (isCacheable(options)) {
+				CacheUtils.putCacheValue(reaction, getChannelCache(), channelId, reactionId);				
+			}
+			return reaction;
+		} catch (HttpStatusCodeException e) {
+			if (e.getStatusCode()!=HttpStatus.NOT_FOUND) {
+				logger.error(String.format("getChannelReaction: %s %s %s %s", e, channelId, reactionId, options));
+			}
+			return null;
+		} catch (RuntimeException e) {
+			logger.error(String.format("getChannelReaction: %s %s %s %s", e, channelId, reactionId, options));
+			return null;
+		}
+	}
+
+	@Override
+	public Reaction updateChannelReaction(String channelId, Reaction reaction, RequestOptions options) {
+		try {
+			client.updateChannelReaction(channelId, reaction, options);
+			return reaction;
+		} catch (RuntimeException e) {
+			logger.error(String.format("updateChannelReaction: %s %s %s", e, channelId, reaction, options));
+			return null;
+		}
+	}
+
+	@Override
+	public boolean deleteChannelReaction(String channelId, String reactionId, RequestOptions options) {
+		try {
+			client.deleteChannelReaction(channelId, reactionId, options);
+			return true;
+		} catch (RuntimeException e) {
+			logger.error(String.format("deleteChannelReaction: %s %s %s", e, channelId, reactionId, options));
+			return false;
+		}
+	}
 
 	@Override
 	public URI postComment(String channelId, String msgId, Message comment, RequestOptions options) {

@@ -2,7 +2,6 @@ package org.einnovator.social.client.modelx;
 
 import org.einnovator.social.client.model.Reaction;
 import org.einnovator.social.client.model.ReactionType;
-import org.einnovator.util.model.ObjectBase;
 import org.einnovator.util.model.ToStringCreator;
 
 /**
@@ -12,7 +11,7 @@ import org.einnovator.util.model.ToStringCreator;
  * @author support@einnovator.org
  *
  */
-public class ReactionFilter extends ObjectBase {
+public class ReactionFilter extends ReactionOptions {
 
 	private ReactionType type;
 

@@ -19,6 +19,8 @@ import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.social.client.modelx.ChannelOptions;
 import org.einnovator.social.client.modelx.MessageFilter;
 import org.einnovator.social.client.modelx.MessageOptions;
+import org.einnovator.social.client.modelx.ReactionFilter;
+import org.einnovator.social.client.modelx.ReactionOptions;
 import org.einnovator.util.MappingUtils;
 import org.einnovator.util.PageOptions;
 import org.einnovator.util.PageResult;
@@ -441,7 +443,212 @@ public class SocialClient {
 		return result.getHeaders().getLocation();
 	}
 
+	//
+	// Message Reactions
+	//
+	
+	/**
+	 * List {@code Reaction} of a {@code Message}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param msgId the identifier of a {@code Message} (UUID)
+	 * @param filter a {@code ReactionFilter}
+	 * @param pageable a {@code Pageable} (optional)
+	 * @return a {@code Page} with {@code Reaction}s
+	 * @throws RestClientException if request fails
+	 */
+	public Page<Reaction> listReactions(String channelId, String msgId, ReactionFilter filter, Pageable pageable) {
+		URI uri = makeURI(SocialEndpoints.reactions(channelId, msgId, config));
+		uri = processURI(uri, filter, pageable);
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		@SuppressWarnings("rawtypes")
+		ResponseEntity<PageResult> result = exchange(request, PageResult.class, filter);
+		return PageUtil.create2(result.getBody(),  Reaction.class);
+		
+	}
 
+	/**
+	 * Post a {@code Reaction} to a {@code Message}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the identifier of a {@code Channel} (UUID)
+	 * @param msgId the identifier of a {@code Message} (UUID)
+	 * @param reaction the {@code Reaction}
+	 * @param options optional {@code RequestOptions}
+	 * @return the location {@code URI} for the created {@code Reaction}
+	 * @throws RestClientException if request fails
+	 */
+	public URI postReaction(String channelId, String msgId, Reaction reaction, RequestOptions options) {
+		URI uri = makeURI(SocialEndpoints.reactions(channelId, msgId, config));
+		uri = processURI(uri, options);
+		RequestEntity<Reaction> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(reaction);
+		ResponseEntity<Void> result = exchange(request, Void.class, options);
+		return result.getHeaders().getLocation();
+		
+	}
+
+	/**
+	 * Get {@code Reaction} with specified identifier posted on a {@code Message}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param msgId the identifier of a {@code Message} (UUID)
+	 * @param reactionId the {@code Reaction} identifier (UUID)
+	 * @param options optional {@code UserOptions}
+	 * @return the {@code Reaction}
+	 * @throws RestClientException if request fails
+	 */
+	public Reaction getReaction(String channelId, String msgId, String reactionId, ReactionOptions options) {
+		URI uri = makeURI(SocialEndpoints.reaction(channelId, msgId, reactionId, config));
+		uri = processURI(uri, options);
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		ResponseEntity<Reaction> result = exchange(request, Reaction.class, options);
+		return result.getBody();
+		
+	}
+	
+	/**
+	 * Update existing {@code Reaction} posted to a {@code Message}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param msgId the identifier of a {@code Message} (UUID)
+	 * @param reaction the reaction to be update (UUID property should be set)
+	 * @param options optional {@code RequestOptions}
+	 * @throws RestClientException if request fails
+	 */
+	public void updateReaction(String channelId, String msgId, Reaction reaction, RequestOptions options) {
+		URI uri = makeURI(SocialEndpoints.reaction(channelId, msgId, reaction.getUuid(), config));
+		uri = processURI(uri, options);
+		RequestEntity<Reaction> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(reaction);
+		exchange(request, Reaction.class, options);
+	}
+
+	/**
+	 * Delete {@code Reaction} posted to a {@code Message}.
+	 * 
+	 * 
+	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner of {@code Reaction}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param msgId the {@code Message} identifier (UUID)
+	 * @param reactionId the {@code Reaction} identifier (UUID)
+	 * @param options optional {@code RequestOptions}
+	 * @throws RestClientException if request fails
+	 */
+	public void deleteReaction(String channelId, String msgId, String reactionId, RequestOptions options) {
+		URI uri = makeURI(SocialEndpoints.reaction(channelId, msgId, reactionId, config));
+		uri = processURI(uri, options);
+		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
+		exchange(request, Void.class, options);
+	}
+
+	//
+	// Channel Reactions
+	//
+	
+	/**
+	 * List {@code Reaction} of a {@code Channel}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param filter a {@code ReactionFilter}
+	 * @param pageable a {@code Pageable} (optional)
+	 * @return a {@code Page} with {@code Reaction}s
+	 * @throws RestClientException if request fails
+	 */
+	public Page<Reaction> listChannelReactions(String channelId, ReactionFilter filter, Pageable pageable) {
+		URI uri = makeURI(SocialEndpoints.channelReactions(channelId, config));
+		uri = processURI(uri, filter, pageable);
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		@SuppressWarnings("rawtypes")
+		ResponseEntity<PageResult> result = exchange(request, PageResult.class, filter);
+		return PageUtil.create2(result.getBody(),  Reaction.class);
+		
+	}
+
+	/**
+	 * Post a {@code Reaction} to a {@code Channel}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the identifier of a {@code Channel} (UUID)
+	 * @param reaction the {@code Reaction}
+	 * @param options optional {@code RequestOptions}	
+	 * @return the location {@code URI} for the created {@code Reaction}
+	 * @throws RestClientException if request fails
+	 */
+	public URI postChannelReaction(String channelId, Reaction reaction, RequestOptions options) {
+		URI uri = makeURI(SocialEndpoints.channelReactions(channelId, config));
+		uri = processURI(uri, options);
+		RequestEntity<Reaction> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(reaction);
+		ResponseEntity<Void> result = exchange(request, Void.class, options);
+		return result.getHeaders().getLocation();
+		
+	}
+
+	/**
+	 * Get {@code Reaction} with specified identifier post on a {@code Channel}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param reactionId the {@code Reaction} identifier (UUID)
+	 * @param options optional {@code UserOptions}
+	 * @return the {@code Reaction}
+	 * @throws RestClientException if request fails
+	 */
+	public Reaction getChannelReaction(String channelId, String reactionId, ReactionOptions options) {
+		URI uri = makeURI(SocialEndpoints.channelReaction(channelId, reactionId, config));
+		uri = processURI(uri, options);
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		ResponseEntity<Reaction> result = exchange(request, Reaction.class, options);
+		return result.getBody();
+		
+	}
+	
+	/**
+	 * Update existing {@code Reaction} posted on a {@code Channel}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param reaction the reaction to be update (UUID property should be set)
+	 * @param options optional {@code RequestOptions}
+	 * @throws RestClientException if request fails
+	 */
+	public void updateChannelReaction(String channelId, Reaction reaction, RequestOptions options) {
+		URI uri = makeURI(SocialEndpoints.channelReaction(channelId, reaction.getUuid(), config));
+		uri = processURI(uri, options);
+		RequestEntity<Reaction> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(reaction);
+		exchange(request, Reaction.class, options);
+	}
+
+	/**
+	 * Delete {@code Reaction} posted to a {@code Channel}.
+	 * 
+	 * 
+	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner of {@code Reaction}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param reactionId the {@code Reaction} identifier (UUID)
+	 * @param options optional {@code RequestOptions}
+	 * @throws RestClientException if request fails
+	 */
+	public void deleteChannelReaction(String channelId, String reactionId, RequestOptions options) {
+		URI uri = makeURI(SocialEndpoints.channelReaction(channelId,reactionId, config));
+		uri = processURI(uri, options);
+		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
+		exchange(request, Void.class, options);
+	}
+
+	
 	//
 	// HTTP transport
 	//

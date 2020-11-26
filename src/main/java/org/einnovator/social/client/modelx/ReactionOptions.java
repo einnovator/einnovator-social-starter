@@ -1,8 +1,8 @@
 package org.einnovator.social.client.modelx;
 
 import org.einnovator.social.client.model.Reaction;
-import org.einnovator.util.model.ObjectBase;
 import org.einnovator.util.model.ToStringCreator;
+import org.einnovator.util.web.RequestOptions;
 
 /**
  * Options to retrieve {@code Reaction}s.
@@ -10,7 +10,7 @@ import org.einnovator.util.model.ToStringCreator;
  * @see Reaction
  * @author support@einnovator.org
  */
-public class ReactionOptions extends ObjectBase {
+public class ReactionOptions extends RequestOptions {
 
 	//
 	// Constructors

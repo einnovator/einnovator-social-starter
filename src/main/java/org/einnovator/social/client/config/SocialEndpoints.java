@@ -22,4 +22,21 @@ public class SocialEndpoints {
 	public static String comments(String channelId, String msgId, SocialClientConfiguration config) {
 		return message(channelId, msgId, config) + "/comment";
 	}
+
+	public static String reactions(String channelId, String msgId, SocialClientConfiguration config) {
+		return message(channelId, msgId, config) + "/reaction";
+	}
+
+	public static String reaction(String channelId, String msgId, String reactionId, SocialClientConfiguration config) {
+		return reactions(channelId, msgId, config) + "/" + reactionId;
+	}
+
+	public static String channelReactions(String channelId, SocialClientConfiguration config) {
+		return channel(channelId, config) + "/reaction";
+	}
+
+	public static String channelReaction(String channelId, String reactionId, SocialClientConfiguration config) {
+		return channelReactions(channelId, config) + "/" + reactionId;
+	}
+
 }
