@@ -9,6 +9,7 @@ import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.model.MessageType;
 import org.einnovator.social.client.model.Reaction;
+import org.einnovator.social.client.model.Reactions;
 import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.social.client.modelx.ChannelOptions;
 import org.einnovator.social.client.modelx.MessageFilter;
@@ -280,6 +281,16 @@ public class ChannelManagerImpl implements ChannelManager {
 			return null;
 		}
 	}
+	
+	@Override
+	public Reactions getReactionStats(String channelId, String msgId, ReactionFilter filter, Pageable pageable) {
+		try {
+			return client.getReactionStats(channelId, msgId, filter, pageable);
+		} catch (RuntimeException e) {
+			logger.error(String.format("getReactionStats: %s %s %s %s %s", e, channelId, msgId, filter, pageable));
+			return null;
+		}
+	}
 
 	@Override
 	public URI postReaction(String channelId, String msgId, Reaction reaction, RequestOptions options) {
@@ -356,6 +367,17 @@ public class ChannelManagerImpl implements ChannelManager {
 			return null;
 		}
 	}
+	
+	@Override
+	public Reactions getChannelReactionStats(String channelId, ReactionFilter filter, Pageable pageable) {
+		try {
+			return client.getChannelReactionStats(channelId, filter, pageable);
+		} catch (RuntimeException e) {
+			logger.error(String.format("getChannelReactionStats: %s %s %s %s", e, channelId, filter, pageable));
+			return null;
+		}
+	}
+	
 
 	@Override
 	public URI postChannelReaction(String channelId, Reaction reaction, RequestOptions options) {

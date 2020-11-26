@@ -15,6 +15,7 @@ import org.einnovator.social.client.config.SocialEndpoints;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.model.Reaction;
+import org.einnovator.social.client.model.Reactions;
 import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.social.client.modelx.ChannelOptions;
 import org.einnovator.social.client.modelx.MessageFilter;
@@ -465,10 +466,29 @@ public class SocialClient {
 		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
 		@SuppressWarnings("rawtypes")
 		ResponseEntity<PageResult> result = exchange(request, PageResult.class, filter);
-		return PageUtil.create2(result.getBody(),  Reaction.class);
-		
+		return PageUtil.create2(result.getBody(),  Reaction.class);		
 	}
-
+	
+	/**
+	 * Get {@code Reaction} statistics for a {@code Message}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param msgId the identifier of a {@code Message} (UUID)
+	 * @param filter a {@code ReactionFilter}
+	 * @param pageable a {@code Pageable} (optional)
+	 * @return the {@code Reactions} statistics
+	 * @throws RestClientException if request fails
+	 */
+	public Reactions getReactionStats(String channelId, String msgId, ReactionFilter filter, Pageable pageable) {
+		URI uri = makeURI(SocialEndpoints.reactionStats(channelId, msgId, config));
+		uri = processURI(uri, filter, pageable);
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		ResponseEntity<Reactions> result = exchange(request, Reactions.class, filter);
+		return result.getBody();
+	}
+	
 	/**
 	 * Post a {@code Reaction} to a {@code Message}.
 	 * 
@@ -573,6 +593,25 @@ public class SocialClient {
 		
 	}
 
+	/**
+	 * Get {@code Reaction} statistics for a {@code Channel}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param filter a {@code ReactionFilter}
+	 * @param pageable a {@code Pageable} (optional)
+	 * @return the {@code Reactions} statistics
+	 * @throws RestClientException if request fails
+	 */
+	public Reactions getChannelReactionStats(String channelId, ReactionFilter filter, Pageable pageable) {
+		URI uri = makeURI(SocialEndpoints.channelReactionStats(channelId, config));
+		uri = processURI(uri, filter, pageable);
+		RequestEntity<Void> request = RequestEntity.get(uri).accept(MediaType.APPLICATION_JSON).build();
+		ResponseEntity<Reactions> result = exchange(request, Reactions.class, filter);
+		return result.getBody();
+	}
+	
 	/**
 	 * Post a {@code Reaction} to a {@code Channel}.
 	 * 

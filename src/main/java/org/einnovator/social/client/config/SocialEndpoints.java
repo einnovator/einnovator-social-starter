@@ -27,12 +27,20 @@ public class SocialEndpoints {
 		return message(channelId, msgId, config) + "/reaction";
 	}
 
+	public static String reactionStats(String channelId, String msgId, SocialClientConfiguration config) {
+		return message(channelId, msgId, config) + "/reactionstats";
+	}
+
 	public static String reaction(String channelId, String msgId, String reactionId, SocialClientConfiguration config) {
 		return reactions(channelId, msgId, config) + "/" + reactionId;
 	}
 
 	public static String channelReactions(String channelId, SocialClientConfiguration config) {
 		return channel(channelId, config) + "/reaction";
+	}
+
+	public static String channelReactionStats(String channelId, SocialClientConfiguration config) {
+		return channel(channelId, config) + "/reactionstats";
 	}
 
 	public static String channelReaction(String channelId, String reactionId, SocialClientConfiguration config) {

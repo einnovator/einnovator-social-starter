@@ -7,6 +7,7 @@ import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
 import org.einnovator.social.client.model.MessageType;
 import org.einnovator.social.client.model.Reaction;
+import org.einnovator.social.client.model.Reactions;
 import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.social.client.modelx.ChannelOptions;
 import org.einnovator.social.client.modelx.MessageFilter;
@@ -226,6 +227,19 @@ public interface ChannelManager {
 	Page<Reaction> listReactions(String channelId, String msgId, ReactionFilter filter, Pageable pageable);
 
 	/**
+	 * Get {@code Reaction} statistics for a {@code Message}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param msgId the identifier of a {@code Message} (UUID)
+	 * @param filter a {@code ReactionFilter}
+	 * @param pageable a {@code Pageable} (optional)
+	 * @return the {@code Reactions} statistics, or null if request failed
+	 */
+	Reactions getReactionStats(String channelId, String msgId, ReactionFilter filter, Pageable pageable);
+	
+	/**
 	 * Post a {@code Reaction} to a {@code Message}.
 	 * 
 	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
@@ -294,6 +308,18 @@ public interface ChannelManager {
 	 */
 	Page<Reaction> listChannelReactions(String channelId, ReactionFilter filter, Pageable pageable);
 
+	/**
+	 * Get {@code Reaction} statistics for a {@code Channel}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the {@code Channel} identifier (UUID)
+	 * @param filter a {@code ReactionFilter}
+	 * @param pageable a {@code Pageable} (optional)
+	 * @return the {@code Reactions} statistics, or null if request failed
+	 */
+	Reactions getChannelReactionStats(String channelId, ReactionFilter filter, Pageable pageable);
+	
 	/**
 	 * Post a {@code Reaction} to a {@code Channel}.
 	 * 
