@@ -42,6 +42,7 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.web.client.RestClientException;
 
 
@@ -85,6 +86,9 @@ public class SocialClient {
 
 	private ClientHttpRequestFactory clientHttpRequestFactory;
 
+	@Autowired(required=false)
+	private ClientCredentialsResourceDetails clientResourceDetails;
+	
 	private boolean web = true;
 
 	
@@ -103,6 +107,7 @@ public class SocialClient {
 	 */
 	public SocialClient(SocialClientConfiguration config) {
 		this.config = config;
+		clientHttpRequestFactory = config.getConnection().makeClientHttpRequestFactory();
 	}
 
 	/**
@@ -112,8 +117,8 @@ public class SocialClient {
 	 * @param config the {@code SocialClientConfiguration}
 	 */
 	public SocialClient(OAuth2RestTemplate restTemplate, SocialClientConfiguration config) {
+		this(config);
 		this.restTemplate = restTemplate;
-		this.config = config;
 	}
 	
 	/**
@@ -202,6 +207,24 @@ public class SocialClient {
 	 */
 	public void setRestTemplate0(OAuth2RestTemplate restTemplate0) {
 		this.restTemplate0 = restTemplate0;
+	}
+
+	/**
+	 * Get the value of property {@code clientResourceDetails}.
+	 *
+	 * @return the value of {@code clientResourceDetails}
+	 */
+	public ClientCredentialsResourceDetails getClientResourceDetails() {
+		return clientResourceDetails;
+	}
+
+	/**
+	 * Set the value of property {@code clientResourceDetails}.
+	 *
+	 * @param clientResourceDetails the value of {@code clientResourceDetails}
+	 */
+	public void setClientResourceDetails(ClientCredentialsResourceDetails clientResourceDetails) {
+		this.clientResourceDetails = clientResourceDetails;
 	}
 
 	/**
@@ -720,6 +743,15 @@ public class SocialClient {
 	 */
 	protected OAuth2RestTemplate getRequiredRestTemplate(RequestOptions options) {
 		OAuth2RestTemplate restTemplate = this.restTemplate;
+		if (options!=null) {
+			if (Boolean.TRUE.equals(options.getRunAsClient())) {
+				restTemplate = setupClientOAuth2RestTemplate(true, false);
+				if (restTemplate==null) {
+					throw new RuntimeException("Client credentials not found");
+				}
+				return restTemplate;
+			}
+		}
 		if (WebUtil.getHttpServletRequest()==null && web && this.restTemplate0!=null ) {
 			restTemplate = this.restTemplate0;
 		}			
@@ -730,24 +762,52 @@ public class SocialClient {
 	//
 
 	public OAuth2RestTemplate makeOAuth2RestTemplate(OAuth2ProtectedResourceDetails resource, OAuth2ClientContext oauth2ClientContext) {
-		OAuth2RestTemplate template = new OAuth2RestTemplate(resource, oauth2ClientContext);			
+		OAuth2RestTemplate template = new OAuth2RestTemplate(resource, oauth2ClientContext);	
 		template.setRequestFactory(clientHttpRequestFactory);
 		return template;
 	}
 	
 	public OAuth2RestTemplate makeOAuth2RestTemplate(OAuth2ClientContext oauth2ClientContext, ClientCredentialsResourceDetails resource) {
-		OAuth2RestTemplate template = new OAuth2RestTemplate(resource, oauth2ClientContext);			
+		OAuth2RestTemplate template = new OAuth2RestTemplate(resource, oauth2ClientContext);
 		template.setRequestFactory(clientHttpRequestFactory);
 		return template;
 	}
 	
-	public OAuth2RestTemplate setupClientOAuth2RestTemplate(ClientCredentialsResourceDetails resource) {
-		if (restTemplate0==null) {
+	public OAuth2RestTemplate setupClientOAuth2RestTemplate(ClientCredentialsResourceDetails resource, boolean checkValid, boolean force) {
+		if (restTemplate0==null || force || (checkValid && isTokenValid(oauth2ClientContext0))) {
 			restTemplate0 = makeOAuth2RestTemplate(oauth2ClientContext0, resource);
 		}
 		return restTemplate0;
 	}
 	
+	public OAuth2RestTemplate setupClientOAuth2RestTemplate(boolean checkValid, boolean force) {
+		if (clientResourceDetails==null) {
+			return null;
+		}
+		return setupClientOAuth2RestTemplate(clientResourceDetails, checkValid, force);
+	}
+	
+	/**
+	 * Check if token is valid.
+	 * 
+	 * @param oauth2ClientContext the {@code oauth2ClientContext}
+	 * @return true if token valid, false otherwise.
+	 */
+	public static boolean isTokenValid(OAuth2ClientContext oauth2ClientContext) {
+		if (oauth2ClientContext==null) {
+			return false;
+		}
+		OAuth2AccessToken token = oauth2ClientContext.getAccessToken();
+		if (token==null) {
+			return false;
+		}
+		if (token.getExpiration()!=null && token.getExpiration().getTime()>System.currentTimeMillis()) {
+			return false;
+		}
+		
+		return true;
+	}
+
 	//
 	// Other
 	//

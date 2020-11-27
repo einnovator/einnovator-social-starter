@@ -6,6 +6,7 @@ import org.einnovator.social.client.manager.ChannelManager;
 import org.einnovator.social.client.manager.ChannelManagerImpl;
 import org.einnovator.social.client.web.ChannelRestController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
@@ -50,6 +51,7 @@ public class SocialClientConfig {
 	}
 	
 	@Bean
+	@ConditionalOnMissingBean(ChannelRestController.class)
 	public ChannelRestController channelRestController() {
 		return new ChannelRestController();
 	}

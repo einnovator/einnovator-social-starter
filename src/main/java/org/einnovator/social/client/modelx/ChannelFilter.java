@@ -39,6 +39,15 @@ public class ChannelFilter extends ChannelOptions {
 	public ChannelFilter() {
 	}
 	
+	/**
+	 * Create instance of {@code ChannelFilter}.
+	 *
+	 * @param obj a prototype
+	 */
+	public ChannelFilter(Object obj) {
+		super(obj);
+	}
+	
 	//
 	// Getters/Setters
 	//

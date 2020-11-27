@@ -24,6 +24,14 @@ public class MessageOptions extends EntityOptions<Message> {
 	public MessageOptions() {
 	}
 
+	/**
+	 * Create instance of {@code MessageOptions}.
+	 *
+	 * @param obj a prototype
+	 */
+	public MessageOptions(Object obj) {
+		super(obj);
+	}
 
 	@Override
 	public ToStringCreator toString(ToStringCreator creator) {

@@ -14,11 +14,24 @@ public class ChannelOptions extends EntityOptions<Channel> {
 
 	private Boolean messages;
 
+	//
+	// Constructors
+	//
+	
 	/**
 	 * Create instance of {@code ChannelOptions}.
 	 *
 	 */
 	public ChannelOptions() {
+	}
+	
+	/**
+	 * Create instance of {@code ChannelOptions}.
+	 *
+	 * @param obj a prototype
+	 */
+	public ChannelOptions(Object obj) {
+		super(obj);
 	}
 
 	//

@@ -9,8 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.einnovator.social.client.manager.ChannelManager;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
+import org.einnovator.social.client.model.Reaction;
+import org.einnovator.social.client.model.Reactions;
 import org.einnovator.social.client.modelx.ChannelFilter;
+import org.einnovator.social.client.modelx.ChannelOptions;
 import org.einnovator.social.client.modelx.MessageFilter;
+import org.einnovator.social.client.modelx.ReactionFilter;
+import org.einnovator.social.client.modelx.ReactionOptions;
 import org.einnovator.util.PageOptions;
 import org.einnovator.util.PageUtil;
 import org.einnovator.util.UriUtils;
@@ -26,6 +31,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriTemplate;
 
@@ -40,14 +46,17 @@ public class ChannelRestController extends ControllerBase {
 
 
 	@GetMapping
-	public ResponseEntity<Page<Channel>> listChannel(ChannelFilter filter, PageOptions options,
-		Principal principal, HttpServletResponse response) {
+	public ResponseEntity<Page<Channel>> listChannels(ChannelFilter filter, PageOptions options,
+		Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
-			setupToken(principal);
+			setupReadOnlyRequest(principal, filter, request);
 			Page<Channel> channels = manager.listChannels(filter, options.toPageRequest());
-			return ok(channels, "listChannel", response, PageUtil.toString(channels), filter, options);
+			if (channels==null) {
+				return badrequest("listChannels", response);				
+			}
+			return ok(channels, "listChannels", response, PageUtil.toString(channels), filter, options);
 		} catch (RuntimeException e) {
-			return status("listChannel", e, response, filter, options);
+			return status("listChannels", e, response, filter, options);
 		}
 	}
 	
@@ -57,7 +66,7 @@ public class ChannelRestController extends ControllerBase {
 			RequestOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
-			setupToken(principal);
+			setupRequest(principal, options, request);
 			URI location =  manager.createChannel(channel, options);
 			if (location==null) {
 				return badrequest("createChannel", response, channel);
@@ -70,10 +79,11 @@ public class ChannelRestController extends ControllerBase {
 	
 	@GetMapping("/{id:.*}")
 	public ResponseEntity<Channel> getChannel(@PathVariable String id,
-		Principal principal, HttpServletResponse response) {
+			ChannelOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
-			setupToken(principal);
-			Channel channel = manager.getChannel(id);
+			setupReadOnlyRequest(principal, options, request);
+			Channel channel = manager.getChannel(id, options);
 			if (channel==null) {
 				return notfound("getChannel", response);				
 			}
@@ -85,9 +95,10 @@ public class ChannelRestController extends ControllerBase {
 	
 	@PutMapping("/{id:.*}")
 	public ResponseEntity<Void> updateChannel(@RequestBody Channel channel, @PathVariable String id,
-			Principal principal, HttpServletResponse response) {			
+			RequestOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {			
 		try {
-			setupToken(principal);
+			setupRequest(principal, options, request);
 			if (manager.updateChannel(channel, null)==null) {
 				return badrequest("getChannel", response);
 			}
@@ -99,9 +110,10 @@ public class ChannelRestController extends ControllerBase {
 	
 	@DeleteMapping("/{channelId:.*}")
 	public ResponseEntity<Void> deleteChannel(@PathVariable String id,
-			Principal principal, HttpServletResponse response) {			
+			RequestOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {			
 		try {
-			setupToken(principal);
+			setupRequest(principal, options, request);
 			if (!manager.deleteChannel(id, null)) {
 				return badrequest("deleteChannel", response);
 			}
@@ -113,14 +125,17 @@ public class ChannelRestController extends ControllerBase {
 	
 
 	@GetMapping("/{cid:.*}/message")
-	public ResponseEntity<Page<Message>> listMessagesFor(@PathVariable("cid") String cid, MessageFilter filter, PageOptions options,
-			Principal principal, HttpServletResponse response) {		
+	public ResponseEntity<Page<Message>> listMessages(@PathVariable("cid") String cid, MessageFilter filter, PageOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {		
 		try {
-			setupToken(principal);
+			setupReadOnlyRequest(principal, filter, request);
 			Page<Message> page = manager.listMessages(cid, filter, options.toPageRequest());
-			return ok(page, "listMessagesFor", response);
+			if (page==null) {
+				return badrequest("listMessages", response, cid);				
+			}
+			return ok(page, "listMessages", response);
 		} catch (RuntimeException e) {
-			return status("listMessagesFor", e, response, cid);
+			return status("listMessages", e, response, cid);
 		}	
 	}
 
@@ -130,7 +145,7 @@ public class ChannelRestController extends ControllerBase {
 			@RequestBody Message msg, BindingResult errors,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
-			setupToken(principal);
+			setupRequest(principal, options, request);
 			URI location =  manager.postMessage(cid, msg, options);
 			if (location==null) {
 				return badrequest("postMessage", response, msg);
@@ -144,9 +159,10 @@ public class ChannelRestController extends ControllerBase {
 	@PutMapping("/{cid:.*}/message/{id:.*}")
 	public ResponseEntity<Void> updateMessage(@PathVariable("cid") String cid, @PathVariable("id") String id,
 			@RequestBody Message msg, BindingResult errors,
-			Principal principal, HttpServletResponse response) {
+			RequestOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
-			setupToken(principal);
+			setupRequest(principal, options, request);
 			if (manager.updateMessage(cid, msg, null)==null) {
 				return badrequest("updateMessage", response);
 			}
@@ -158,9 +174,10 @@ public class ChannelRestController extends ControllerBase {
 
 	@DeleteMapping("/{cid:.*}/message/{id:.*}")
 	public ResponseEntity<Void> deleteMessage(@PathVariable("cid") String cid, @PathVariable("id") String id,
-			Principal principal, HttpServletResponse response) {
+			RequestOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
-			setupToken(principal);
+			setupRequest(principal, options, request);
 			if (!manager.deleteMessage(cid, id, null)) {
 				return badrequest("deleteMessage", response);
 			}
@@ -182,6 +199,7 @@ public class ChannelRestController extends ControllerBase {
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
+			setupRequest(principal, options, request);
 			URI location = manager.postComment(cid, mid, message, options); 	
 			if (location==null) {
 				return badrequest("postComment", response, message);				
@@ -193,8 +211,234 @@ public class ChannelRestController extends ControllerBase {
 		}
 	}
 
+	
+	//
+	// Message Reactions
+	//
+	
 
-	protected void setupToken(Principal principal) {
+	@GetMapping("/{cid:.*}/reaction")
+	public ResponseEntity<Page<Reaction>> listChannelReactions(@PathVariable("cid") String cid,
+			ReactionFilter filter, PageOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
+
+
+		try {
+			setupReadOnlyRequest(principal, filter, request);
+			Page<Reaction> page = manager.listChannelReactions(cid, filter, options.toPageRequest());
+			if (page==null) {
+				return badrequest("listChannelReactions", response);				
+			}
+			return ok(page, "listChannelReactions", response, PageUtil.toString(page), filter, options);
+		} catch (RuntimeException e) {
+			return badrequest("listChannelReactions", response, e, cid, filter, options);
+		}
+	}
+
+	@GetMapping("/{cid:.*}/reactionstats")
+	public ResponseEntity<Reactions> getChannelReactionStats(@PathVariable("cid") String cid,
+			ReactionFilter filter, PageOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			setupReadOnlyRequest(principal, filter, request);
+			Reactions reactions = manager.getChannelReactionStats(cid, filter, options.toPageRequest());
+			if (reactions==null) {
+				return notfound("getChannelReactionStats", response);				
+			}
+			return ok(reactions, "getChannelReactionStats", response);
+		} catch (RuntimeException e) {
+			return badrequest("getChannelReactionStats", response, e, cid, filter, options);
+		}
+	}
+
+	@PostMapping("/{cid:.*}/reaction")
+	public ResponseEntity<Void> postChannelReaction(@PathVariable("cid") String cid, 
+			@RequestBody Reaction reaction, 
+			@RequestParam(required = false) Boolean cancel,
+			RequestOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			setupRequest(principal, options, request);
+			URI location = manager.postChannelReaction(cid, reaction, options);
+			if (location==null) {
+				return badrequest("postChannelReaction", response, cid, reaction);				
+			}
+			return created(location, "postChannelReaction", response);				
+		} catch (RuntimeException e) {
+			return badrequest("postChannelReaction", response, e, reaction);
+		}
+	}
+
+	@GetMapping("/{cid:.*}/reaction/{id:.*}")
+	public ResponseEntity<Reaction> getChannelReaction(@PathVariable("cid") String cid, @PathVariable("id") String id,
+			ReactionOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			setupReadOnlyRequest(principal, options, request);
+			Reaction reaction = manager.getChannelReaction(cid, id, options);
+			if (reaction == null) {
+				return notfound("getChannelReaction", response, Reaction.class, id);
+			}
+			return ok(reaction, "getChannelReaction", response);
+		} catch (RuntimeException e) {
+			return badrequest("getChannelReaction", response, e, cid, id);
+		}
+	}
+
+	@PutMapping("/{cid:.*}/reaction/{id:.*}")
+	public ResponseEntity<Void> updateChannelReaction(@PathVariable("cid") String cid,  @PathVariable("id") String id,
+			@RequestBody Reaction reaction, 
+			RequestOptions options,
+		Principal principal, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			setupRequest(principal, options, request);
+			Reaction reaction2 = manager.updateChannelReaction(cid, reaction, options);
+			if (reaction2 == null) {
+				return badrequest("updateChannelReaction", response, reaction);
+			}
+			return nocontent("updateChannelReaction", response, reaction);
+		} catch (RuntimeException e) {
+			return badrequest("updateChannelReaction", response, e, reaction);
+		}
+	}
+
+	@DeleteMapping("/{cid:.*}/reaction/{id:.*}")
+	public ResponseEntity<Void> deleteChannelReaction(@PathVariable("cid") String cid, @PathVariable("id") String id,
+			RequestOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		
+		try {
+			setupRequest(principal, options, request);
+			boolean b = manager.deleteChannelReaction(cid, id, options);
+			if (!b) {
+				return badrequest("deleteChannelReaction:", response, id);
+			}
+			return nocontent("deleteChannelReaction", response, cid, id);
+		} catch (RuntimeException e) {
+			return badrequest("deleteChannelReaction", response, e, cid, id);
+		}
+	}
+	
+	//
+	// Reactions
+	//
+	
+
+	@GetMapping("/{cid:.*}/message/{mid:.*}/reaction")
+	public ResponseEntity<Page<Reaction>> listReactions(@PathVariable("cid") String cid, @PathVariable("mid") String mid,
+			ReactionFilter filter, PageOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			setupReadOnlyRequest(principal, filter, request);
+			Page<Reaction> page = manager.listReactions(cid, mid, filter, options.toPageRequest());
+			if (page==null) {
+				return badrequest("listReactions", response, cid, mid);				
+			}
+			return ok(page, "listReactions", response, PageUtil.toString(page), filter, options);
+		} catch (RuntimeException e) {
+			return badrequest("listReactions", response, e, cid, mid, filter, options);
+		}
+	}
+	
+	@GetMapping("/{cid:.*}/message/{mid:.*}/reactionstats")
+	public ResponseEntity<Reactions> getReactionStats(@PathVariable("cid") String cid, @PathVariable("mid") String mid,
+		ReactionFilter filter, PageOptions options,
+		Principal principal, HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			setupRequest(principal, filter, request);
+			Reactions reactions = manager.getReactionStats(cid, mid, filter, options.toPageRequest());
+			if (reactions==null) {
+				return badrequest("getReactionStats", response, cid, mid);				
+			}
+			return ok(reactions, "getReactionStats", response);
+		} catch (RuntimeException e) {
+			return badrequest("getReactionStats", response, e, cid, mid);
+		}
+	}
+
+	@PostMapping("/{cid:.*}/message/{mid:.*}/reaction")
+	public ResponseEntity<Void> postReaction(@PathVariable("cid") String cid, @PathVariable("mid") String mid, 
+			@RequestBody Reaction reaction, 
+			@RequestParam(required = false) Boolean cancel,
+			RequestOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			setupRequest(principal, options, request);
+			URI location = manager.postReaction(cid, mid, reaction, options); 			
+			if (location==null) {
+				return badrequest("postReaction", response, cid, mid, reaction);				
+			}
+			return created(location, "postReaction", response);				
+		} catch (RuntimeException e) {
+			return badrequest("postReaction", response, e, reaction);
+		}
+	}
+
+	@GetMapping("/{cid:.*}/message/{mid:.*}/reaction/{id:.*}")
+	public ResponseEntity<Reaction> getReaction(@PathVariable("cid") String cid, @PathVariable("mid") String mid, @PathVariable("id") String id,
+			ReactionOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			setupReadOnlyRequest(principal, options, request);
+			Reaction reaction = manager.getReaction(cid, mid, id, options);
+			if (reaction == null) {
+				return notfound("getReaction", response, cid, mid);
+			}
+			return ok(reaction, "getReaction", response);
+		} catch (RuntimeException e) {
+			return badrequest("getReaction", response, e, cid, mid);
+		}
+	}
+
+	@PutMapping("/{cid:.*}/message/{mid:.*}/reaction/{id:.*}")
+	public ResponseEntity<Void> updateReaction(@PathVariable("cid") String cid, @PathVariable("mid") String mid,  @PathVariable("id") String id,
+			@RequestBody Reaction reaction, 
+			RequestOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			setupRequest(principal, options, request);
+			Reaction reaction2 = manager.updateReaction(cid, mid, reaction, options);
+			if (reaction2 == null) {
+				return badrequest("updateReaction", response, reaction);
+			}
+			return nocontent("updateReaction", response, reaction);
+		} catch (RuntimeException e) {
+			return badrequest("updateReaction", response, e, reaction);
+		}
+	}
+
+	@DeleteMapping("/{cid:.*}/message/{mid:.*}/reaction/{id:.*}")
+	public ResponseEntity<Void> deleteReaction(@PathVariable("cid") String cid, @PathVariable("mid") String mid, @PathVariable("id") String id,
+			RequestOptions options,
+			Principal principal, HttpServletRequest request, HttpServletResponse response) {
+
+		try {
+			setupRequest(principal, options, request);
+			boolean b = manager.deleteReaction(cid, mid, id, options);
+			if (!b) {
+				return badrequest("deleteReaction:", response, id);
+			}
+			return nocontent("deleteReaction", response, cid, mid, id);
+		} catch (RuntimeException e) {
+			return badrequest("deleteReaction", response, e, cid, mid, id);
+		}
+	}
+	
+	
+	
+	
+	protected void setupReadOnlyRequest(Principal principal, RequestOptions options, HttpServletRequest request) {
+		setupRequest(principal, options, request);
+	}
+	
+	protected void setupRequest(Principal principal, RequestOptions options, HttpServletRequest request) {
 	}
 }

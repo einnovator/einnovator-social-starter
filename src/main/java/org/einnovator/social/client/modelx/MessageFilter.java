@@ -31,6 +31,15 @@ public class MessageFilter extends MessageOptions {
 	public MessageFilter() {
 	}
 	
+	/**
+	 * Create instance of {@code MessageFilter}.
+	 *
+	 * @param obj a prototype
+	 */
+	public MessageFilter(Object obj) {
+		super(obj);
+	}
+	
 	//
 	// Getters/Setters
 	//

@@ -28,6 +28,15 @@ public class ReactionFilter extends ReactionOptions {
 	public ReactionFilter() {
 	}
 
+	/**
+	 * Create instance of {@code ReactionFilter}.
+	 *
+	 * @param obj a prototype
+	 */
+	public ReactionFilter(Object obj) {
+		super(obj);
+	}
+	
 	//
 	// Getters/Setters
 	//

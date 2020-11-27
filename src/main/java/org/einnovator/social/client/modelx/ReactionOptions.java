@@ -23,7 +23,14 @@ public class ReactionOptions extends RequestOptions {
 	public ReactionOptions() {
 	}
 
-
+	/**
+	 * Create instance of {@code ReactionOptions}.
+	 *
+	 * @param obj a prototype
+	 */
+	public ReactionOptions(Object obj) {
+		super(obj);
+	}
 	@Override
 	public ToStringCreator toString(ToStringCreator creator) {
 		return super.toString(creator);
