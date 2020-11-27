@@ -303,6 +303,17 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
+	public Reaction cancelReaction(String channelId, String msgId, Reaction reaction, RequestOptions options) {
+		try {
+			client.cancelReaction(channelId, msgId, reaction, options);
+			return reaction;
+		} catch (RuntimeException e) {
+			logger.error(String.format("postMessage: %s %s %s %s", e, channelId, msgId, reaction));
+			return null;
+		}
+	}
+	
+	@Override
 	public Reaction getReaction(String channelId, String msgId, String reactionId, ReactionOptions options) {
 		try {
 			Reaction reaction = null;
@@ -388,6 +399,18 @@ public class ChannelManagerImpl implements ChannelManager {
 			return null;
 		}
 	}
+	
+	@Override
+	public Reaction cancelChannelReaction(String channelId, Reaction reaction, RequestOptions options) {
+		try {
+			client.cancelChannelReaction(channelId, reaction, options);
+			return reaction;
+		} catch (RuntimeException e) {
+			logger.error(String.format("postChannelReaction: %s %s %s", e, channelId, reaction));
+			return null;
+		}
+	}
+	
 	
 	@Override
 	public Reaction getChannelReaction(String channelId, String reactionId, ReactionOptions options) {

@@ -1,16 +1,12 @@
 package org.einnovator.social.client;
 
-import static org.einnovator.util.UriUtils.appendQueryParameters;
 import static org.einnovator.util.UriUtils.makeURI;
 
 import java.net.URI;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.einnovator.social.client.config.SocialClientConfiguration;
-
 import org.einnovator.social.client.config.SocialEndpoints;
 import org.einnovator.social.client.model.Channel;
 import org.einnovator.social.client.model.Message;
@@ -22,10 +18,9 @@ import org.einnovator.social.client.modelx.MessageFilter;
 import org.einnovator.social.client.modelx.MessageOptions;
 import org.einnovator.social.client.modelx.ReactionFilter;
 import org.einnovator.social.client.modelx.ReactionOptions;
-import org.einnovator.util.MappingUtils;
-import org.einnovator.util.PageOptions;
 import org.einnovator.util.PageResult;
 import org.einnovator.util.PageUtil;
+import org.einnovator.util.UriUtils;
 import org.einnovator.util.web.RequestOptions;
 import org.einnovator.util.web.Result;
 import org.einnovator.util.web.WebUtil;
@@ -530,7 +525,25 @@ public class SocialClient {
 		RequestEntity<Reaction> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(reaction);
 		ResponseEntity<Void> result = exchange(request, Void.class, options);
 		return result.getHeaders().getLocation();
-		
+	}
+	
+	/**
+	 * Cancel a {@code Reaction} to a {@code Message}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the identifier of a {@code Channel} (UUID)
+	 * @param msgId the identifier of a {@code Message} (UUID)
+	 * @param reaction the {@code Reaction}
+	 * @param options optional {@code RequestOptions}
+	 * @throws RestClientException if request fails
+	 */
+	public void cancelReaction(String channelId, String msgId, Reaction reaction, RequestOptions options) {
+		URI uri = makeURI(SocialEndpoints.reactions(channelId, msgId, config));
+		uri = processURI(uri, options);
+		uri = UriUtils.appendQueryParameter(uri, "cancel", true);
+		RequestEntity<Reaction> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(reaction);
+		exchange(request, Void.class, options);
 	}
 
 	/**
@@ -655,6 +668,24 @@ public class SocialClient {
 		
 	}
 
+	/**
+	 * Cancel a {@code Reaction} to a {@code Channel}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the identifier of a {@code Channel} (UUID)
+	 * @param reaction the {@code Reaction}
+	 * @param options optional {@code RequestOptions}	
+	 * @throws RestClientException if request fails
+	 */
+	public void cancelChannelReaction(String channelId, Reaction reaction, RequestOptions options) {
+		URI uri = makeURI(SocialEndpoints.channelReactions(channelId, config));
+		uri = processURI(uri, options);
+		uri = UriUtils.appendQueryParameter(uri, "cancel", true);
+		RequestEntity<Reaction> request = RequestEntity.post(uri).accept(MediaType.APPLICATION_JSON).body(reaction);
+		exchange(request, Void.class, options);
+	}
+	
 	/**
 	 * Get {@code Reaction} with specified identifier post on a {@code Channel}.
 	 * 
@@ -820,20 +851,7 @@ public class SocialClient {
 	 * @return the processed {@code URI}
 	 */
 	public static URI processURI(URI uri, Object... objs) {
-		if (objs!=null && objs.length>0) {
-			Map<String, String> params = new LinkedHashMap<>();
-			for (Object obj: objs) {
-				if (obj==null) {
-					continue;
-				}
-				if (obj instanceof Pageable) {
-					obj = new PageOptions((Pageable)obj);
-				}
-				params.putAll(MappingUtils.toMapFormatted(obj));
-			}
-			uri = appendQueryParameters(uri, params);			
-		}
-		return uri;
+		return UriUtils.appendQueryParameters(uri, objs);
 	}
 	
 	

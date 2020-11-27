@@ -18,7 +18,6 @@ import org.einnovator.util.web.RequestOptions;
 import org.springframework.cache.Cache;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.client.RestClientException;
 
 public interface ChannelManager {
 	
@@ -50,7 +49,6 @@ public interface ChannelManager {
 	 * 
 	 * @param filter a {@code ChannelFilter}
 	 * @param pageable a {@code Pageable} (optional)
-	 * @throws RestClientException if request fails
 	 * @return a {@code Page} with {@code Channel}s
 	 */
 	Page<Channel> listChannels(ChannelFilter filter, Pageable pageable);
@@ -253,6 +251,19 @@ public interface ChannelManager {
 	URI postReaction(String channelId, String msgId, Reaction reaction, RequestOptions options);
 
 	/**
+	 * Cancel a {@code Reaction} to a {@code Message}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the identifier of a {@code Channel} (UUID)
+	 * @param msgId the identifier of a {@code Message} (UUID)
+	 * @param reaction the {@code Reaction}
+	 * @param options optional {@code RequestOptions}
+	 * @return the {@code Reaction}, or null if cancel failed
+	 */
+	Reaction cancelReaction(String channelId, String msgId, Reaction reaction, RequestOptions options);
+	 
+	/**
 	 * Get {@code Reaction} with specified identifier posted on a {@code Message}.
 	 * 
 	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
@@ -274,7 +285,6 @@ public interface ChannelManager {
 	 * @param msgId the identifier of a {@code Message} (UUID)
 	 * @param reaction the reaction to be update (UUID property should be set)
 	 * @param options optional {@code RequestOptions}
-	 * @throws RestClientException if request fails
 	 */
 	Reaction updateReaction(String channelId, String msgId, Reaction reaction, RequestOptions options);
 
@@ -333,6 +343,18 @@ public interface ChannelManager {
 	URI postChannelReaction(String channelId, Reaction reaction, RequestOptions options);
 
 	/**
+	 * Cancel a {@code Reaction} to a {@code Channel}.
+	 * 
+	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
+	 * 
+	 * @param channelId the identifier of a {@code Channel} (UUID)
+	 * @param reaction the {@code Reaction}
+	 * @param options optional {@code RequestOptions}	
+	 * @return the {@code Reaction}, or null if cancel failed
+	 */
+	Reaction cancelChannelReaction(String channelId, Reaction reaction, RequestOptions options);
+	
+	/**
 	 * Get {@code Reaction} with specified identifier post on a {@code Channel}.
 	 * 
 	 * <p><b>Required Security Credentials</b>: Matching {@link Channel#getSharing()} and {@link Channel#getAuthorities()}.
@@ -341,7 +363,6 @@ public interface ChannelManager {
 	 * @param reactionId the {@code Reaction} identifier (UUID)
 	 * @param options optional {@code UserOptions}
 	 * @return the {@code Reaction}
-	 * @throws RestClientException if request fails
 	 */
 	Reaction getChannelReaction(String channelId, String reactionId, ReactionOptions options);
 	

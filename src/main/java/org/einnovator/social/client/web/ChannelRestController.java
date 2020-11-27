@@ -261,11 +261,19 @@ public class ChannelRestController extends ControllerBase {
 
 		try {
 			setupRequest(principal, options, request);
-			URI location = manager.postChannelReaction(cid, reaction, options);
-			if (location==null) {
-				return badrequest("postChannelReaction", response, cid, reaction);				
+			if (Boolean.TRUE.equals(cancel)) {
+				if (manager.cancelChannelReaction(cid, reaction, options)==null) {
+					return badrequest("postChannelReaction", response);
+				}
+				return nocontent("postChannelReaction", response);
+			} else {
+				URI location = manager.postChannelReaction(cid, reaction, options);
+				if (location==null) {
+					return badrequest("postChannelReaction", response, cid, reaction);				
+				}
+				return created(location, "postChannelReaction", response);					
 			}
-			return created(location, "postChannelReaction", response);				
+			
 		} catch (RuntimeException e) {
 			return badrequest("postChannelReaction", response, e, reaction);
 		}
@@ -370,11 +378,18 @@ public class ChannelRestController extends ControllerBase {
 
 		try {
 			setupRequest(principal, options, request);
-			URI location = manager.postReaction(cid, mid, reaction, options); 			
-			if (location==null) {
-				return badrequest("postReaction", response, cid, mid, reaction);				
+			if (Boolean.TRUE.equals(cancel)) {
+				if (manager.cancelReaction(cid, mid, reaction, options)==null) {
+					return badrequest("postReaction", response);
+				}
+				return nocontent("postReaction", response);
+			} else {
+				URI location = manager.postReaction(cid, mid, reaction, options); 			
+				if (location==null) {
+					return badrequest("postReaction", response, cid, mid, reaction);				
+				}
+				return created(location, "postReaction", response);				
 			}
-			return created(location, "postReaction", response);				
 		} catch (RuntimeException e) {
 			return badrequest("postReaction", response, e, reaction);
 		}
