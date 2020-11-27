@@ -1,6 +1,7 @@
 package org.einnovator.social.client.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.einnovator.util.model.EntityBase;
 import org.einnovator.util.model.ToStringCreator;
@@ -45,6 +46,9 @@ public class Message extends EntityBase {
 
 	private List<Reaction> reactions;
 	
+	private Map<ReactionType, Integer> reactionStats;
+	
+	private Reaction reaction;
 	
 	/**
 	 * Create instance of {@code Message}.
@@ -449,6 +453,42 @@ public class Message extends EntityBase {
 	}
 
 	
+	/**
+	 * Get the value of property {@code reactionStats}.
+	 *
+	 * @return the value of {@code reactionStats}
+	 */
+	public Map<ReactionType, Integer> getReactionStats() {
+		return reactionStats;
+	}
+
+	/**
+	 * Set the value of property {@code reactionStats}.
+	 *
+	 * @param reactionStats the value of {@code reactionStats}
+	 */
+	public void setReactionStats(Map<ReactionType, Integer> reactionStats) {
+		this.reactionStats = reactionStats;
+	}
+
+	/**
+	 * Get the value of property {@code reaction}.
+	 *
+	 * @return the value of {@code reaction}
+	 */
+	public Reaction getReaction() {
+		return reaction;
+	}
+
+	/**
+	 * Set the value of property {@code reaction}.
+	 *
+	 * @param reaction the value of {@code reaction}
+	 */
+	public void setReaction(Reaction reaction) {
+		this.reaction = reaction;
+	}
+
 	@Override
 	public ToStringCreator toString1(ToStringCreator creator) {
 		return super.toString1(creator)
@@ -462,6 +502,8 @@ public class Message extends EntityBase {
 				.append("reported", reported)
 				.append("reportedBy", reportedBy)
 				.append("reportedDate", reportedDate)
+				.append("reactionStats", reactionStats)
+				.append("reaction", reaction)
 				;
 	}
 }
