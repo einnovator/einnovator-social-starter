@@ -18,7 +18,6 @@ import org.einnovator.social.client.modelx.ReactionFilter;
 import org.einnovator.social.client.modelx.ReactionOptions;
 import org.einnovator.util.UriUtils;
 import org.einnovator.util.cache.CacheUtils;
-import org.einnovator.util.web.RequestOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -100,7 +99,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public URI createChannel(Channel channel, RequestOptions options) {
+	public URI createChannel(Channel channel, ChannelOptions options) {
 		try {
 			return client.createChannel(channel, options);
 		} catch (RuntimeException e) {
@@ -111,7 +110,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	
 	@Override
 	@CachePut(value=CACHE_CHANNEL, key="#channel.uuid")
-	public Channel updateChannel(Channel channel, RequestOptions options) {
+	public Channel updateChannel(Channel channel, ChannelOptions options) {
 		try {
 			client.updateChannel(channel, options);
 			return channel;
@@ -122,7 +121,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public Channel createOrUpdateChannel(Channel channel, RequestOptions options) {
+	public Channel createOrUpdateChannel(Channel channel, ChannelOptions options) {
 		if (channel.getUuid()==null) {
 			URI uri = createChannel(channel, options);
 			if (uri==null) {
@@ -138,7 +137,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	
 	@Override
 	@CacheEvict(value=CACHE_CHANNEL, key="#id")
-	public boolean deleteChannel(String id, RequestOptions options) {
+	public boolean deleteChannel(String id, ChannelOptions options) {
 		try {
 			client.deleteChannel(id, options);
 			return true;
@@ -207,7 +206,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public URI postMessage(String channelId, Message msg, RequestOptions options) {
+	public URI postMessage(String channelId, Message msg, MessageOptions options) {
 		try {
 			return client.postMessage(channelId, msg, options);
 		} catch (RuntimeException e) {
@@ -236,7 +235,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public Message updateMessage(String channelId, Message msg, RequestOptions options) {
+	public Message updateMessage(String channelId, Message msg, MessageOptions options) {
 		try {
 			client.updateMessage(channelId, msg, options);
 			return msg;
@@ -247,7 +246,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public boolean deleteMessage(String channelId, String id, RequestOptions options) {
+	public boolean deleteMessage(String channelId, String id, MessageOptions options) {
 		try {
 			client.deleteMessage(channelId, id, options);
 			return true;
@@ -258,7 +257,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 	
 	@Override
-	public URI postChildMessage(String channelId, String msgId, Message message, RequestOptions options) {
+	public URI postChildMessage(String channelId, String msgId, Message message, MessageOptions options) {
 		try {
 			return client.postChildMessage(channelId, msgId, message, options);
 		} catch (RuntimeException e) {
@@ -293,7 +292,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public URI postReaction(String channelId, String msgId, Reaction reaction, RequestOptions options) {
+	public URI postReaction(String channelId, String msgId, Reaction reaction, ReactionOptions options) {
 		try {
 			return client.postReaction(channelId, msgId, reaction, options);
 		} catch (RuntimeException e) {
@@ -303,7 +302,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public Reaction cancelReaction(String channelId, String msgId, Reaction reaction, RequestOptions options) {
+	public Reaction cancelReaction(String channelId, String msgId, Reaction reaction, ReactionOptions options) {
 		try {
 			client.cancelReaction(channelId, msgId, reaction, options);
 			return reaction;
@@ -344,7 +343,7 @@ public class ChannelManagerImpl implements ChannelManager {
 		}
 	}
 	
-	public Reaction updateReaction(String channelId, String msgId, Reaction reaction, RequestOptions options) {
+	public Reaction updateReaction(String channelId, String msgId, Reaction reaction, ReactionOptions options) {
 		try {
 			client.updateReaction(channelId, msgId, reaction, options);
 			return reaction;
@@ -355,7 +354,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public boolean deleteReaction(String channelId, String msgId, String reactionId, RequestOptions options) {
+	public boolean deleteReaction(String channelId, String msgId, String reactionId, ReactionOptions options) {
 		try {
 			client.deleteReaction(channelId, msgId, reactionId, options);
 			return true;
@@ -391,7 +390,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	
 
 	@Override
-	public URI postChannelReaction(String channelId, Reaction reaction, RequestOptions options) {
+	public URI postChannelReaction(String channelId, Reaction reaction, ReactionOptions options) {
 		try {
 			return client.postChannelReaction(channelId, reaction, options);
 		} catch (RuntimeException e) {
@@ -401,7 +400,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 	
 	@Override
-	public Reaction cancelChannelReaction(String channelId, Reaction reaction, RequestOptions options) {
+	public Reaction cancelChannelReaction(String channelId, Reaction reaction, ReactionOptions options) {
 		try {
 			client.cancelChannelReaction(channelId, reaction, options);
 			return reaction;
@@ -444,7 +443,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public Reaction updateChannelReaction(String channelId, Reaction reaction, RequestOptions options) {
+	public Reaction updateChannelReaction(String channelId, Reaction reaction, ReactionOptions options) {
 		try {
 			client.updateChannelReaction(channelId, reaction, options);
 			return reaction;
@@ -455,7 +454,7 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public boolean deleteChannelReaction(String channelId, String reactionId, RequestOptions options) {
+	public boolean deleteChannelReaction(String channelId, String reactionId, ReactionOptions options) {
 		try {
 			client.deleteChannelReaction(channelId, reactionId, options);
 			return true;
@@ -466,13 +465,13 @@ public class ChannelManagerImpl implements ChannelManager {
 	}
 
 	@Override
-	public URI postComment(String channelId, String msgId, Message comment, RequestOptions options) {
+	public URI postComment(String channelId, String msgId, Message comment, MessageOptions options) {
 		comment.setType(MessageType.COMMENT);
 		return postChildMessage(channelId, msgId, comment, options);		
 	}
 
 	@Override
-	public URI postAnswer(String channelId, String msgId, Message answer, RequestOptions options) {
+	public URI postAnswer(String channelId, String msgId, Message answer, MessageOptions options) {
 		answer.setType(MessageType.ANSWER);
 		return postChildMessage(channelId, msgId, answer, options);		
 	}

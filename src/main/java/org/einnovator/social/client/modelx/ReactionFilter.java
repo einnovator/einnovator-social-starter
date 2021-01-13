@@ -53,7 +53,7 @@ public class ReactionFilter extends ReactionOptions {
 	/**
 	 * Set the value of property {@code type}.
 	 *
-	 * @param type the type to set
+	 * @param type the type
 	 */
 	public void setType(ReactionType type) {
 		this.type = type;
@@ -71,7 +71,7 @@ public class ReactionFilter extends ReactionOptions {
 	/**
 	 * Set the value of property {@code owner}.
 	 *
-	 * @param owner the owner to set
+	 * @param owner the owner
 	 */
 	public void setOwner(String owner) {
 		this.owner = owner;
@@ -84,7 +84,7 @@ public class ReactionFilter extends ReactionOptions {
 	/**
 	 * Set the value of property {@code type}.
 	 *
-	 * @param type the type to set
+	 * @param type the type
 	 * @return this {@code ReactionFilter}
 	 */
 	public ReactionFilter withType(ReactionType type) {
@@ -95,7 +95,7 @@ public class ReactionFilter extends ReactionOptions {
 	/**
 	 * Set the value of property {@code owner}.
 	 *
-	 * @param owner the owner to set
+	 * @param owner the owner
 	 * @return this {@code ReactionFilter}
 	 */
 	public ReactionFilter withOwner(String owner) {

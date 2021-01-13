@@ -46,7 +46,7 @@ public class SocialClientConfiguration extends ObjectBase {
 	/**
 	 * Set the value of property {@code server}.
 	 *
-	 * @param server the server to set
+	 * @param server the server
 	 */
 	public void setServer(String server) {
 		this.server = server;
@@ -64,7 +64,7 @@ public class SocialClientConfiguration extends ObjectBase {
 	/**
 	 * Set the value of property {@code connection}.
 	 *
-	 * @param connection the connection to set
+	 * @param connection the connection
 	 */
 	public void setConnection(ConnectionConfiguration connection) {
 		this.connection = connection;
@@ -82,7 +82,7 @@ public class SocialClientConfiguration extends ObjectBase {
 	/**
 	 * Set the value of property {@code registration}.
 	 *
-	 * @param registration the registration to set
+	 * @param registration the registration
 	 */
 	public void setRegistration(SocialRegistration registration) {
 		this.registration = registration;

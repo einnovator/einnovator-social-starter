@@ -14,7 +14,6 @@ import org.einnovator.social.client.modelx.MessageFilter;
 import org.einnovator.social.client.modelx.MessageOptions;
 import org.einnovator.social.client.modelx.ReactionFilter;
 import org.einnovator.social.client.modelx.ReactionOptions;
-import org.einnovator.util.web.RequestOptions;
 import org.springframework.cache.Cache;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,10 +58,10 @@ public interface ChannelManager {
 	 * <p><b>Required Security Credentials</b>: Any.
 	 * 
 	 * @param channel the {@code Channel}
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code ChannelOptions}
 	 * @return the location {@code URI} for the created {@code Channel}, or null if request fails
 	 */
-	URI createChannel(Channel channel, RequestOptions options);
+	URI createChannel(Channel channel, ChannelOptions options);
 	
 	/**
 	 * Update existing {@code Channel}
@@ -70,10 +69,10 @@ public interface ChannelManager {
 	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner.
 	 * 
 	 * @param channel the {@code Channel}
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code ChannelOptions}
 	 * @return the same {@code Channel}, or null if request failed
 	 */
-	Channel updateChannel(Channel channel, RequestOptions options);
+	Channel updateChannel(Channel channel, ChannelOptions options);
 	
 
 	/**
@@ -82,10 +81,10 @@ public interface ChannelManager {
 	 * If {@code Channel.uuid} has text is assumed to be an update. Otherwise a create. A single call is made to the server.
 	 * 
 	 * @param channel the {@code Channel}
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code ChannelOptions}
 	 * @return the {@code Channel} with {@code uuid} property set; or null if error.
 	 */
-	Channel createOrUpdateChannel(Channel channel, RequestOptions options);
+	Channel createOrUpdateChannel(Channel channel, ChannelOptions options);
 	
 	
 	/**
@@ -94,10 +93,10 @@ public interface ChannelManager {
 	 * <p><b>Required Security Credentials</b>: Client, Admin (global role ADMIN), or owner.
 	 * 
 	 * @param id the {@code Channel} identifier (UUID)
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code ChannelOptions}
 	 * @return true if {@code Channel} was deleted, or false if request failed
 	 */
-	boolean deleteChannel(String id, RequestOptions options);
+	boolean deleteChannel(String id, ChannelOptions options);
 	
 	//
 	// Messages
@@ -122,10 +121,10 @@ public interface ChannelManager {
 	 * 
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msg the {@code Message}
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code MessageOptions}
 	 * @return the location {@code URI} for the created {@code Message}, or null if request failed
 	 */
-	URI postMessage(String channelId, Message msg, RequestOptions options);
+	URI postMessage(String channelId, Message msg, MessageOptions options);
 
 	/**
 	 * Get {@code Message} with specified identifier post to a {@code Channel}.
@@ -134,7 +133,7 @@ public interface ChannelManager {
 	 * 
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param msgId the identifier of a {@code Message} (UUID)
-	 * @param options optional {@code UserOptions}
+	 * @param options optional {@code MessageOptions}
 	 * @return the {@code Message}, or null if not found or request failed
 	 */
 	Message getMessage(String channelId, String msgId, MessageOptions options);
@@ -146,10 +145,10 @@ public interface ChannelManager {
 	 * 
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param message the message to be update (UUID property should be set)
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code MessageOptions}
 	 * @return the same {@code Message}, or null if request failed
 	 */
-	Message updateMessage(String channelId, Message message, RequestOptions options);
+	Message updateMessage(String channelId, Message message, MessageOptions options);
 
 	/**
 	 * Delete {@code Message} posted to a {@code Channel}.
@@ -159,10 +158,10 @@ public interface ChannelManager {
 	 * 
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param msgId the {@code Message} identifier (UUID)
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code MessageOptions}
 	 * @return true if {@code Message} was deleted, or false if request failed
 	 */
-	boolean deleteMessage(String channelId, String msgId, RequestOptions options);
+	boolean deleteMessage(String channelId, String msgId, MessageOptions options);
 
 	/**
 	 * Post a {@code Message} as child to other {@code Message} previous posted to a {@code Channel}.
@@ -172,10 +171,10 @@ public interface ChannelManager {
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msgId the identifier of the parent {@code Message} (UUID)
 	 * @param message the {@code Message} to post
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code MessageOptions}
 	 * @return the location {@code URI} for the created {@code Message}, or null if request failed
 	 */
-	URI postChildMessage(String channelId, String msgId, Message message, RequestOptions options);
+	URI postChildMessage(String channelId, String msgId, Message message, MessageOptions options);
 
 	/**
 	 * Post a {@code Message} of type {@code COMMENT} as child to other {@code Message} previous posted to a {@code Channel}.
@@ -185,11 +184,11 @@ public interface ChannelManager {
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msgId the identifier of the parent {@code Message} (UUID)
 	 * @param comment the child {@code Message} to post
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code MessageOptions}
 	 * @return the location {@code URI} for the created {@code Message}, or null if request failed
 	 * @see MessageType
 	 */
-	URI postComment(String channelId, String msgId, Message comment, RequestOptions options);
+	URI postComment(String channelId, String msgId, Message comment, MessageOptions options);
 
 
 	/**
@@ -200,11 +199,11 @@ public interface ChannelManager {
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msgId the identifier of the parent {@code Message} (UUID)
 	 * @param answer the child {@code Message} to post
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code MessageOptions}
 	 * @return the location {@code URI} for the created {@code Message}, or null if request failed
 	 * @see MessageType
 	 */
-	URI postAnswer(String channelId, String msgId, Message answer, RequestOptions options);
+	URI postAnswer(String channelId, String msgId, Message answer, MessageOptions options);
 
 
 	//
@@ -245,10 +244,10 @@ public interface ChannelManager {
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msgId the identifier of a {@code Message} (UUID)
 	 * @param reaction the {@code Reaction}
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code ReactionOptions}
 	 * @return the location {@code URI} for the created {@code Reaction}, or null if request failed
 	 */
-	URI postReaction(String channelId, String msgId, Reaction reaction, RequestOptions options);
+	URI postReaction(String channelId, String msgId, Reaction reaction, ReactionOptions options);
 
 	/**
 	 * Cancel a {@code Reaction} to a {@code Message}.
@@ -258,10 +257,10 @@ public interface ChannelManager {
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param msgId the identifier of a {@code Message} (UUID)
 	 * @param reaction the {@code Reaction}
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code ReactionOptions}
 	 * @return the {@code Reaction}, or null if cancel failed
 	 */
-	Reaction cancelReaction(String channelId, String msgId, Reaction reaction, RequestOptions options);
+	Reaction cancelReaction(String channelId, String msgId, Reaction reaction, ReactionOptions options);
 	 
 	/**
 	 * Get {@code Reaction} with specified identifier posted on a {@code Message}.
@@ -271,7 +270,7 @@ public interface ChannelManager {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param msgId the identifier of a {@code Message} (UUID)
 	 * @param reactionId the {@code Reaction} identifier (UUID)
-	 * @param options optional {@code UserOptions}
+	 * @param options optional {@code ReactionOptions}
 	 * @return the {@code Reaction}, or null if not found or request failed
 	 */
 	Reaction getReaction(String channelId, String msgId, String reactionId, ReactionOptions options);
@@ -284,9 +283,10 @@ public interface ChannelManager {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param msgId the identifier of a {@code Message} (UUID)
 	 * @param reaction the reaction to be update (UUID property should be set)
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code ReactionOptions}
+	 * @return the {@code Reaction}, or null if not found or request failed
 	 */
-	Reaction updateReaction(String channelId, String msgId, Reaction reaction, RequestOptions options);
+	Reaction updateReaction(String channelId, String msgId, Reaction reaction, ReactionOptions options);
 
 	/**
 	 * Delete {@code Reaction} posted to a {@code Message}.
@@ -297,10 +297,10 @@ public interface ChannelManager {
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param msgId the {@code Message} identifier (UUID)
 	 * @param reactionId the {@code Reaction} identifier (UUID)
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code ReactionOptions}
 	 * @return true if {@code Reaction} was deleted, or false if request failed
 	 */
-	boolean deleteReaction(String channelId, String msgId, String reactionId, RequestOptions options);
+	boolean deleteReaction(String channelId, String msgId, String reactionId, ReactionOptions options);
 
 	//
 	// Channel Reactions
@@ -337,10 +337,10 @@ public interface ChannelManager {
 	 * 
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param reaction the {@code Reaction}
-	 * @param options optional {@code RequestOptions}	
+	 * @param options optional {@code ReactionOptions}	
 	 * @return the location {@code URI} for the created {@code Reaction}, or null if request failed
 	 */
-	URI postChannelReaction(String channelId, Reaction reaction, RequestOptions options);
+	URI postChannelReaction(String channelId, Reaction reaction, ReactionOptions options);
 
 	/**
 	 * Cancel a {@code Reaction} to a {@code Channel}.
@@ -349,10 +349,10 @@ public interface ChannelManager {
 	 * 
 	 * @param channelId the identifier of a {@code Channel} (UUID)
 	 * @param reaction the {@code Reaction}
-	 * @param options optional {@code RequestOptions}	
+	 * @param options optional {@code ReactionOptions}	
 	 * @return the {@code Reaction}, or null if cancel failed
 	 */
-	Reaction cancelChannelReaction(String channelId, Reaction reaction, RequestOptions options);
+	Reaction cancelChannelReaction(String channelId, Reaction reaction, ReactionOptions options);
 	
 	/**
 	 * Get {@code Reaction} with specified identifier post on a {@code Channel}.
@@ -373,10 +373,10 @@ public interface ChannelManager {
 	 * 
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param reaction the reaction to be update (UUID property should be set)
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code ReactionOptions}
 	 * @return the {@code Reaction}, or null if not found or request failed
 	 */
-	Reaction updateChannelReaction(String channelId, Reaction reaction, RequestOptions options);
+	Reaction updateChannelReaction(String channelId, Reaction reaction, ReactionOptions options);
 
 	/**
 	 * Delete {@code Reaction} posted to a {@code Channel}.
@@ -386,10 +386,10 @@ public interface ChannelManager {
 	 * 
 	 * @param channelId the {@code Channel} identifier (UUID)
 	 * @param reactionId the {@code Reaction} identifier (UUID)
-	 * @param options optional {@code RequestOptions}
+	 * @param options optional {@code ReactionOptions}
 	 * @return true if {@code Reaction} was deleted, or false if request failed
 	 */
-	boolean deleteChannelReaction(String channelId, String reactionId, RequestOptions options);
+	boolean deleteChannelReaction(String channelId, String reactionId, ReactionOptions options);
 
 	//
 	// Caching

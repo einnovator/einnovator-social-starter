@@ -14,6 +14,7 @@ import org.einnovator.social.client.model.Reactions;
 import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.social.client.modelx.ChannelOptions;
 import org.einnovator.social.client.modelx.MessageFilter;
+import org.einnovator.social.client.modelx.MessageOptions;
 import org.einnovator.social.client.modelx.ReactionFilter;
 import org.einnovator.social.client.modelx.ReactionOptions;
 import org.einnovator.util.PageOptions;
@@ -63,7 +64,7 @@ public class ChannelRestController extends ControllerBase {
 	
 	@PostMapping
 	public ResponseEntity<Void> createChannel(@RequestBody Channel channel, 
-			RequestOptions options,
+			ChannelOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			setupRequest(principal, options, request);
@@ -95,11 +96,11 @@ public class ChannelRestController extends ControllerBase {
 	
 	@PutMapping("/{id:.*}")
 	public ResponseEntity<Void> updateChannel(@RequestBody Channel channel, @PathVariable String id,
-			RequestOptions options,
+			ChannelOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {			
 		try {
 			setupRequest(principal, options, request);
-			if (manager.updateChannel(channel, null)==null) {
+			if (manager.updateChannel(channel, options)==null) {
 				return badrequest("getChannel", response);
 			}
 			return nocontent("getChannel", response);
@@ -110,11 +111,11 @@ public class ChannelRestController extends ControllerBase {
 	
 	@DeleteMapping("/{channelId:.*}")
 	public ResponseEntity<Void> deleteChannel(@PathVariable String id,
-			RequestOptions options,
+			ChannelOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {			
 		try {
 			setupRequest(principal, options, request);
-			if (!manager.deleteChannel(id, null)) {
+			if (!manager.deleteChannel(id, options)) {
 				return badrequest("deleteChannel", response);
 			}
 			return nocontent("deleteChannel", response);
@@ -141,7 +142,7 @@ public class ChannelRestController extends ControllerBase {
 
 	@PostMapping("/{cid:.*}/message")
 	public ResponseEntity<Void> postMessage(@PathVariable("cid") String cid,
-			RequestOptions options,
+			MessageOptions options,
 			@RequestBody Message msg, BindingResult errors,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -159,11 +160,11 @@ public class ChannelRestController extends ControllerBase {
 	@PutMapping("/{cid:.*}/message/{id:.*}")
 	public ResponseEntity<Void> updateMessage(@PathVariable("cid") String cid, @PathVariable("id") String id,
 			@RequestBody Message msg, BindingResult errors,
-			RequestOptions options,
+			MessageOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			setupRequest(principal, options, request);
-			if (manager.updateMessage(cid, msg, null)==null) {
+			if (manager.updateMessage(cid, msg, options)==null) {
 				return badrequest("updateMessage", response);
 			}
 			return nocontent("updateMessage", response);
@@ -174,11 +175,11 @@ public class ChannelRestController extends ControllerBase {
 
 	@DeleteMapping("/{cid:.*}/message/{id:.*}")
 	public ResponseEntity<Void> deleteMessage(@PathVariable("cid") String cid, @PathVariable("id") String id,
-			RequestOptions options,
+			MessageOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			setupRequest(principal, options, request);
-			if (!manager.deleteMessage(cid, id, null)) {
+			if (!manager.deleteMessage(cid, id, options)) {
 				return badrequest("deleteMessage", response);
 			}
 			return nocontent("deleteMessage", response);
@@ -195,7 +196,7 @@ public class ChannelRestController extends ControllerBase {
 	@PostMapping({"/{cid:.*}/message/{mid:.*}/comment", "/{cid:.*}/message/{mid:.*}/message"})
 	public ResponseEntity<Void> postComment(@PathVariable("cid") String cid, @PathVariable("mid") String mid, 
 			@RequestBody Message message, BindingResult errors,
-			RequestOptions options,
+			MessageOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
@@ -222,7 +223,6 @@ public class ChannelRestController extends ControllerBase {
 			ReactionFilter filter, PageOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 
-
 		try {
 			setupReadOnlyRequest(principal, filter, request);
 			Page<Reaction> page = manager.listChannelReactions(cid, filter, options.toPageRequest());
@@ -239,7 +239,6 @@ public class ChannelRestController extends ControllerBase {
 	public ResponseEntity<Reactions> getChannelReactionStats(@PathVariable("cid") String cid,
 			ReactionFilter filter, PageOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
-
 		try {
 			setupReadOnlyRequest(principal, filter, request);
 			Reactions reactions = manager.getChannelReactionStats(cid, filter, options.toPageRequest());
@@ -256,7 +255,7 @@ public class ChannelRestController extends ControllerBase {
 	public ResponseEntity<Void> postChannelReaction(@PathVariable("cid") String cid, 
 			@RequestBody Reaction reaction, 
 			@RequestParam(required = false) Boolean cancel,
-			RequestOptions options,
+			ReactionOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
@@ -299,7 +298,7 @@ public class ChannelRestController extends ControllerBase {
 	@PutMapping("/{cid:.*}/reaction/{id:.*}")
 	public ResponseEntity<Void> updateChannelReaction(@PathVariable("cid") String cid,  @PathVariable("id") String id,
 			@RequestBody Reaction reaction, 
-			RequestOptions options,
+			ReactionOptions options,
 		Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		try {
 			setupRequest(principal, options, request);
@@ -315,7 +314,7 @@ public class ChannelRestController extends ControllerBase {
 
 	@DeleteMapping("/{cid:.*}/reaction/{id:.*}")
 	public ResponseEntity<Void> deleteChannelReaction(@PathVariable("cid") String cid, @PathVariable("id") String id,
-			RequestOptions options,
+			ReactionOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 		
 		try {
@@ -373,7 +372,7 @@ public class ChannelRestController extends ControllerBase {
 	public ResponseEntity<Void> postReaction(@PathVariable("cid") String cid, @PathVariable("mid") String mid, 
 			@RequestBody Reaction reaction, 
 			@RequestParam(required = false) Boolean cancel,
-			RequestOptions options,
+			ReactionOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
@@ -415,7 +414,7 @@ public class ChannelRestController extends ControllerBase {
 	@PutMapping("/{cid:.*}/message/{mid:.*}/reaction/{id:.*}")
 	public ResponseEntity<Void> updateReaction(@PathVariable("cid") String cid, @PathVariable("mid") String mid,  @PathVariable("id") String id,
 			@RequestBody Reaction reaction, 
-			RequestOptions options,
+			ReactionOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
@@ -432,7 +431,7 @@ public class ChannelRestController extends ControllerBase {
 
 	@DeleteMapping("/{cid:.*}/message/{mid:.*}/reaction/{id:.*}")
 	public ResponseEntity<Void> deleteReaction(@PathVariable("cid") String cid, @PathVariable("mid") String mid, @PathVariable("id") String id,
-			RequestOptions options,
+			ReactionOptions options,
 			Principal principal, HttpServletRequest request, HttpServletResponse response) {
 
 		try {

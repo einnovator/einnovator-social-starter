@@ -42,7 +42,7 @@ public class SocialRegistration extends ObjectBase {
 	/**
 	 * Set the value of property {@code auto}.
 	 *
-	 * @param auto the auto to set
+	 * @param auto the auto
 	 */
 	public void setAuto(boolean auto) {
 		this.auto = auto;
@@ -62,7 +62,7 @@ public class SocialRegistration extends ObjectBase {
 	/**
 	 * Set the value of property {@code application}.
 	 *
-	 * @param application the application to set
+	 * @param application the application
 	 */
 	public void setApplication(Application application) {
 		this.application = application;
@@ -80,7 +80,7 @@ public class SocialRegistration extends ObjectBase {
 	/**
 	 * Set the value of property {@code channels}.
 	 *
-	 * @param channels the channels to set
+	 * @param channels the channels
 	 */
 	public void setChannels(List<Channel> channels) {
 		this.channels = channels;
@@ -99,7 +99,7 @@ public class SocialRegistration extends ObjectBase {
 	/**
 	 * Set the value of property {@code properties}.
 	 *
-	 * @param properties the properties to set
+	 * @param properties the properties
 	 */
 	public void setProperties(Map<String, Object> properties) {
 		this.properties = properties;
