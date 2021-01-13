@@ -322,7 +322,6 @@ public class SocialClient {
 		exchange(request, Channel.class, options);
 	}
 	
-	
 	/**
 	 * Update {@code Channel}.
 	 * 
@@ -765,7 +764,7 @@ public class SocialClient {
 	 * @throws RestClientException if request fails
 	 */
 	public void updateChannelReaction(String channelId, String id, Reaction reaction, ReactionOptions options) {
-		URI uri = makeURI(SocialEndpoints.channelReaction(channelId, reaction.getUuid(), config));
+		URI uri = makeURI(SocialEndpoints.channelReaction(channelId, id, config));
 		uri = processURI(uri, options);
 		RequestEntity<Reaction> request = RequestEntity.put(uri).accept(MediaType.APPLICATION_JSON).body(reaction);
 		exchange(request, Reaction.class, options);
