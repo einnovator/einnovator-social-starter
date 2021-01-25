@@ -1,10 +1,10 @@
 package org.einnovator.social.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -18,9 +18,9 @@ import org.einnovator.social.client.modelx.ChannelFilter;
 import org.einnovator.sso.client.SsoTestHelper;
 import org.einnovator.util.UriUtils;
 import org.einnovator.util.security.Authority;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -28,9 +28,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { SocialClientConfig.class, SocialClientTests.TestConfig.class }, webEnvironment = WebEnvironment.NONE)
 @TestPropertySource(properties = { "social.server=http://localhost:2051", "sso.server=http://localhost:2001",
 		"spring.cache.ehcache.config:ehcache-social-starter.xml" })
@@ -105,7 +106,7 @@ public class SocialClientTests extends SsoTestHelper {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void createChannelAndDeleteTest() {
 		String name = "tdd-" + UUID.randomUUID().toString();
 		Channel channel = new Channel().withName(name);
