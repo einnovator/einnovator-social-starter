@@ -348,7 +348,7 @@ public class SocialClient {
 	public void deleteChannel(String id, ChannelOptions options) {
 		URI uri = makeURI(SocialEndpoints.channel(id, config));
 		uri = processURI(uri, options);
-		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
+		RequestEntity<Void> request = RequestEntity.delete(uri).build();
 		exchange(request, Void.class, options);
 	}
 
@@ -466,7 +466,7 @@ public class SocialClient {
 	public void deleteMessage(String channelId, String msgId, MessageOptions options) {
 		URI uri = makeURI(SocialEndpoints.message(channelId, msgId, config));
 		uri = processURI(uri, options);
-		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
+		RequestEntity<Void> request = RequestEntity.delete(uri).build();
 		exchange(request, Void.class, options);
 	}
 
@@ -646,7 +646,7 @@ public class SocialClient {
 	public void deleteReaction(String channelId, String msgId, String reactionId, ReactionOptions options) {
 		URI uri = makeURI(SocialEndpoints.reaction(channelId, msgId, reactionId, config));
 		uri = processURI(uri, options);
-		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
+		RequestEntity<Void> request = RequestEntity.delete(uri).build();
 		exchange(request, Void.class, options);
 	}
 
@@ -799,7 +799,7 @@ public class SocialClient {
 	public void deleteChannelReaction(String channelId, String reactionId, ReactionOptions options) {
 		URI uri = makeURI(SocialEndpoints.channelReaction(channelId,reactionId, config));
 		uri = processURI(uri, options);
-		RequestEntity<Void> request = RequestEntity.delete(uri).accept(MediaType.APPLICATION_JSON).build();
+		RequestEntity<Void> request = RequestEntity.delete(uri).build();
 		exchange(request, Void.class, options);
 	}
 
@@ -813,7 +813,7 @@ public class SocialClient {
 		try {
 			return exchange(restTemplate, request, responseType);			
 		} catch (RuntimeException e) {
-			if (options!=null && !options.isSingleton()) {
+			if (options!=null && !Boolean.TRUE.equals(options.getSingleton())) {
 				options.setResult(new Result<Object>(e));
 			}
 			throw e;
